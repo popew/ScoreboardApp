@@ -11,7 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Api", "Api", "{2D6D15C7-779
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{B2D73606-430F-4257-8612-C7D29D3A15E2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScoreboardApp.Api", "ScoreboardApp.Api\ScoreboardApp.Api.csproj", "{7A554280-F90A-4CE0-8FA9-C823A92AC577}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScoreboardApp.Api", "src\Api\ScoreboardApp.Api\ScoreboardApp.Api.csproj", "{7A554280-F90A-4CE0-8FA9-C823A92AC577}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScoreboardApp.Web", "src\Web\ScoreboardApp.Web\ScoreboardApp.Web.csproj", "{F74DE966-5FF9-41DD-BE9B-82796536C765}"
 EndProject
