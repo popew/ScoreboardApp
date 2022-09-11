@@ -1,0 +1,45 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32616.157
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{FE5C03D4-3D05-4984-8837-15E1E8517293}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{D06D01C3-A955-4FFE-863A-45C5B58C725A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Api", "Api", "{2D6D15C7-7792-43D1-A6DB-7050D28829E6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{B2D73606-430F-4257-8612-C7D29D3A15E2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScoreboardApp.Api", "src\Api\ScoreboardApp.Api\ScoreboardApp.Api.csproj", "{7A554280-F90A-4CE0-8FA9-C823A92AC577}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScoreboardApp.Web", "src\Web\ScoreboardApp.Web\ScoreboardApp.Web.csproj", "{F74DE966-5FF9-41DD-BE9B-82796536C765}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7A554280-F90A-4CE0-8FA9-C823A92AC577}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A554280-F90A-4CE0-8FA9-C823A92AC577}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A554280-F90A-4CE0-8FA9-C823A92AC577}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A554280-F90A-4CE0-8FA9-C823A92AC577}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F74DE966-5FF9-41DD-BE9B-82796536C765}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F74DE966-5FF9-41DD-BE9B-82796536C765}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F74DE966-5FF9-41DD-BE9B-82796536C765}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F74DE966-5FF9-41DD-BE9B-82796536C765}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2D6D15C7-7792-43D1-A6DB-7050D28829E6} = {FE5C03D4-3D05-4984-8837-15E1E8517293}
+		{B2D73606-430F-4257-8612-C7D29D3A15E2} = {FE5C03D4-3D05-4984-8837-15E1E8517293}
+		{7A554280-F90A-4CE0-8FA9-C823A92AC577} = {2D6D15C7-7792-43D1-A6DB-7050D28829E6}
+		{F74DE966-5FF9-41DD-BE9B-82796536C765} = {B2D73606-430F-4257-8612-C7D29D3A15E2}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DA1CCF4D-308B-462C-A0D1-27B7EAC168EF}
+	EndGlobalSection
+EndGlobal
