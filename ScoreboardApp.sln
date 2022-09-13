@@ -23,6 +23,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScoreboardApp.Infrastructure", "src\Infrastructure\ScoreboardApp.Infrastructure\ScoreboardApp.Infrastructure.csproj", "{CC1E07E9-FAD2-4B5F-8882-A0975CA2E0C3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScoreboardApp.Domain", "src\Domain\ScoreboardApp.Domain\ScoreboardApp.Domain.csproj", "{AC145723-CA9A-419C-81D6-F4BBF310B7E2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,10 @@ Global
 		{CC1E07E9-FAD2-4B5F-8882-A0975CA2E0C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC1E07E9-FAD2-4B5F-8882-A0975CA2E0C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC1E07E9-FAD2-4B5F-8882-A0975CA2E0C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC145723-CA9A-419C-81D6-F4BBF310B7E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC145723-CA9A-419C-81D6-F4BBF310B7E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC145723-CA9A-419C-81D6-F4BBF310B7E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC145723-CA9A-419C-81D6-F4BBF310B7E2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -54,6 +60,7 @@ Global
 		{9657E0EC-8827-4B62-BB74-25061F53EA5B} = {FE5C03D4-3D05-4984-8837-15E1E8517293}
 		{3F1CBC31-276B-4265-82BC-B2F8CEA48F07} = {FE5C03D4-3D05-4984-8837-15E1E8517293}
 		{CC1E07E9-FAD2-4B5F-8882-A0975CA2E0C3} = {3F1CBC31-276B-4265-82BC-B2F8CEA48F07}
+		{AC145723-CA9A-419C-81D6-F4BBF310B7E2} = {9657E0EC-8827-4B62-BB74-25061F53EA5B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DA1CCF4D-308B-462C-A0D1-27B7EAC168EF}
