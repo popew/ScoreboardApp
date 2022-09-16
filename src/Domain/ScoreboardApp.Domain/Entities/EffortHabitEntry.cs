@@ -1,16 +1,16 @@
 ﻿using ScoreboardApp.Domain.Entities.Commons;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace ScoreboardApp.Domain.Entities
 {
-    public class HabitTracker : BaseEntity
+    public class EffortHabitEntry : HabitEntry
     {
-        public DateTime Created { get; set; }
-
-        public IList<Habit> HabitTrackerEntries = new List<Habit>();
+        [Required]
+        public float Effort { get; set; }
     }
 }
