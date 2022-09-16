@@ -12,8 +12,5 @@ namespace ScoreboardApp.Domain.Entities.Commons
 
         [Required]
         public DateOnly EntryDate { get; set; }
-
-        [Required]
-        public EntryType EntryType { get; set; }
     }
 }
