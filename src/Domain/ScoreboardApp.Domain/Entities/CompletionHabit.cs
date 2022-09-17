@@ -11,7 +11,6 @@ namespace ScoreboardApp.Domain.Entities
 {
     internal class CompletionHabit : Habit
     {
-        [ForeignKey("Id")]
         public IList<CompletionHabitEntry> HabitEntries { get; set; } = new List<CompletionHabitEntry>();
     }
 }

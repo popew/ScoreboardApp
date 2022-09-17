@@ -9,7 +9,7 @@ namespace ScoreboardApp.Domain.Entities
 {
     public class HabitTracker : BaseEntity
     {
-        public DateTime Created { get; set; }
+        public int Order { get; set; }
 
         public IList<Habit> HabitTrackerEntries = new List<Habit>();
     }

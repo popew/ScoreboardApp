@@ -11,6 +11,8 @@ namespace ScoreboardApp.Domain.Entities
     public class EffortHabitEntry : HabitEntry
     {
         [Required]
-        public float Effort { get; set; }
+        public double Effort { get; set; }
+
+        public double? SessionGoal { get; set; }
     }
 }

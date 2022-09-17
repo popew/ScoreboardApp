@@ -7,7 +7,6 @@ namespace ScoreboardApp.Domain.Entities.Commons
     public abstract class HabitEntry : BaseEntity
     {
         [Required]
-        [ForeignKey("Id")]
         public Habit Habit { get; set; }
 
         [Required]

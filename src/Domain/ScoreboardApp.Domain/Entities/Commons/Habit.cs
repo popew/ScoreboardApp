@@ -18,8 +18,7 @@ namespace ScoreboardApp.Domain.Entities.Commons
         [Required]
         public HabitType HabitType { get; set; }
         public double? Goal { get; set; }
-
-        [ForeignKey("Id")]
+        
         public HabitTracker HabitTracker { get; set; }
 
     }

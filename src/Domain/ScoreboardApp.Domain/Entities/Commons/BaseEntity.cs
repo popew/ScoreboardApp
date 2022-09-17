@@ -10,8 +10,6 @@ namespace ScoreboardApp.Domain.Entities.Commons
 {
     public abstract class BaseEntity
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
     }
 }

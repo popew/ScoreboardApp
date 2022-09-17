@@ -13,7 +13,8 @@ namespace ScoreboardApp.Domain.Entities
     {
         public string? Unit { get; set; }
 
-        [ForeignKey("Id")]
+        public double AverageGoal { get; set; }
+
         public IList<EffortHabitEntry> HabitEntries { get; set; } = new List<EffortHabitEntry>();
     }
 }
