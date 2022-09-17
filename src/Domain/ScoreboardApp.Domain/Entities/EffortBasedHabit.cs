@@ -1,11 +1,4 @@
 ﻿using ScoreboardApp.Domain.Entities.Commons;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ScoreboardApp.Domain.Entities
 {
@@ -13,7 +6,7 @@ namespace ScoreboardApp.Domain.Entities
     {
         public string? Unit { get; set; }
 
-        public double AverageGoal { get; set; }
+        public double? AverageGoal { get; set; }
 
         public IList<EffortHabitEntry> HabitEntries { get; set; } = new List<EffortHabitEntry>();
     }
