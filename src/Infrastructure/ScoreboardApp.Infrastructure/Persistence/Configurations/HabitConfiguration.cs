@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ScoreboardApp.Infrastructure.Persistence.Configurations
 {
-    internal class HabitConfiguration : IEntityTypeConfiguration<Habit>
+    public class HabitConfiguration : IEntityTypeConfiguration<Habit>
     {
         public void Configure(EntityTypeBuilder<Habit> builder)
         {
