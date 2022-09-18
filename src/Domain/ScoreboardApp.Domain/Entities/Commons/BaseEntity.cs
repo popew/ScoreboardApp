@@ -1,7 +1,9 @@
-﻿namespace ScoreboardApp.Domain.Entities.Commons
+﻿using ScoreboardApp.Domain.Commons;
+
+namespace ScoreboardApp.Domain.Entities.Commons
 {
-    public abstract class BaseEntity
+    public abstract class BaseEntity : Entity<Guid>
     {
-        public Guid Id { get; set; }
+
     }
 }
