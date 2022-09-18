@@ -1,12 +1,15 @@
 ﻿using ScoreboardApp.Domain.Entities.Commons;
+using ScoreboardApp.Domain.Enums;
 
 namespace ScoreboardApp.Domain.Entities
 {
-    public class EffortBasedHabit : Habit
+    public class EffortHabit : Habit
     {
         public string? Unit { get; set; }
 
         public double? AverageGoal { get; set; }
+
+        public HabitSubtype HabitSubtype { get; set; }
 
         public IList<EffortHabitEntry> HabitEntries { get; set; } = new List<EffortHabitEntry>();
     }

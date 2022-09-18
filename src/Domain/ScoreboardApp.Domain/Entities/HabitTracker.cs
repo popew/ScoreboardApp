@@ -7,6 +7,6 @@ namespace ScoreboardApp.Domain.Entities
         public string Name { get; set; } = default!;
         public int Order { get; set; }
 
-        public IList<Habit> Habits = new List<Habit>();
+        public IList<Habit> Habits { get; private set; } = new List<Habit>();
     }
 }

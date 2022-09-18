@@ -10,10 +10,6 @@ namespace ScoreboardApp.Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<Habit> builder)
         {
-            builder.HasDiscriminator<HabitType>("HabitType")
-                .HasValue<CompletionHabit>(HabitType.Completion)
-                .HasValue<EffortBasedHabit>(HabitType.Effort);
-
             builder.Property(h => h.HabitTracker)
                 .IsRequired();
 
@@ -21,5 +17,7 @@ namespace ScoreboardApp.Infrastructure.Persistence.Configurations
                 .HasMaxLength(200)
                 .IsRequired();
         }
+
+
     }
 }

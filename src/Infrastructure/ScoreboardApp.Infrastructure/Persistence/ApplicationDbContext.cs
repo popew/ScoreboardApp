@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ScoreboardApp.Domain.Entities;
 using ScoreboardApp.Domain.Entities.Commons;
+using System.Reflection;
 
 namespace ScoreboardApp.Infrastructure.Persistence
 {
@@ -10,8 +11,21 @@ namespace ScoreboardApp.Infrastructure.Persistence
         {
         }
 
-        public DbSet<HabitTracker> HabitTrackers;
-        public DbSet<Habit> Habits;
-        public DbSet<HabitEntry> HabitEntries;
+        public DbSet<HabitTracker> HabitTrackers { get; set; }
+
+        public DbSet<Habit> Habits { get; set; }
+        public DbSet<CompletionHabit> CompletionHabits { get; set; }
+        public DbSet<EffortHabit> EffortHabits { get; set; }
+
+        public DbSet<HabitEntry> HabitEntries { get; set; }
+        public DbSet<CompletionHabitEntry> CompletionHabitEntries { get; set; }
+
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+            base.OnModelCreating(builder);
+        }
     }
 }
