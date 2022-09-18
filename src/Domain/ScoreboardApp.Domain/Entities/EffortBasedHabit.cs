@@ -4,10 +4,6 @@ namespace ScoreboardApp.Domain.Entities
 {
     public class EffortBasedHabit : Habit
     {
-        public EffortBasedHabit()
-        {
-            HabitType = 
-        }
         public string? Unit { get; set; }
 
         public double? AverageGoal { get; set; }
