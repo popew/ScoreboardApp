@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Relational;
 using ScoreboardApp.Domain.Entities;
 using ScoreboardApp.Domain.Entities.Commons;
+using ScoreboardApp.Infrastructure.Persistence.Converters;
 using System.Reflection;
 
 namespace ScoreboardApp.Infrastructure.Persistence
@@ -26,6 +28,12 @@ namespace ScoreboardApp.Infrastructure.Persistence
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
             base.OnModelCreating(builder);
+        }
+        protected override void ConfigureConventions(ModelConfigurationBuilder builder)
+        {
+            builder.Properties<DateOnly>()
+                   .HaveConversion<DateOnlyConverter>()
+                   .HaveColumnType("date");
         }
     }
 }

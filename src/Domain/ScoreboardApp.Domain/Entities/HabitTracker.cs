@@ -5,7 +5,7 @@ namespace ScoreboardApp.Domain.Entities
     public class HabitTracker : BaseEntity
     {
         public string Name { get; set; } = default!;
-        public int Order { get; set; }
+        public int? Order { get; set; }
 
         public IList<Habit> Habits { get; private set; } = new List<Habit>();
     }

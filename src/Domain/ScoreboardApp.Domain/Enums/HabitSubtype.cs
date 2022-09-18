@@ -2,7 +2,8 @@
 {
     public enum HabitSubtype
     {
-        ProgressionHabit = 0,
-        ReductionHabit = 1
+        None = 0,
+        ProgressionHabit = 1,
+        ReductionHabit = 2
     }
 }
