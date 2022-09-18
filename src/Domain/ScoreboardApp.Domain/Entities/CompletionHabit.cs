@@ -1,5 +1,4 @@
 ﻿using ScoreboardApp.Domain.Entities.Commons;
-using ScoreboardApp.Domain.Enums;
 
 namespace ScoreboardApp.Domain.Entities
 {

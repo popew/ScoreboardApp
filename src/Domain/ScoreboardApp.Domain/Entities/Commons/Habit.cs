@@ -1,6 +1,4 @@
-﻿using ScoreboardApp.Domain.Enums;
-
-namespace ScoreboardApp.Domain.Entities.Commons
+﻿namespace ScoreboardApp.Domain.Entities.Commons
 {
     public abstract class Habit : BaseEntity
     {
