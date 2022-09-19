@@ -2,12 +2,6 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ScoreboardApp.Domain.Entities;
 using ScoreboardApp.Domain.Entities.Commons;
-using ScoreboardApp.Infrastructure.Persistence.Converters;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ScoreboardApp.Infrastructure.Persistence.Configurations
 {
