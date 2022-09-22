@@ -17,6 +17,7 @@ namespace ScoreboardApp.Infrastructure.Persistence.Configurations
                 .IsRequired();
         }
     }
+
     public class EffortHabitEntryConfiguration : HabitEntryConfiguration<EffortHabitEntry>
     {
         public override void Configure(EntityTypeBuilder<EffortHabitEntry> builder)

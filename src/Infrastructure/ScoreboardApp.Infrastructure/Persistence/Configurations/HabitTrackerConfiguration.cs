@@ -8,7 +8,7 @@ namespace ScoreboardApp.Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<HabitTracker> builder)
         {
-            builder.Property(ht => ht.Name)
+            builder.Property(ht => ht.Title)
                 .HasMaxLength(200)
                 .IsRequired();
         }
