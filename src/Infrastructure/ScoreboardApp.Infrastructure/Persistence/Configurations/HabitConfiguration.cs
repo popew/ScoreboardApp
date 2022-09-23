@@ -10,9 +10,6 @@ namespace ScoreboardApp.Infrastructure.Persistence.Configurations
     {
         public virtual void Configure(EntityTypeBuilder<T> builder)
         {
-            builder.Property(h => h.HabitTracker)
-                .IsRequired();
-
             builder.Property(h => h.Name)
                 .HasMaxLength(200)
                 .IsRequired();

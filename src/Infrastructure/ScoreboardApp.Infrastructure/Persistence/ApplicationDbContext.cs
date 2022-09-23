@@ -21,6 +21,8 @@ namespace ScoreboardApp.Infrastructure.Persistence
         public DbSet<HabitEntry> HabitEntries { get; set; }
         public DbSet<CompletionHabitEntry> CompletionHabitEntries { get; set; }
 
+        public DbSet<EffortHabitEntry> EffortHabitEntries { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

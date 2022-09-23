@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ScoreboardApp.Domain.Entities;
+using ScoreboardApp.Domain.Entities.Commons;
 
 namespace ScoreboardApp.Infrastructure.Persistence.Configurations
 {
-    internal class HabitTrackerConfiguration : IEntityTypeConfiguration<HabitTracker>
+    public class HabitTrackerConfiguration : IEntityTypeConfiguration<HabitTracker>
     {
         public void Configure(EntityTypeBuilder<HabitTracker> builder)
         {
