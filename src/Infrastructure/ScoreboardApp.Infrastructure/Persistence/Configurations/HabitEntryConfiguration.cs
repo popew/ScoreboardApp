@@ -21,9 +21,6 @@ namespace ScoreboardApp.Infrastructure.Persistence.Configurations
         {
             base.Configure(builder);
 
-            //builder.Property(e => e.Habit)
-            //    .IsRequired();
-
             builder.Property(e => e.Effort)
                 .IsRequired();
         }
@@ -34,9 +31,6 @@ namespace ScoreboardApp.Infrastructure.Persistence.Configurations
         public override void Configure(EntityTypeBuilder<CompletionHabitEntry> builder)
         {
             base.Configure(builder);
-
-            //builder.Property(e => e.Habit)
-            //       .IsRequired();
         }
     }
 }

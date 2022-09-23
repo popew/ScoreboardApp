@@ -4,6 +4,10 @@
     {
         public string Name { get; set; } = default!;
         public string? Description { get; set; }
+
+        public Guid HabitTrackerId { get; set; }
         public HabitTracker HabitTracker { get; set; }
+
+        
     }
 }

@@ -12,5 +12,6 @@ namespace ScoreboardApp.Domain.Entities
         public HabitSubtype HabitSubtype { get; set; } = HabitSubtype.None;
 
         public IList<EffortHabitEntry> HabitEntries { get; set; } = new List<EffortHabitEntry>();
+
     }
 }

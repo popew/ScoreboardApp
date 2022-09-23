@@ -24,6 +24,8 @@ namespace ScoreboardApp.Infrastructure.Persistence.Configurations
         public override void Configure(EntityTypeBuilder<CompletionHabit> builder)
         {
             base.Configure(builder);
+
+
         }
     }
 
