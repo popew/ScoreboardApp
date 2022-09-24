@@ -2,27 +2,34 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ScoreboardApp.Domain.Entities;
 using ScoreboardApp.Domain.Entities.Commons;
+using ScoreboardApp.Domain.Enums;
 
 namespace ScoreboardApp.Infrastructure.Persistence.Configurations
 {
-    public abstract class HabitConfiguration<T> : IEntityTypeConfiguration<T>
-        where T : Habit
+    public abstract class HabitConfiguration<THabit, TEntry> : IEntityTypeConfiguration<THabit>
+        where THabit : Habit<TEntry> 
+        where TEntry : HabitEntry<THabit>
     {
-        public virtual void Configure(EntityTypeBuilder<T> builder)
+        public virtual void Configure(EntityTypeBuilder<THabit> builder)
         {
-            builder.Property(h => h.HabitTracker)
-                .IsRequired();
-
-            builder.Property(h => h.Name)
+            builder.Property(h => h.Title)
                 .HasMaxLength(200)
                 .IsRequired();
 
             builder.Property(h => h.Description)
                 .HasMaxLength(400);
+
+            builder.Property(h => h.HabitTrackerId)
+                .IsRequired();
+
+            builder.HasMany(h => h.HabitEntries)
+                .WithOne(e => e.Habit)
+                .HasForeignKey(e => e.HabitId);
+
         }
     }
 
-    public class CompletionHabitConfiguration : HabitConfiguration<CompletionHabit>
+    public class CompletionHabitConfiguration : HabitConfiguration<CompletionHabit, CompletionHabitEntry>
     {
         public override void Configure(EntityTypeBuilder<CompletionHabit> builder)
         {
@@ -30,13 +37,13 @@ namespace ScoreboardApp.Infrastructure.Persistence.Configurations
         }
     }
 
-    public class EffortHabitConfiguration : HabitConfiguration<EffortHabit>
+    public class EffortHabitConfiguration : HabitConfiguration<EffortHabit, EffortHabitEntry>
     {
         public override void Configure(EntityTypeBuilder<EffortHabit> builder)
         {
             base.Configure(builder);
 
-            builder.Property(h => h.HabitSubtype)
+            builder.Property(h => h.Subtype)
                 .IsRequired();
 
             builder.Property(h => h.Unit)

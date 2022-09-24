@@ -2,7 +2,7 @@
 
 namespace ScoreboardApp.Domain.Entities
 {
-    public class EffortHabitEntry : HabitEntry
+    public class EffortHabitEntry : HabitEntry<EffortHabit>
     {
         public double Effort { get; set; }
 

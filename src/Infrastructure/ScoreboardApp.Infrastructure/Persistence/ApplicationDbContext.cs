@@ -13,13 +13,13 @@ namespace ScoreboardApp.Infrastructure.Persistence
         }
 
         public DbSet<HabitTracker> HabitTrackers { get; set; }
-
-        public DbSet<Habit> Habits { get; set; }
         public DbSet<CompletionHabit> CompletionHabits { get; set; }
         public DbSet<EffortHabit> EffortHabits { get; set; }
 
-        public DbSet<HabitEntry> HabitEntries { get; set; }
+
         public DbSet<CompletionHabitEntry> CompletionHabitEntries { get; set; }
+
+        public DbSet<EffortHabitEntry> EffortHabitEntries { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

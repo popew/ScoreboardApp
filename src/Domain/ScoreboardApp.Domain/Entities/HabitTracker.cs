@@ -8,6 +8,7 @@ namespace ScoreboardApp.Domain.Entities
         public string Title { get; set; } = default!;
         public Priority Priority { get; set; } = Priority.None;
 
-        public IList<Habit> Habits { get; private set; } = new List<Habit>();
+        public IList<CompletionHabit> CompletionHabits { get; private set; } = new List<CompletionHabit>();
+        public IList<EffortHabit> EffortHabits { get; private set; } = new List<EffortHabit>();
     }
 }
