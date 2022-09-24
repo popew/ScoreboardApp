@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="HabitEntries\Commands\" />
+    <Folder Include="HabitEntries\Validators\" />
+    <Folder Include="HabitEntries\Queries\" />
+    <Folder Include="Habits\Commands\" />
+    <Folder Include="Habits\Validators\" />
+    <Folder Include="Habits\Queries\" />
+    <Folder Include="HabitTrackers\Commands\" />
+    <Folder Include="HabitTrackers\Validators\" />
+    <Folder Include="HabitTrackers\Queries\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="10.0.1" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
+  </ItemGroup>
+
+</Project>
