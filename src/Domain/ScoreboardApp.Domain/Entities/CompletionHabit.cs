@@ -2,8 +2,8 @@
 
 namespace ScoreboardApp.Domain.Entities
 {
-    public class CompletionHabit : Habit
+    public class CompletionHabit : Habit<CompletionHabitEntry>
     {
-        public IList<CompletionHabitEntry> HabitEntries { get; set; } = new List<CompletionHabitEntry>();
+
     }
 }

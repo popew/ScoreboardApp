@@ -1,6 +1,6 @@
 ﻿namespace ScoreboardApp.Domain.Enums
 {
-    public enum HabitSubtype
+    public enum EffortHabitSubtype
     {
         None = 0,
         ProgressionHabit = 1,
