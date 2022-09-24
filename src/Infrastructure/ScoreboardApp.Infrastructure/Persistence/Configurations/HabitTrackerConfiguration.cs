@@ -11,11 +11,13 @@ namespace ScoreboardApp.Infrastructure.Persistence.Configurations
         {
             builder.HasMany(ht => ht.EffortHabits)
                 .WithOne(h => h.HabitTracker)
-                .HasForeignKey(h => h.HabitTrackerId);
+                .HasForeignKey(h => h.HabitTrackerId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasMany(ht => ht.CompletionHabits)
                 .WithOne(h => h.HabitTracker)
-                .HasForeignKey(h => h.HabitTrackerId);
+                .HasForeignKey(h => h.HabitTrackerId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.Property(ht => ht.Title)
                 .HasMaxLength(200)

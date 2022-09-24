@@ -24,7 +24,8 @@ namespace ScoreboardApp.Infrastructure.Persistence.Configurations
 
             builder.HasMany(h => h.HabitEntries)
                 .WithOne(e => e.Habit)
-                .HasForeignKey(e => e.HabitId);
+                .HasForeignKey(e => e.HabitId).
+                .OnDelete(DeleteBehavior.Cascade);
 
         }
     }
