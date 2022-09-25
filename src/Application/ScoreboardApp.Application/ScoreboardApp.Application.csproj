@@ -13,7 +13,6 @@
     <Folder Include="Habits\Commands\" />
     <Folder Include="Habits\Validators\" />
     <Folder Include="Habits\Queries\" />
-    <Folder Include="HabitTrackers\Commands\" />
     <Folder Include="HabitTrackers\Validators\" />
     <Folder Include="HabitTrackers\Queries\" />
   </ItemGroup>
@@ -22,6 +21,10 @@
     <PackageReference Include="MediatR" Version="10.0.1" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Infrastructure\ScoreboardApp.Infrastructure\ScoreboardApp.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
