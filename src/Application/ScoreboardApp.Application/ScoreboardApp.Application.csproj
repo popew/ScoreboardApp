@@ -13,11 +13,12 @@
     <Folder Include="Habits\Commands\" />
     <Folder Include="Habits\Validators\" />
     <Folder Include="Habits\Queries\" />
-    <Folder Include="HabitTrackers\Validators\" />
     <Folder Include="HabitTrackers\Queries\" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="11.0.1" />
+    <PackageReference Include="FluentValidation" Version="11.2.2" />
     <PackageReference Include="MediatR" Version="10.0.1" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
