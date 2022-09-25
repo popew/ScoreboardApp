@@ -5,7 +5,7 @@ namespace ScoreboardApp.Domain.Entities
 {
     public abstract class Habit<TEntry> : BaseEntity
     {
-        public string Title { get; set; } = default!;
+        public string? Title { get; set; }
         public string? Description { get; set; }
 
         public Guid HabitTrackerId { get; set; }
