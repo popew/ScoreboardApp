@@ -6,12 +6,14 @@ using ScoreboardApp.Domain.Enums;
 
 namespace ScoreboardApp.Infrastructure.Persistence.Configurations
 {
-    public abstract class HabitConfiguration<THabit, TEntry> : IEntityTypeConfiguration<THabit>
+    public abstract class HabitConfiguration<THabit, TEntry> : BaseEntityConfiguration<THabit>, IEntityTypeConfiguration<THabit>
         where THabit : Habit<TEntry> 
         where TEntry : HabitEntry<THabit>
     {
-        public virtual void Configure(EntityTypeBuilder<THabit> builder)
+        public override void Configure(EntityTypeBuilder<THabit> builder)
         {
+            base.Configure(builder);
+
             builder.Property(h => h.Title)
                 .HasMaxLength(200)
                 .IsRequired();
@@ -24,9 +26,8 @@ namespace ScoreboardApp.Infrastructure.Persistence.Configurations
 
             builder.HasMany(h => h.HabitEntries)
                 .WithOne(e => e.Habit)
-                .HasForeignKey(e => e.HabitId).
+                .HasForeignKey(e => e.HabitId)
                 .OnDelete(DeleteBehavior.Cascade);
-
         }
     }
 
