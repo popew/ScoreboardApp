@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace ScoreboardApp.Infrastructure.Persistence
 {
-    internal class ApplicationDbContext : DbContext
+    internal class ApplicationDbContext : DbContext, IApplicationDbContext
     {
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
