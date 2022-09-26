@@ -11,27 +11,28 @@ using System.Threading.Tasks;
 
 namespace ScoreboardApp.Application.HabitTrackers.Commands
 {
-    public record CreateHabitTrackerCommand : IRequest<CreateHabitTrackerCommandResponse>
+    public sealed record CreateHabitTrackerCommand : IRequest<CreateHabitTrackerCommandResponse>
     {
         public string Title { get; init; } = default!;
         public PriorityLevel Priority { get; init; }
     }
 
-    public record CreateHabitTrackerCommandResponse
+    public sealed record CreateHabitTrackerCommandResponse
     {
         public Guid Id { get; init; }
         public string Title { get; init; } = default!;
         public PriorityLevel PriorityLevel { get; init; }
     }
 
-    public class CreateHabitTrackerCommandHandler : IRequestHandler<CreateHabitTrackerCommand, CreateHabitTrackerCommandResponse>
+    public sealed class CreateHabitTrackerCommandHandler : IRequestHandler<CreateHabitTrackerCommand, CreateHabitTrackerCommandResponse>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
 
-        public CreateHabitTrackerCommandHandler(IApplicationDbContext context)
+        public CreateHabitTrackerCommandHandler(IApplicationDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
         public async Task<CreateHabitTrackerCommandResponse> Handle(CreateHabitTrackerCommand request, CancellationToken cancellationToken)
         {

@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using ScoreboardApp.Application.HabitTrackers.Commands;
 using ScoreboardApp.Infrastructure.Persistence;
 using System;
 using System.Collections.Generic;
@@ -8,13 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ScoreboardApp.Application.HabitTrackers.Validators
+namespace ScoreboardApp.Application.HabitTrackers.Commands.Validators
 {
-    internal class CreateHabitTrackeCommandValidator : AbstractValidator<CreateHabitTrackerCommand>
+    internal sealed class UpdateHabitTrackerCommandValidator : AbstractValidator<UpdateHabitTrackerCommand>
     {
         private readonly IApplicationDbContext _context;
 
-        public CreateHabitTrackeCommandValidator(IApplicationDbContext context)
+        public UpdateHabitTrackerCommandValidator(IApplicationDbContext context)
         {
             _context = context;
 
@@ -22,6 +21,9 @@ namespace ScoreboardApp.Application.HabitTrackers.Validators
                 .NotEmpty()
                 .MaximumLength(200)
                 .MustAsync(BeUniqueTitle).WithMessage("The title already exists.");
+
+            RuleFor(x => x.Priority)
+                .IsInEnum();
         }
 
         public async Task<bool> BeUniqueTitle(string title, CancellationToken cancellationToken)

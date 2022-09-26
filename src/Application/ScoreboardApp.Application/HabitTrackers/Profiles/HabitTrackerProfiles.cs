@@ -15,6 +15,9 @@ namespace ScoreboardApp.Application.HabitTrackers.Profiles
         {
             CreateMap<CreateHabitTrackerCommand, HabitTracker>();
             CreateMap<HabitTracker, CreateHabitTrackerCommandResponse>();
+
+            CreateMap<UpdateHabitTrackerCommand, HabitTracker>();
+            CreateMap<HabitTracker, UpdateHabitTrackerCommand>();
         }
     }
 }
