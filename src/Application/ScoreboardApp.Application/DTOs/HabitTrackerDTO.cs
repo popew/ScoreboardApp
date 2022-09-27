@@ -1,4 +1,5 @@
 ﻿using ScoreboardApp.Application.Commons.Enums;
+using ScoreboardApp.Application.Commons.Mappings;
 using ScoreboardApp.Domain.Entities;
 using ScoreboardApp.Domain.Enums;
 using System;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ScoreboardApp.Application.HabitTrackers.DTOs
 {
-    public sealed class HabitTrackerDTO
+    public sealed class HabitTrackerDTO : IMapFrom<HabitTracker>
     {
         public Guid Id { get; set; }
         public string? Title { get; set; }
