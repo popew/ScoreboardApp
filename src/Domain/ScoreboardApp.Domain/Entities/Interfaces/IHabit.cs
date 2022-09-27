@@ -1,4 +1,4 @@
-﻿namespace ScoreboardApp.Domain.Entities
+﻿namespace ScoreboardApp.Domain.Entities.Interfaces
 {
     public interface IHabit<TEntry>
     {

@@ -1,4 +1,6 @@
-﻿namespace ScoreboardApp.Domain.Entities
+﻿using ScoreboardApp.Domain.Entities.Interfaces;
+
+namespace ScoreboardApp.Domain.Entities
 {
     public class CompletionHabit : BaseEntity, IHabit<CompletionHabitEntry>
     {

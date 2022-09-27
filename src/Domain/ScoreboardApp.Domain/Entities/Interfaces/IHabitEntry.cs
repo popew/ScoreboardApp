@@ -1,4 +1,4 @@
-﻿namespace ScoreboardApp.Domain.Entities.Commons
+﻿namespace ScoreboardApp.Domain.Entities.Interfaces
 {
     public interface IHabitEntry<THabit>
     {
