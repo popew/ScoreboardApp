@@ -12,7 +12,7 @@ namespace ScoreboardApp.Api.Controllers
         {
             var response = await Mediator.Send(command);
 
-            return CreatedAtAction("Post", new { response.Id }, response);
+            return CreatedAtAction(nameof(Create), new { response.Id }, response);
         }
 
         [HttpGet]
