@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ScoreboardApp.Application.HabitTrackers.Commands.Validators
 {
-    internal sealed class UpdateHabitTrackerCommandValidator : AbstractValidator<UpdateHabitTrackerCommand>
+    public sealed class UpdateHabitTrackerCommandValidator : AbstractValidator<UpdateHabitTrackerCommand>
     {
         private readonly IApplicationDbContext _context;
 

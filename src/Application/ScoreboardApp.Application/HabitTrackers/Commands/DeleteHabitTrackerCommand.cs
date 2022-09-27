@@ -12,9 +12,9 @@ using System.Threading.Tasks;
 
 namespace ScoreboardApp.Application.HabitTrackers.Commands
 {
-    public sealed record DeleteHabitTrackerCommand : IRequest
+    public sealed record DeleteHabitTrackerCommand(Guid Id) : IRequest
     {
-        public Guid Id { get; init; }
+        public Guid Id { get; init; } = Id;
     }
 
     public sealed class DeleteHabitTrackercommandHandler : IRequestHandler<DeleteHabitTrackerCommand>

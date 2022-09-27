@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace ScoreboardApp.Application.HabitTrackers.Validators
 {
     // See more: https://github.com/jasontaylordev/CleanArchitecture/tree/main/src/Application/TodoLists/Commands
-    internal sealed class CreateHabitTrackeCommandValidator : AbstractValidator<CreateHabitTrackerCommand>
+    public sealed class CreateHabitTrackeCommandValidator : AbstractValidator<CreateHabitTrackerCommand>
     {
         private readonly IApplicationDbContext _context;
 
