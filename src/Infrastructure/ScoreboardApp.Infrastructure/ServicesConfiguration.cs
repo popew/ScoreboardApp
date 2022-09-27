@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ScoreboardApp.Infrastructure.Persistence;
+using System.ComponentModel.DataAnnotations;
 
 namespace ScoreboardApp.Infrastructure
 {
@@ -13,6 +14,8 @@ namespace ScoreboardApp.Infrastructure
             {
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             });
+
+            services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
 
             return services;
         }
