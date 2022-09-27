@@ -3,6 +3,7 @@ using MediatR;
 using ScoreboardApp.Application.Commons.Enums;
 using ScoreboardApp.Application.Commons.Exceptions;
 using ScoreboardApp.Domain.Entities;
+using ScoreboardApp.Domain.Enums;
 using ScoreboardApp.Infrastructure.Persistence;
 using System;
 using System.Collections.Generic;
@@ -16,25 +17,24 @@ namespace ScoreboardApp.Application.HabitTrackers.Commands
     {
         public Guid Id { get; init; }
         public string Title { get; init; } = default!;
-        public PriorityLevel Priority { get; init; }
+        public PriorityMapping Priority { get; init; }
     }
 
+    // Rationale: Commands shouldn't return any values, but it's nice to return the object back from the call
     public sealed record UpdateHabitTrackerCommandResponse
     {
         public Guid Id { get; init; }
         public string Title { get; init; } = default!;
-        public PriorityLevel Priority { get; init; }
+        public PriorityMapping Priority { get; init; }
     }
 
     public sealed class UpdateHabitTrackerCommandHandler : IRequestHandler<UpdateHabitTrackerCommand, UpdateHabitTrackerCommandResponse>
     {
         private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
 
-        public UpdateHabitTrackerCommandHandler(IApplicationDbContext context, IMapper mapper)
+        public UpdateHabitTrackerCommandHandler(IApplicationDbContext context)
         {
             _context = context;
-            _mapper = mapper;
         }
 
         public async Task<UpdateHabitTrackerCommandResponse> Handle(UpdateHabitTrackerCommand request, CancellationToken cancellationToken)
@@ -47,11 +47,17 @@ namespace ScoreboardApp.Application.HabitTrackers.Commands
                 throw new NotFoundException(nameof(HabitTracker), request.Id);
             }
 
-            _mapper.Map<UpdateHabitTrackerCommand, HabitTracker>(request, habitTracker);
+            habitTracker.Title = request.Title;
+            habitTracker.Priority = (Priority)request.Priority;
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            return _mapper.Map<UpdateHabitTrackerCommandResponse>(habitTracker);
+            return new UpdateHabitTrackerCommandResponse()
+            {
+                Id = habitTracker.Id,
+                Title = habitTracker.Title,
+                Priority = (PriorityMapping)habitTracker.Priority
+            };
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ScoreboardApp.Application.Commons.Enums
 {
-    public enum PriorityLevel
+    public enum PriorityMapping
     {
         None = 0,
         Low = 1,

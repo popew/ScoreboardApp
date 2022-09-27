@@ -13,7 +13,6 @@
     <Folder Include="Habits\Commands\" />
     <Folder Include="Habits\Validators\" />
     <Folder Include="Habits\Queries\" />
-    <Folder Include="HabitTrackers\Queries\" />
   </ItemGroup>
 
   <ItemGroup>
