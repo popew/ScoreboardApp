@@ -1,9 +1,11 @@
-﻿using ScoreboardApp.Domain.Entities.Commons;
-
-namespace ScoreboardApp.Domain.Entities
+﻿namespace ScoreboardApp.Domain.Entities
 {
-    public class CompletionHabit : Habit<CompletionHabitEntry>
+    public class CompletionHabit : BaseEntity, IHabit<CompletionHabitEntry>
     {
-
+        public string? Description { get; set; }
+        public IList<CompletionHabitEntry> HabitEntries { get; set; }
+        public HabitTracker HabitTracker { get; set; }
+        public Guid HabitTrackerId { get; set; }
+        public string? Title { get; set; }
     }
 }

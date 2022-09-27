@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using ScoreboardApp.Domain.Entities.Commons;
+using ScoreboardApp.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
