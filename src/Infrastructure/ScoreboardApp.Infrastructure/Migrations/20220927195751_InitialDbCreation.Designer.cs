@@ -12,8 +12,8 @@ using ScoreboardApp.Infrastructure.Persistence;
 namespace ScoreboardApp.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220925203715_InitialDBCreation")]
-    partial class InitialDBCreation
+    [Migration("20220927195751_InitialDbCreation")]
+    partial class InitialDbCreation
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

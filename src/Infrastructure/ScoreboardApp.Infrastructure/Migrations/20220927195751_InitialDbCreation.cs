@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ScoreboardApp.Infrastructure.Migrations
 {
-    public partial class InitialDBCreation : Migration
+    public partial class InitialDbCreation : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -27,9 +27,9 @@ namespace ScoreboardApp.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(400)", maxLength: 400, nullable: true),
-                    HabitTrackerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    HabitTrackerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -50,9 +50,9 @@ namespace ScoreboardApp.Infrastructure.Migrations
                     Unit = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     AverageGoal = table.Column<double>(type: "float", nullable: true),
                     Subtype = table.Column<int>(type: "int", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(400)", maxLength: 400, nullable: true),
-                    HabitTrackerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    HabitTrackerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -71,8 +71,8 @@ namespace ScoreboardApp.Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Completion = table.Column<bool>(type: "bit", nullable: false),
-                    HabitId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    EntryDate = table.Column<DateTime>(type: "date", nullable: false)
+                    EntryDate = table.Column<DateTime>(type: "date", nullable: false),
+                    HabitId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -92,8 +92,8 @@ namespace ScoreboardApp.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Effort = table.Column<double>(type: "float", nullable: false),
                     SessionGoal = table.Column<double>(type: "float", nullable: true),
-                    HabitId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    EntryDate = table.Column<DateTime>(type: "date", nullable: false)
+                    EntryDate = table.Column<DateTime>(type: "date", nullable: false),
+                    HabitId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
