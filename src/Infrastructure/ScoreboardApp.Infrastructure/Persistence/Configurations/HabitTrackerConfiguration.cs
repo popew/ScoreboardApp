@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ScoreboardApp.Domain.Entities;
-using ScoreboardApp.Domain.Entities.Commons;
 
 namespace ScoreboardApp.Infrastructure.Persistence.Configurations
 {

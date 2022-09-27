@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ScoreboardApp.Domain.Entities;
-using ScoreboardApp.Domain.Entities.Commons;
 using ScoreboardApp.Infrastructure.Persistence.Converters;
 using System.Reflection;
 
