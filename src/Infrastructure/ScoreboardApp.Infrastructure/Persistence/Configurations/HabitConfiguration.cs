@@ -7,8 +7,8 @@ using ScoreboardApp.Domain.Enums;
 namespace ScoreboardApp.Infrastructure.Persistence.Configurations
 {
     public abstract class HabitConfiguration<THabit, TEntry> : BaseEntityConfiguration<THabit>, IEntityTypeConfiguration<THabit>
-        where THabit : Habit<TEntry> 
-        where TEntry : HabitEntry<THabit>
+        where THabit : BaseEntity, IHabit<TEntry> 
+        where TEntry : BaseEntity, IHabitEntry<THabit>
     {
         public override void Configure(EntityTypeBuilder<THabit> builder)
         {
