@@ -7,12 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="EffortHabits\Commands\Validators\" />
+    <Folder Include="EffortHabits\Queries\" />
     <Folder Include="HabitEntries\Commands\" />
     <Folder Include="HabitEntries\Validators\" />
     <Folder Include="HabitEntries\Queries\" />
-    <Folder Include="Habits\Commands\" />
-    <Folder Include="Habits\Validators\" />
-    <Folder Include="Habits\Queries\" />
+    <Folder Include="CompletionHabits\Queries\" />
   </ItemGroup>
 
   <ItemGroup>

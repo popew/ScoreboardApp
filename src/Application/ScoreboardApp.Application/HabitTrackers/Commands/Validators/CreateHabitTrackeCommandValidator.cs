@@ -19,6 +19,9 @@ namespace ScoreboardApp.Application.HabitTrackers.Validators
         {
             _context = context;
 
+            RuleFor(x => x)
+                .MustAsync(NotExceedNumberOfAllowedTrackers).WithMessage("Cannot create more than 20 HabitTrackers pers user.");
+
             RuleFor(x => x.Title)
                 .NotEmpty()
                 .MaximumLength(200)
@@ -28,7 +31,12 @@ namespace ScoreboardApp.Application.HabitTrackers.Validators
                 .IsInEnum();
         }
 
-        public async Task<bool> BeUniqueTitle(string title, CancellationToken cancellationToken)
+        private async Task<bool> NotExceedNumberOfAllowedTrackers(CreateHabitTrackerCommand command, CancellationToken cancellationToken)
+        {
+            return await _context.HabitTrackers.Select(x => x.Id).CountAsync(cancellationToken) < 20;
+        }
+
+        private async Task<bool> BeUniqueTitle(string title, CancellationToken cancellationToken)
         {
             return await _context.HabitTrackers
                 .AllAsync(x => x.Title != title, cancellationToken);

@@ -26,7 +26,7 @@ namespace ScoreboardApp.Application.HabitTrackers.Commands.Validators
                 .IsInEnum();
         }
 
-        public async Task<bool> BeUniqueTitle(string title, CancellationToken cancellationToken)
+        private async Task<bool> BeUniqueTitle(string title, CancellationToken cancellationToken)
         {
             return await _context.HabitTrackers
                 .AllAsync(x => x.Title != title, cancellationToken);

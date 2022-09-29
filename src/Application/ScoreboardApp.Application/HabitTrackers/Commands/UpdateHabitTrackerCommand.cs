@@ -39,24 +39,24 @@ namespace ScoreboardApp.Application.HabitTrackers.Commands
 
         public async Task<UpdateHabitTrackerCommandResponse> Handle(UpdateHabitTrackerCommand request, CancellationToken cancellationToken)
         {
-            var habitTracker = await _context.HabitTrackers
+            var habitTrackerEntity = await _context.HabitTrackers
                                         .FindAsync(new object[] { request.Id }, cancellationToken);
 
-            if (habitTracker == null)
+            if (habitTrackerEntity == null)
             {
                 throw new NotFoundException(nameof(HabitTracker), request.Id);
             }
 
-            habitTracker.Title = request.Title;
-            habitTracker.Priority = (Priority)request.Priority;
+            habitTrackerEntity.Title = request.Title;
+            habitTrackerEntity.Priority = (Priority)request.Priority;
 
             await _context.SaveChangesAsync(cancellationToken);
 
             return new UpdateHabitTrackerCommandResponse()
             {
-                Id = habitTracker.Id,
-                Title = habitTracker.Title,
-                Priority = (PriorityMapping)habitTracker.Priority
+                Id = habitTrackerEntity.Id,
+                Title = habitTrackerEntity.Title,
+                Priority = (PriorityMapping)habitTrackerEntity.Priority
             };
         }
     }

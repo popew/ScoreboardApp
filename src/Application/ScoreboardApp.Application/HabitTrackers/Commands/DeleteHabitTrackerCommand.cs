@@ -27,16 +27,16 @@ namespace ScoreboardApp.Application.HabitTrackers.Commands
         }
         public async Task<Unit> Handle(DeleteHabitTrackerCommand request, CancellationToken cancellationToken)
         {
-            var habitTracker = await _context.HabitTrackers
+            var habitTrackerEntity = await _context.HabitTrackers
                                 .Where(ht => ht.Id == request.Id)
                                 .SingleOrDefaultAsync(cancellationToken);
 
-            if (habitTracker == null)
+            if (habitTrackerEntity == null)
             {
                 throw new NotFoundException(nameof(HabitTracker), request.Id);
             }
 
-            _context.HabitTrackers.Remove(habitTracker);
+            _context.HabitTrackers.Remove(habitTrackerEntity);
 
             await _context.SaveChangesAsync(cancellationToken);
 
