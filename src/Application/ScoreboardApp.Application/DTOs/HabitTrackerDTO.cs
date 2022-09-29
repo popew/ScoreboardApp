@@ -1,8 +1,9 @@
 ﻿using ScoreboardApp.Application.Commons.Enums;
 using ScoreboardApp.Application.Commons.Mappings;
+using ScoreboardApp.Application.HabitTrackers.DTOs;
 using ScoreboardApp.Domain.Entities;
 
-namespace ScoreboardApp.Application.HabitTrackers.DTOs
+namespace ScoreboardApp.Application.DTOs
 {
     public sealed class HabitTrackerDTO : IMapFrom<HabitTracker>
     {

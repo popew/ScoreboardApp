@@ -30,7 +30,7 @@ namespace ScoreboardApp.Application.Habits.Commands
             _context = context;
         }
 
-        async Task<CreateCompletionHabitCommandResponse> IRequestHandler<CreateCompletionHabitCommand, CreateCompletionHabitCommandResponse>.Handle(CreateCompletionHabitCommand request, CancellationToken cancellationToken)
+        public async Task<CreateCompletionHabitCommandResponse> Handle(CreateCompletionHabitCommand request, CancellationToken cancellationToken)
         {
             var habitEntity = new CompletionHabit()
             {
