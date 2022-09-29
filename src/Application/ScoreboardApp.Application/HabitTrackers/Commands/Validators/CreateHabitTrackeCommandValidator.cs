@@ -2,11 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using ScoreboardApp.Application.HabitTrackers.Commands;
 using ScoreboardApp.Infrastructure.Persistence;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ScoreboardApp.Application.HabitTrackers.Validators
 {

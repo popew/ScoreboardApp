@@ -1,15 +1,9 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
 using ScoreboardApp.Application.Commons.Enums;
 using ScoreboardApp.Application.Commons.Exceptions;
 using ScoreboardApp.Domain.Entities;
 using ScoreboardApp.Domain.Enums;
 using ScoreboardApp.Infrastructure.Persistence;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ScoreboardApp.Application.HabitTrackers.Commands
 {

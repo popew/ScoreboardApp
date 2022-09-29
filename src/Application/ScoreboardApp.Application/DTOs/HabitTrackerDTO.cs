@@ -1,12 +1,6 @@
 ﻿using ScoreboardApp.Application.Commons.Enums;
 using ScoreboardApp.Application.Commons.Mappings;
 using ScoreboardApp.Domain.Entities;
-using ScoreboardApp.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ScoreboardApp.Application.HabitTrackers.DTOs
 {
