@@ -8,10 +8,11 @@
 
   <ItemGroup>
     <Folder Include="EffortHabits\Queries\" />
-    <Folder Include="HabitEntries\Commands\" />
-    <Folder Include="HabitEntries\Validators\" />
-    <Folder Include="HabitEntries\Queries\" />
+    <Folder Include="EffortHabitEntries\Commands\" />
+    <Folder Include="EffortHabitEntries\Validators\" />
+    <Folder Include="EffortHabitEntries\Queries\" />
     <Folder Include="CompletionHabits\Queries\" />
+    <Folder Include="CompletionHabitEntries\" />
   </ItemGroup>
 
   <ItemGroup>
