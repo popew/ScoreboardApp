@@ -15,6 +15,14 @@ namespace ScoreboardApp.Api.Controllers
             return CreatedAtAction(nameof(Create), new { response.Id }, response);
         }
 
+        [HttpGet("{id:guid}")]
+        public async Task<IActionResult> Get(Guid id)
+        {
+            var response = await Mediator.Send(new GetHabitTrackerQuery(id));
+
+            return Ok(response);
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -23,7 +31,7 @@ namespace ScoreboardApp.Api.Controllers
             return Ok(response);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:guid}")]
         public async Task<IActionResult> Update(Guid id, UpdateHabitTrackerCommand command)
         {
             if(id != command.Id)
@@ -36,7 +44,7 @@ namespace ScoreboardApp.Api.Controllers
             return Ok(response);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
             await Mediator.Send(new DeleteHabitTrackerCommand(id));
