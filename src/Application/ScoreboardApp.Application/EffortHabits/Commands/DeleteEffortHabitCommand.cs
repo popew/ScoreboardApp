@@ -27,7 +27,7 @@ namespace ScoreboardApp.Application.Habits.Commands
 
             if (habitEntity == null)
             {
-                throw new NotFoundException(nameof(HabitTracker), request.Id);
+                throw new NotFoundException(nameof(EffortHabit), request.Id);
             }
 
             _context.EffortHabits.Remove(habitEntity);

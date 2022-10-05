@@ -30,7 +30,7 @@ namespace ScoreboardApp.Application.HabitTrackers.Queries
 
         public async Task<GetAllHabitTrackersResponse> Handle(GetAllHabitTrackersQuery request, CancellationToken cancellationToken)
         {
-            var habitTrackers = await _context.HabitTrackers
+            var habitTrackerEntities = await _context.HabitTrackers
                 .AsNoTracking()
                 .ProjectTo<HabitTrackerDTO>(_mapper.ConfigurationProvider)
                 .OrderBy(ht => ht.Title)
@@ -38,7 +38,7 @@ namespace ScoreboardApp.Application.HabitTrackers.Queries
 
             return new GetAllHabitTrackersResponse()
             {
-                HabitTrackers = habitTrackers
+                HabitTrackers = habitTrackerEntities
             };
         }
     }

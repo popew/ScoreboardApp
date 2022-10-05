@@ -4,7 +4,8 @@ using ScoreboardApp.Application.Commons.Exceptions;
 using ScoreboardApp.Domain.Entities;
 using ScoreboardApp.Infrastructure.Persistence;
 using ScoreboardApp.Domain.Enums;
-
+using ScoreboardApp.Application.Commons.Mappings;
+using AutoMapper;
 
 namespace ScoreboardApp.Application.Habits.Commands
 {
@@ -21,7 +22,7 @@ namespace ScoreboardApp.Application.Habits.Commands
         public Guid HabitTrackerId { get; init; }
     }
 
-    public sealed record UpdateEffortHabitCommandResponse
+    public sealed record UpdateEffortHabitCommandResponse : IMapFrom<EffortHabit>
     {
         public Guid Id { get; init; }
         public string Title { get; init; } = default!;
@@ -37,10 +38,12 @@ namespace ScoreboardApp.Application.Habits.Commands
     public sealed class UpdateEfforHabitCommandHandler : IRequestHandler<UpdateEffortHabitCommand, UpdateEffortHabitCommandResponse>
     {
         private readonly IApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
-        public UpdateEfforHabitCommandHandler(IApplicationDbContext context)
+        public UpdateEfforHabitCommandHandler(IApplicationDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         public async Task<UpdateEffortHabitCommandResponse> Handle(UpdateEffortHabitCommand request, CancellationToken cancellationToken)
@@ -62,15 +65,7 @@ namespace ScoreboardApp.Application.Habits.Commands
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            return new UpdateEffortHabitCommandResponse()
-            {
-                Title = habitEntity.Title,
-                Description = habitEntity.Description,
-                Unit = habitEntity.Unit,
-                AverageGoal = habitEntity.AverageGoal,
-                Subtype = (EffortHabitSubtypeMapping)habitEntity.Subtype,
-                HabitTrackerId = habitEntity.HabitTrackerId
-            };
+            return _mapper.Map<UpdateEffortHabitCommandResponse>(habitEntity);
         }
     }
 }

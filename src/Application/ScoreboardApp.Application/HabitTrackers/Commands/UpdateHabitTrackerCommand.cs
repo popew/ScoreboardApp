@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using ScoreboardApp.Application.Commons.Enums;
 using ScoreboardApp.Application.Commons.Exceptions;
 using ScoreboardApp.Domain.Entities;
@@ -25,10 +26,12 @@ namespace ScoreboardApp.Application.HabitTrackers.Commands
     public sealed class UpdateHabitTrackerCommandHandler : IRequestHandler<UpdateHabitTrackerCommand, UpdateHabitTrackerCommandResponse>
     {
         private readonly IApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
-        public UpdateHabitTrackerCommandHandler(IApplicationDbContext context)
+        public UpdateHabitTrackerCommandHandler(IApplicationDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         public async Task<UpdateHabitTrackerCommandResponse> Handle(UpdateHabitTrackerCommand request, CancellationToken cancellationToken)
@@ -46,12 +49,7 @@ namespace ScoreboardApp.Application.HabitTrackers.Commands
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            return new UpdateHabitTrackerCommandResponse()
-            {
-                Id = habitTrackerEntity.Id,
-                Title = habitTrackerEntity.Title,
-                Priority = (PriorityMapping)habitTrackerEntity.Priority
-            };
+            return _mapper.Map<UpdateHabitTrackerCommandResponse>(habitTrackerEntity);
         }
     }
 }

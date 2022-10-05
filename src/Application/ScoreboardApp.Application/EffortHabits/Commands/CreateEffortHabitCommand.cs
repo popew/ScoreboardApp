@@ -2,6 +2,8 @@
 using ScoreboardApp.Domain.Entities;
 using ScoreboardApp.Infrastructure.Persistence;
 using MediatR;
+using AutoMapper;
+using ScoreboardApp.Application.Commons.Mappings;
 
 namespace ScoreboardApp.Application.Habits.Commands
 {
@@ -17,7 +19,7 @@ namespace ScoreboardApp.Application.Habits.Commands
         public Guid HabitTrackerId { get; init; }
     }
 
-    public sealed record CreateEfforHabitCommandResponse
+    public sealed record CreateEfforHabitCommandResponse : IMapFrom<EffortHabit>
     {
         public Guid Id { get; init; }
         public string Title { get; init; } = default!;
@@ -33,10 +35,12 @@ namespace ScoreboardApp.Application.Habits.Commands
     public sealed class CreateEfforHabitCommandHandler : IRequestHandler<CreateEfforHabitCommand, CreateEfforHabitCommandResponse>
     {
         private readonly IApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
-        public CreateEfforHabitCommandHandler(IApplicationDbContext context)
+        public CreateEfforHabitCommandHandler(IApplicationDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         public async Task<CreateEfforHabitCommandResponse> Handle(CreateEfforHabitCommand request, CancellationToken cancellationToken)
@@ -52,13 +56,7 @@ namespace ScoreboardApp.Application.Habits.Commands
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            return new CreateEfforHabitCommandResponse()
-            {
-                Id = habitEntity.Id,
-                Title = habitEntity.Title,
-                Description = habitEntity.Description,
-                HabitTrackerId = habitEntity.HabitTrackerId
-            };
+            return _mapper.Map<CreateEfforHabitCommandResponse>(habitEntity);
         }
     }
 }

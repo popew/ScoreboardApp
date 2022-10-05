@@ -1,5 +1,7 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using ScoreboardApp.Application.Commons.Enums;
+using ScoreboardApp.Application.Commons.Mappings;
 using ScoreboardApp.Domain.Entities;
 using ScoreboardApp.Domain.Enums;
 using ScoreboardApp.Infrastructure.Persistence;
@@ -13,7 +15,7 @@ namespace ScoreboardApp.Application.HabitTrackers.Commands
     }
 
     // Rationale: Commands shouldn't return any values, but it's nice to return the object back from the call
-    public sealed record CreateHabitTrackerCommandResponse
+    public sealed record CreateHabitTrackerCommandResponse : IMapFrom<HabitTracker>
     {
         public Guid Id { get; init; }
         public string Title { get; init; } = default!;
@@ -23,10 +25,12 @@ namespace ScoreboardApp.Application.HabitTrackers.Commands
     public sealed class CreateHabitTrackerCommandHandler : IRequestHandler<CreateHabitTrackerCommand, CreateHabitTrackerCommandResponse>
     {
         private readonly IApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
-        public CreateHabitTrackerCommandHandler(IApplicationDbContext context)
+        public CreateHabitTrackerCommandHandler(IApplicationDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
         public async Task<CreateHabitTrackerCommandResponse> Handle(CreateHabitTrackerCommand request, CancellationToken cancellationToken)
         {
@@ -40,12 +44,7 @@ namespace ScoreboardApp.Application.HabitTrackers.Commands
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            return new CreateHabitTrackerCommandResponse()
-            {
-                Id = habitTrackerEntity.Id,
-                Title = habitTrackerEntity.Title,
-                Priority = (PriorityMapping)habitTrackerEntity.Priority
-            };
+            return _mapper.Map<CreateHabitTrackerCommandResponse>(habitTrackerEntity);
         }
     }
 }
