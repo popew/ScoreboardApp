@@ -20,7 +20,7 @@ namespace ScoreboardApp.Application.EffortHabits.Commands.Validators
 
             RuleFor(x => x.HabitTrackerId)
                 .NotEmpty()
-                .MustAsync(BeValidHabitTrackerId);
+                .MustAsync(BeValidHabitTrackerId).WithMessage("HabitTrackerId must be an existing id.");
 
             RuleFor(x => x.Title)
                 .NotEmpty();

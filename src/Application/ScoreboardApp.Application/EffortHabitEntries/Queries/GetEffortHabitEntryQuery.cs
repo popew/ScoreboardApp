@@ -38,7 +38,7 @@ namespace ScoreboardApp.Application.EffortHabitEntries.Queries
 
             if (entryEntity == null)
             {
-                throw new NotFoundException(nameof(HabitTracker), request.Id);
+                throw new NotFoundException(nameof(EffortHabitEntry), request.Id);
             }
 
             return new GetEffortHabitEntryQueryResponse()

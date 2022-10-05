@@ -13,7 +13,7 @@ namespace ScoreboardApp.Application.Habits.Commands
         public string Description { get; init; } = default!;
 
         public string? Unit { get; init; } = default!;
-        public double? Goal { get; init; }
+        public double? AverageGoal { get; init; }
 
         public EffortHabitSubtypeMapping Subtype { get; init; }
         public Guid HabitTrackerId { get; init; }
@@ -26,7 +26,7 @@ namespace ScoreboardApp.Application.Habits.Commands
         public string Description { get; init; } = default!;
 
         public string? Unit { get; init; } = default!;
-        public double? Goal { get; init; }
+        public double? AverageGoal { get; init; }
 
         public EffortHabitSubtypeMapping Subtype { get; init; }
         public Guid HabitTrackerId { get; init; }
@@ -49,7 +49,9 @@ namespace ScoreboardApp.Application.Habits.Commands
             {
                 Title = request.Title,
                 Description = request.Description,
-                HabitTrackerId = request.HabitTrackerId
+                HabitTrackerId = request.HabitTrackerId,
+                Unit = request.Unit,
+                AverageGoal = request.AverageGoal
             };
 
             _context.EffortHabits.Add(habitEntity);
