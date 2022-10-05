@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace ScoreboardApp.Application.EffortHabits.Queries
 {
-    public sealed record GetEffortHabitQuery : IRequest<GetEffortHabitQueryResponse>
+    public sealed record GetEffortHabitQuery(Guid Id) : IRequest<GetEffortHabitQueryResponse>
     {
         public Guid Id { get; init; }
     }
