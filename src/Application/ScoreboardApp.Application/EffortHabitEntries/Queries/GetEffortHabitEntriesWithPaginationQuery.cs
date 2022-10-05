@@ -9,19 +9,14 @@ using ScoreboardApp.Infrastructure.Persistence;
 
 namespace ScoreboardApp.Application.EffortHabitEntries.Queries
 {
-    public sealed record GetEffortHabitEntriesWithPaginationQuery : IPagedQuery, IRequest<GetEffortHabitEntriesWithPaginationQueryResponse>
+    public sealed record GetEffortHabitEntriesWithPaginationQuery : IPagedQuery, IRequest<PaginatedList<EffortHabitEntryDTO>>
     {
         public Guid HabitId { get; init; }
         public int PageNumber { get; init; } = 1;
         public int PageSize { get; init; } = 10;
     }
 
-    public sealed record GetEffortHabitEntriesWithPaginationQueryResponse
-    {
-        public PaginatedList<EffortHabitEntryDTO> PaginatedEffortHabitEntries { get; init; }
-    }
-
-    public sealed class GetEffortHabitEntriesWithPaginationQueryHandler : IRequestHandler<GetEffortHabitEntriesWithPaginationQuery, GetEffortHabitEntriesWithPaginationQueryResponse>
+    public sealed class GetEffortHabitEntriesWithPaginationQueryHandler : IRequestHandler<GetEffortHabitEntriesWithPaginationQuery, PaginatedList<EffortHabitEntryDTO>>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -32,18 +27,14 @@ namespace ScoreboardApp.Application.EffortHabitEntries.Queries
             _mapper = mapper;
         }
 
-        public async Task<GetEffortHabitEntriesWithPaginationQueryResponse> Handle(GetEffortHabitEntriesWithPaginationQuery request, CancellationToken cancellationToken)
+        public async Task<PaginatedList<EffortHabitEntryDTO>> Handle(GetEffortHabitEntriesWithPaginationQuery request, CancellationToken cancellationToken)
         {
-            var paginatedList = await _context.EffortHabitEntries
-                                                .Where(x => x.HabitId == request.HabitId)
-                                                .OrderBy(x => x.EntryDate)
-                                                .ProjectTo<EffortHabitEntryDTO>(_mapper.ConfigurationProvider)
-                                                .PaginatedListAsync(request.PageNumber, request.PageSize);
+            return await _context.EffortHabitEntries
+                                .Where(x => x.HabitId == request.HabitId)
+                                .OrderBy(x => x.EntryDate)
+                                .ProjectTo<EffortHabitEntryDTO>(_mapper.ConfigurationProvider)
+                                .PaginatedListAsync(request.PageNumber, request.PageSize);
 
-            return new GetEffortHabitEntriesWithPaginationQueryResponse()
-            {
-                PaginatedEffortHabitEntries = paginatedList
-            };
 
         }
     }

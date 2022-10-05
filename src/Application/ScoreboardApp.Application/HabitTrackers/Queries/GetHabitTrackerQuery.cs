@@ -12,17 +12,12 @@ using System.Threading.Tasks;
 
 namespace ScoreboardApp.Application.HabitTrackers.Queries
 {
-    public sealed record GetHabitTrackerQuery(Guid Id) : IRequest<GetHabitTrackerQueryResponse>
+    public sealed record GetHabitTrackerQuery(Guid Id) : IRequest<HabitTrackerDTO>
     {
         public Guid Id { get; init; } = Id;
     }
 
-    public sealed record GetHabitTrackerQueryResponse
-    {
-        public HabitTrackerDTO HabitTracker { get; init; }
-    }
-
-    public sealed class GetHabitTrackerQueryHandler : IRequestHandler<GetHabitTrackerQuery, GetHabitTrackerQueryResponse>
+    public sealed class GetHabitTrackerQueryHandler : IRequestHandler<GetHabitTrackerQuery, HabitTrackerDTO>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -34,7 +29,7 @@ namespace ScoreboardApp.Application.HabitTrackers.Queries
         }
 
 
-        public async Task<GetHabitTrackerQueryResponse> Handle(GetHabitTrackerQuery request, CancellationToken cancellationToken)
+        public async Task<HabitTrackerDTO> Handle(GetHabitTrackerQuery request, CancellationToken cancellationToken)
         {
             var habitTrackerEntity = await _context.HabitTrackers.FindAsync(new object[] { request.Id }, cancellationToken);
 
@@ -43,10 +38,7 @@ namespace ScoreboardApp.Application.HabitTrackers.Queries
                 throw new NotFoundException(nameof(HabitTracker), request.Id);
             }
 
-            return new GetHabitTrackerQueryResponse()
-            {
-                HabitTracker = _mapper.Map<HabitTrackerDTO>(habitTrackerEntity)
-            };
+            return _mapper.Map<HabitTrackerDTO>(habitTrackerEntity);
         }
     }
 }

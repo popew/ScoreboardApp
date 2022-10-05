@@ -14,18 +14,12 @@ using System.Threading.Tasks;
 
 namespace ScoreboardApp.Application.EffortHabits.Queries
 {
-    public sealed record GetEffortHabitQuery(Guid Id) : IRequest<GetEffortHabitQueryResponse>
+    public sealed record GetEffortHabitQuery(Guid Id) : IRequest<EffortHabitDTO>
     {
         public Guid Id { get; init; }
     }
 
-    public sealed record GetEffortHabitQueryResponse
-    {
-        public EffortHabitDTO EffortHabit { get; init; }
-    }
-
-
-    public sealed class GetEffortHabitQueryHandler : IRequestHandler<GetEffortHabitQuery, GetEffortHabitQueryResponse>
+    public sealed class GetEffortHabitQueryHandler : IRequestHandler<GetEffortHabitQuery, EffortHabitDTO>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -35,7 +29,7 @@ namespace ScoreboardApp.Application.EffortHabits.Queries
             _context = context;
             _mapper = mapper;
         }
-        public async Task<GetEffortHabitQueryResponse> Handle(GetEffortHabitQuery request, CancellationToken cancellationToken)
+        public async Task<EffortHabitDTO> Handle(GetEffortHabitQuery request, CancellationToken cancellationToken)
         {
             var effortHabitEntity = await _context.EffortHabits.FindAsync(new object[] { request.Id }, cancellationToken);
 
@@ -44,10 +38,7 @@ namespace ScoreboardApp.Application.EffortHabits.Queries
                 throw new NotFoundException(nameof(HabitTracker), request.Id);
             }
 
-            return new GetEffortHabitQueryResponse()
-            {
-                EffortHabit = _mapper.Map<EffortHabitDTO>(effortHabitEntity)
-            };
+            return _mapper.Map<EffortHabitDTO>(effortHabitEntity);
         }
     }
 }

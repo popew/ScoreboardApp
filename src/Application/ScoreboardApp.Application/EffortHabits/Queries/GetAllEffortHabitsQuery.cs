@@ -14,17 +14,11 @@ using System.Threading.Tasks;
 
 namespace ScoreboardApp.Application.EffortHabits.Queries
 {
-    public sealed record GetAllEffortHabitsQuery : IRequest<GetAllEffortHabitsQueryResponse>
+    public sealed record GetAllEffortHabitsQuery : IRequest<IList<EffortHabitDTO>>
     {
         public Guid HabitTrackerId { get; init; }
     }
-
-    public sealed record GetAllEffortHabitsQueryResponse
-    {
-        public IList<EffortHabitDTO> EffortHabits { get; init; }
-    }
-
-    public sealed class GetAllEffortHabitsQueryHandler : IRequestHandler<GetAllEffortHabitsQuery, GetAllEffortHabitsQueryResponse>
+    public sealed class GetAllEffortHabitsQueryHandler : IRequestHandler<GetAllEffortHabitsQuery, IList<EffortHabitDTO>>
     {
 
         private readonly IApplicationDbContext _context;
@@ -35,19 +29,16 @@ namespace ScoreboardApp.Application.EffortHabits.Queries
             _context = context;
             _mapper = mapper;
         }
-        public async Task<GetAllEffortHabitsQueryResponse> Handle(GetAllEffortHabitsQuery request, CancellationToken cancellationToken)
+        public async Task<IList<EffortHabitDTO>> Handle(GetAllEffortHabitsQuery request, CancellationToken cancellationToken)
         {
-            var effortHabitEntities = await _context.EffortHabits
-                                                    .AsNoTracking()
-                                                    .Where(x => x.Id == request.HabitTrackerId)
-                                                    .ProjectTo<EffortHabitDTO>(_mapper.ConfigurationProvider)
-                                                    .OrderBy(ht => ht.Title)
-                                                    .ToListAsync(cancellationToken);
+            return await _context.EffortHabits
+                                .AsNoTracking()
+                                .Where(x => x.Id == request.HabitTrackerId)
+                                .ProjectTo<EffortHabitDTO>(_mapper.ConfigurationProvider)
+                                .OrderBy(ht => ht.Title)
+                                .ToListAsync(cancellationToken);
 
-            return new GetAllEffortHabitsQueryResponse()
-            {
-                 EffortHabits = effortHabitEntities
-            };
+            
         }
     }
 }

@@ -7,17 +7,12 @@ using ScoreboardApp.Infrastructure.Persistence;
 
 namespace ScoreboardApp.Application.HabitTrackers.Queries
 {
-    public sealed record GetAllHabitTrackersQuery : IRequest<GetAllHabitTrackersResponse>
+    public sealed record GetAllHabitTrackersQuery : IRequest<IList<HabitTrackerDTO>>
     {
 
     }
 
-    public sealed record GetAllHabitTrackersResponse
-    {
-        public IList<HabitTrackerDTO> HabitTrackers { get; init; }
-    }
-
-    public sealed class GetAllHabitTrackersQueryHandler : IRequestHandler<GetAllHabitTrackersQuery, GetAllHabitTrackersResponse>
+    public sealed class GetAllHabitTrackersQueryHandler : IRequestHandler<GetAllHabitTrackersQuery, IList<HabitTrackerDTO>>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -28,18 +23,13 @@ namespace ScoreboardApp.Application.HabitTrackers.Queries
             _mapper = mapper;
         }
 
-        public async Task<GetAllHabitTrackersResponse> Handle(GetAllHabitTrackersQuery request, CancellationToken cancellationToken)
+        public async Task<IList<HabitTrackerDTO>> Handle(GetAllHabitTrackersQuery request, CancellationToken cancellationToken)
         {
-            var habitTrackerEntities = await _context.HabitTrackers
+            return await _context.HabitTrackers
                 .AsNoTracking()
                 .ProjectTo<HabitTrackerDTO>(_mapper.ConfigurationProvider)
                 .OrderBy(ht => ht.Title)
                 .ToListAsync(cancellationToken);
-
-            return new GetAllHabitTrackersResponse()
-            {
-                HabitTrackers = habitTrackerEntities
-            };
         }
     }
 }
