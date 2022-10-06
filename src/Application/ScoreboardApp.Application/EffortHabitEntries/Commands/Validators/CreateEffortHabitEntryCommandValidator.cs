@@ -26,14 +26,16 @@ namespace ScoreboardApp.Application.EffortHabitEntries.Commands.Validators
                 .MustAsync(BeUniqueDate).WithMessage("Effort habit entry for this day already exists.");
         }
 
-        private async Task<bool> BeValidEffortHabitId(Guid habitTrackerId, CancellationToken cancellationToken)
+        private async Task<bool> BeValidEffortHabitId(Guid habitId, CancellationToken cancellationToken)
         {
-            return await _context.EffortHabits.AnyAsync(x => x.Id == habitTrackerId, cancellationToken);
+            return await _context.EffortHabits.AnyAsync(x => x.Id == habitId, cancellationToken);
         }
 
-        private async Task<bool> BeUniqueDate(DateOnly date, CancellationToken cancellationToken)
+        private async Task<bool> BeUniqueDate(CreateEffortHabitEntryCommand command, DateOnly entryDate, CancellationToken cancellationToken)
         {
-            return await _context.EffortHabitEntries.AnyAsync(x => x.EntryDate == date, cancellationToken);
+            return !await _context.EffortHabitEntries
+                .Where(x => x.HabitId == command.HabitId)
+                .AnyAsync(x => x.EntryDate == entryDate, cancellationToken);
         }
     }
 }

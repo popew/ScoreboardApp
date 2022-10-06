@@ -33,7 +33,7 @@ namespace ScoreboardApp.Application.EffortHabits.Queries
         {
             return await _context.EffortHabits
                                 .AsNoTracking()
-                                .Where(x => x.Id == request.HabitTrackerId)
+                                .Where(x => x.HabitTrackerId == request.HabitTrackerId)
                                 .ProjectTo<EffortHabitDTO>(_mapper.ConfigurationProvider)
                                 .OrderBy(ht => ht.Title)
                                 .ToListAsync(cancellationToken);

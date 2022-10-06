@@ -6,6 +6,7 @@ namespace ScoreboardApp.Application.HabitTrackers.DTOs
 {
     public sealed class EffortHabitDTO : IMapFrom<EffortHabit>
     {
+        public Guid Id { get; set; }
         public string? Unit { get; set; }
 
         public double? AverageGoal { get; set; }

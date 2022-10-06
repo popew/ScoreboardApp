@@ -5,6 +5,7 @@ namespace ScoreboardApp.Application.HabitTrackers.DTOs
 {
     public sealed class CompletionHabitEntryDTO : IMapFrom<CompletionHabitEntry>
     {
+        public Guid Id { get; set; }
         public string? Description { get; set; }
         public IList<CompletionHabitEntryDTO> HabitEntries { get; set; }
         public Guid HabitTrackerId { get; set; }

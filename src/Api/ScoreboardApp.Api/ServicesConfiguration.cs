@@ -9,7 +9,9 @@ namespace ScoreboardApp.Api
             services.AddControllers(options =>
             {
                 options.Filters.Add<ApiExceptionFilterAttribute>();
-            });
+                options.UseDateOnlyTimeOnlyStringConverters();
+            })
+            .AddJsonOptions(options => options.UseDateOnlyTimeOnlyStringConverters());
 
             return services;
         }

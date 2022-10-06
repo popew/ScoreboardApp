@@ -7,29 +7,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ScoreboardApp.Application.EffortHabitEntries.Queries.Validators
+namespace ScoreboardApp.Application.EffortHabitEntries.Commands.Validators
 {
-    public sealed class GetEffortHabitsWithPaginationQueryValidator : AbstractValidator<GetEffortHabitEntriesWithPaginationQuery>
+    public sealed class UpdateEffortHabitEntryCommandValidator : AbstractValidator<UpdateEffortHabitEntryCommand>
     {
         private readonly IApplicationDbContext _context;
 
-        public GetEffortHabitsWithPaginationQueryValidator(IApplicationDbContext context)
+        public UpdateEffortHabitEntryCommandValidator(IApplicationDbContext context)
         {
             _context = context;
+
             RuleFor(x => x.HabitId)
                 .NotEmpty()
                 .MustAsync(BeValidEffortHabitId).WithMessage("EffortHabit with given id does not exist.");
-
-            RuleFor(x => x.PageNumber)
-                .GreaterThanOrEqualTo(1);
-
-            RuleFor(x => x.PageSize)
-                .GreaterThanOrEqualTo(1);
         }
 
         private async Task<bool> BeValidEffortHabitId(Guid habitId, CancellationToken cancellationToken)
         {
             return await _context.EffortHabits.AnyAsync(x => x.Id == habitId, cancellationToken);
         }
+
     }
 }
