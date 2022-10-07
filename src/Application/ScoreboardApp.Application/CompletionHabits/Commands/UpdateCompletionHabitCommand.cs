@@ -54,7 +54,7 @@ namespace ScoreboardApp.Application.Habits.Commands
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            return _mapper.Map<UpdateEffortHabitCommandResponse>(habitEntity);
+            return _mapper.Map<UpdateCompletionHabitCommandResponse>(habitEntity);
         }
     }
 }
