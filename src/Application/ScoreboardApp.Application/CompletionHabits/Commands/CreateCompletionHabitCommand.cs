@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
+using ScoreboardApp.Application.Commons.Mappings;
 using ScoreboardApp.Domain.Entities;
 using ScoreboardApp.Infrastructure.Persistence;
 
@@ -12,7 +14,7 @@ namespace ScoreboardApp.Application.Habits.Commands
         public Guid HabitTrackerId { get; init; }
     }
 
-    public sealed record CreateCompletionHabitCommandResponse
+    public sealed record CreateCompletionHabitCommandResponse : IMapFrom<CompletionHabit>
     {
         public Guid Id { get; init; }
         public string Title { get; init; } = default!;
@@ -24,10 +26,12 @@ namespace ScoreboardApp.Application.Habits.Commands
     public sealed class CreateCompletionHabitCommandHandler : IRequestHandler<CreateCompletionHabitCommand, CreateCompletionHabitCommandResponse>
     {
         private readonly IApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
-        public CreateCompletionHabitCommandHandler(IApplicationDbContext context)
+        public CreateCompletionHabitCommandHandler(IApplicationDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         public async Task<CreateCompletionHabitCommandResponse> Handle(CreateCompletionHabitCommand request, CancellationToken cancellationToken)
@@ -43,13 +47,7 @@ namespace ScoreboardApp.Application.Habits.Commands
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            return new CreateCompletionHabitCommandResponse()
-            {
-                Id = habitEntity.Id,
-                Title = habitEntity.Title,
-                Description = habitEntity.Description,
-                HabitTrackerId = habitEntity.HabitTrackerId
-            };
+            return _mapper.Map<CreateCompletionHabitCommandResponse>(habitEntity);
         }
     }
 }
