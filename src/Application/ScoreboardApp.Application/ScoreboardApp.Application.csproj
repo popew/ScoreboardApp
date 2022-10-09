@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="CompletionHabits\Queries\" />
     <Folder Include="CompletionHabitEntries\" />
   </ItemGroup>
 
