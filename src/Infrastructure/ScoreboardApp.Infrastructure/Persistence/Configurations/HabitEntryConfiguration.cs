@@ -1,17 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ScoreboardApp.Domain.Entities;
-using ScoreboardApp.Domain.Entities.Commons;
+using ScoreboardApp.Domain.Entities.Interfaces;
 using ScoreboardApp.Domain.Enums;
 
 namespace ScoreboardApp.Infrastructure.Persistence.Configurations
 {
-    public abstract class HabitEntryConfiguration<TEntry, THabit> : IEntityTypeConfiguration<TEntry>
-        where TEntry : HabitEntry<THabit>
-        where THabit : Habit<TEntry>
+    public abstract class HabitEntryConfiguration<TEntry, THabit> : BaseEntityConfiguration<TEntry>, IEntityTypeConfiguration<TEntry>
+        where TEntry : BaseEntity, IHabitEntry<THabit>
+        where THabit : BaseEntity, IHabit<TEntry>
     {
-        public virtual void Configure(EntityTypeBuilder<TEntry> builder)
+        public override void Configure(EntityTypeBuilder<TEntry> builder)
         {
+            base.Configure(builder);
+
             builder.Property(e => e.HabitId)
                 .IsRequired();
 

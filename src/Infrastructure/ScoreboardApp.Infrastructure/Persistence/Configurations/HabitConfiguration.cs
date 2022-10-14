@@ -1,17 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ScoreboardApp.Domain.Entities;
-using ScoreboardApp.Domain.Entities.Commons;
+using ScoreboardApp.Domain.Entities.Interfaces;
 using ScoreboardApp.Domain.Enums;
 
 namespace ScoreboardApp.Infrastructure.Persistence.Configurations
 {
-    public abstract class HabitConfiguration<THabit, TEntry> : IEntityTypeConfiguration<THabit>
-        where THabit : Habit<TEntry> 
-        where TEntry : HabitEntry<THabit>
+    public abstract class HabitConfiguration<THabit, TEntry> : BaseEntityConfiguration<THabit>, IEntityTypeConfiguration<THabit>
+        where THabit : BaseEntity, IHabit<TEntry> 
+        where TEntry : BaseEntity, IHabitEntry<THabit>
     {
-        public virtual void Configure(EntityTypeBuilder<THabit> builder)
+        public override void Configure(EntityTypeBuilder<THabit> builder)
         {
+            base.Configure(builder);
+
             builder.Property(h => h.Title)
                 .HasMaxLength(200)
                 .IsRequired();
@@ -24,8 +26,8 @@ namespace ScoreboardApp.Infrastructure.Persistence.Configurations
 
             builder.HasMany(h => h.HabitEntries)
                 .WithOne(e => e.Habit)
-                .HasForeignKey(e => e.HabitId);
-
+                .HasForeignKey(e => e.HabitId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 

@@ -1,12 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ScoreboardApp.Domain.Entities;
-using ScoreboardApp.Domain.Entities.Commons;
 using ScoreboardApp.Infrastructure.Persistence.Converters;
 using System.Reflection;
 
 namespace ScoreboardApp.Infrastructure.Persistence
 {
-    internal class ApplicationDbContext : DbContext
+    public sealed class ApplicationDbContext : DbContext, IApplicationDbContext
     {
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
