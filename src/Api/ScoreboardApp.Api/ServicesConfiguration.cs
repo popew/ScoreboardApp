@@ -1,4 +1,6 @@
-﻿using ScoreboardApp.Api.Filters;
+﻿using Microsoft.Extensions.DependencyInjection;
+using ScoreboardApp.Api.Filters;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace ScoreboardApp.Api
 {
@@ -12,6 +14,8 @@ namespace ScoreboardApp.Api
                 options.UseDateOnlyTimeOnlyStringConverters();
             })
             .AddJsonOptions(options => options.UseDateOnlyTimeOnlyStringConverters());
+
+
 
             return services;
         }
