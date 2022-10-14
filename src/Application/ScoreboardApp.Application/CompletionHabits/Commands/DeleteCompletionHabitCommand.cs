@@ -6,9 +6,9 @@ using ScoreboardApp.Infrastructure.Persistence;
 
 namespace ScoreboardApp.Application.Habits.Commands
 {
-    public sealed record DeleteCompletionHabitCommand : IRequest
+    public sealed record DeleteCompletionHabitCommand(Guid Id) : IRequest
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Id;
     }
 
     public sealed class DeleteCompletionHabitCommandHandler : IRequestHandler<DeleteCompletionHabitCommand>

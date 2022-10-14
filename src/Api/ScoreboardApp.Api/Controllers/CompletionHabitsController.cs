@@ -24,7 +24,7 @@ namespace ScoreboardApp.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] GetAllEffortHabitsQuery query)
+        public async Task<IActionResult> GetAll([FromQuery] GetAllCompletionHabitsQuery query)
         {
             var response = await Mediator.Send(query);
 
@@ -32,7 +32,7 @@ namespace ScoreboardApp.Api.Controllers
         }
 
         [HttpPut("{id:guid}")]
-        public async Task<IActionResult> Update(Guid id, UpdateEffortHabitCommand command)
+        public async Task<IActionResult> Update(Guid id, UpdateCompletionHabitCommand command)
         {
             if (id != command.Id)
             {
@@ -47,7 +47,7 @@ namespace ScoreboardApp.Api.Controllers
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            await Mediator.Send(new DeleteEffortHabitCommand(id));
+            await Mediator.Send(new DeleteCompletionHabitCommand(id));
 
             return NoContent();
         }

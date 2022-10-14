@@ -13,9 +13,9 @@ using System.Threading.Tasks;
 
 namespace ScoreboardApp.Application.CompletionHabitEntries.Queries
 {
-    public sealed record GetCompletionHabitEntryQuery : IRequest<CompletionHabitEntryDTO>
+    public sealed record GetCompletionHabitEntryQuery(Guid Id) : IRequest<CompletionHabitEntryDTO>
     {
-        public Guid Id { get; init; }
+        public Guid Id { get; init; } = Id;
     }
 
     public sealed class GetCompletionHabitEntryQueryHandler : IRequestHandler<GetCompletionHabitEntryQuery, CompletionHabitEntryDTO>
