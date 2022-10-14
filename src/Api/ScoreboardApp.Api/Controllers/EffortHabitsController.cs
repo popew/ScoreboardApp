@@ -7,7 +7,7 @@ using ScoreboardApp.Application.HabitTrackers.Queries;
 
 namespace ScoreboardApp.Api.Controllers
 {
-    public class EffortHabitsController : ApiControllerBase
+    public sealed class EffortHabitsController : ApiControllerBase
     {
         [HttpPost]
         public async Task<IActionResult> Create(CreateEfforHabitCommand command)

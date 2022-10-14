@@ -35,7 +35,7 @@ namespace ScoreboardApp.Application.EffortHabits.Queries
 
             if (effortHabitEntity == null)
             {
-                throw new NotFoundException(nameof(HabitTracker), request.Id);
+                throw new NotFoundException(nameof(EffortHabit), request.Id);
             }
 
             return _mapper.Map<EffortHabitDTO>(effortHabitEntity);

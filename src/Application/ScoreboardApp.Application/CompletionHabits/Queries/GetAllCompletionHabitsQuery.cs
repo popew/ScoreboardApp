@@ -1,4 +1,9 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+using ScoreboardApp.Application.HabitTrackers.DTOs;
+using ScoreboardApp.Infrastructure.Persistence;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,19 +12,29 @@ using System.Threading.Tasks;
 
 namespace ScoreboardApp.Application.CompletionHabits.Queries
 {
-    public sealed record GetAllCompletionHabitsQuery : IRequest<GetAllCompletionHabitsQueryResponse>
+    public sealed record GetAllCompletionHabitsQuery : IRequest<IList<CompletionHabitDTO>>
     {
-    }
-    public sealed record GetAllCompletionHabitsQueryResponse
-    {
-
+        public Guid HabitTrackerId { get; init; }
     }
 
-    public sealed class GetAllCompletionHabitsQueryHandler : IRequestHandler<GetAllCompletionHabitsQuery, GetAllCompletionHabitsQueryResponse>
+    public sealed class GetAllCompletionHabitsQueryHandler : IRequestHandler<GetAllCompletionHabitsQuery, IList<CompletionHabitDTO>>
     {
-        public Task<GetAllCompletionHabitsQueryResponse> Handle(GetAllCompletionHabitsQuery request, CancellationToken cancellationToken)
+        private readonly IApplicationDbContext _context;
+        private readonly IMapper _mapper;
+
+        public GetAllCompletionHabitsQueryHandler(IApplicationDbContext context, IMapper mapper)
         {
-            throw new NotImplementedException();
+            _context = context;
+            _mapper = mapper;
+        }
+        public async Task<IList<CompletionHabitDTO>> Handle(GetAllCompletionHabitsQuery request, CancellationToken cancellationToken)
+        {
+            return await _context.CompletionHabits
+                                .AsNoTracking()
+                                .Where(x => x.HabitTrackerId == request.HabitTrackerId)
+                                .ProjectTo<CompletionHabitDTO>(_mapper.ConfigurationProvider)
+                                .OrderBy(ht => ht.Title)
+                                .ToListAsync(cancellationToken);
         }
     }
 }

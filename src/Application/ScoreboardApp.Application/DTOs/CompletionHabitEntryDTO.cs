@@ -5,10 +5,10 @@ namespace ScoreboardApp.Application.HabitTrackers.DTOs
 {
     public sealed class CompletionHabitEntryDTO : IMapFrom<CompletionHabitEntry>
     {
-        public Guid Id { get; set; }
-        public string? Description { get; set; }
-        public IList<CompletionHabitEntryDTO> HabitEntries { get; set; }
-        public Guid HabitTrackerId { get; set; }
-        public string? Title { get; set; }
+        public Guid Id { get; init; }
+        public bool Completion { get; init; }
+        public DateOnly EntryDate { get; init; }
+        public CompletionHabitDTO Habit { get; init; }
+        public Guid HabitId { get; init; }
     }
 }

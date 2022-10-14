@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using ScoreboardApp.Application.CompletionHabitEntries.Commands;
 using ScoreboardApp.Infrastructure.Persistence;
 using System;
 using System.Collections.Generic;
@@ -8,19 +7,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ScoreboardApp.Application.EffortHabitEntries.Commands.Validators
+namespace ScoreboardApp.Application.CompletionHabitEntries.Commands.Validators
 {
-    public sealed class UpdateEffortHabitEntryCommandValidator : AbstractValidator<UpdateEffortHabitEntryCommand>
+    internal class UpdateCompletionHabitEntryCommandValidator : AbstractValidator<UpdateCompletionHabitEntryCommand>
     {
         private readonly IApplicationDbContext _context;
 
-        public UpdateEffortHabitEntryCommandValidator(IApplicationDbContext context)
+        public UpdateCompletionHabitEntryCommandValidator(IApplicationDbContext context)
         {
             _context = context;
 
             RuleFor(x => x.HabitId)
                 .NotEmpty()
-                .MustAsync(BeValidEffortHabitId).WithMessage("EffortHabit with given id does not exist.");
+                .MustAsync(BeValidEffortHabitId).WithMessage("Habit with given id does not exist.");
 
             RuleFor(x => x.EntryDate)
                 .NotEmpty()
@@ -32,18 +31,18 @@ namespace ScoreboardApp.Application.EffortHabitEntries.Commands.Validators
             return await _context.EffortHabits.AnyAsync(x => x.Id == habitId, cancellationToken);
         }
 
-        private async Task<bool> BeUniqueDateOrSameEntity(UpdateEffortHabitEntryCommand command, DateOnly entryDate, CancellationToken cancellationToken)
+        private async Task<bool> BeUniqueDateOrSameEntity(UpdateCompletionHabitEntryCommand command, DateOnly entryDate, CancellationToken cancellationToken)
         {
-            var entryEntity = await _context.EffortHabitEntries
+            var entryEntity = await _context.CompletionHabitEntries
                                             .Where(x => x.HabitId == command.HabitId)
                                             .SingleOrDefaultAsync(x => x.EntryDate == entryDate, cancellationToken);
 
-            if (entryEntity == null)
+            if(entryEntity == null)
             {
                 return true;
             }
 
-            if (entryEntity.Id == command.Id)
+            if(entryEntity.Id == command.Id)
             {
                 return true;
             }
@@ -51,6 +50,5 @@ namespace ScoreboardApp.Application.EffortHabitEntries.Commands.Validators
             return false;
 
         }
-
     }
 }

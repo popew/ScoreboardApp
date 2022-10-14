@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ScoreboardApp.Application.EffortHabitEntries.Commands;
-using ScoreboardApp.Application.EffortHabitEntries.Queries;
+using ScoreboardApp.Application.CompletionHabits.Queries;
+using ScoreboardApp.Application.EffortHabits.Queries;
 using ScoreboardApp.Application.Habits.Commands;
 
 namespace ScoreboardApp.Api.Controllers
 {
-    public sealed class EffortHabitEntriesController : ApiControllerBase
+    public sealed class CompletionHabitsController : ApiControllerBase
     {
         [HttpPost]
-        public async Task<IActionResult> Create(CreateEffortHabitEntryCommand command)
+        public async Task<IActionResult> Create(CreateCompletionHabitCommand command)
         {
             var response = await Mediator.Send(command);
 
@@ -18,13 +18,13 @@ namespace ScoreboardApp.Api.Controllers
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            var response = await Mediator.Send(new GetEffortHabitEntryQuery(id));
+            var response = await Mediator.Send(new GetCompletionHabitQuery(id));
 
             return Ok(response);
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] GetEffortHabitEntriesWithPaginationQuery query)
+        public async Task<IActionResult> GetAll([FromQuery] GetAllEffortHabitsQuery query)
         {
             var response = await Mediator.Send(query);
 
@@ -32,7 +32,7 @@ namespace ScoreboardApp.Api.Controllers
         }
 
         [HttpPut("{id:guid}")]
-        public async Task<IActionResult> Update(Guid id, UpdateEffortHabitEntryCommand command)
+        public async Task<IActionResult> Update(Guid id, UpdateEffortHabitCommand command)
         {
             if (id != command.Id)
             {
@@ -47,7 +47,7 @@ namespace ScoreboardApp.Api.Controllers
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            await Mediator.Send(new DeleteEffortHabitEntryCommand(id));
+            await Mediator.Send(new DeleteEffortHabitCommand(id));
 
             return NoContent();
         }
