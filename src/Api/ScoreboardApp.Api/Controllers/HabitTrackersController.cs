@@ -1,10 +1,12 @@
 ﻿
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ScoreboardApp.Application.HabitTrackers.Commands;
 using ScoreboardApp.Application.HabitTrackers.Queries;
 
 namespace ScoreboardApp.Api.Controllers
 {
+    [Authorize]
     public sealed class HabitTrackersController : ApiControllerBase
     {
         [HttpPost]

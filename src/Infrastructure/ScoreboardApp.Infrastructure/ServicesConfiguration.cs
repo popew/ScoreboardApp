@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -21,6 +22,13 @@ namespace ScoreboardApp.Infrastructure
             services.AddHealthChecks()
                     .AddSqlServer(connectionString: configuration.GetConnectionString("DefaultConnection"),
                                   failureStatus: HealthStatus.Degraded);
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddJwtBearer(options =>
+                    {
+                        options.Audience = configuration["AAD:ResourceId"]; // Audience -> the API
+                        options.Authority = $"{configuration["AAD:InstanceId"]}{configuration["AAD:TenantId"]}";
+                    });
 
             return services;
         }
