@@ -30,6 +30,7 @@ namespace ScoreboardApp.Infrastructure
                         options.Authority = $"{configuration["AAD:InstanceId"]}{configuration["AAD:TenantId"]}";
                     });
 
+
             return services;
         }
     }

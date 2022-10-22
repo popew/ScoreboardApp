@@ -38,7 +38,7 @@ namespace ScoreboardApp.Api
                     .AddService("ScoreboardApp"))
                     .AddZipkinExporter(options =>
                     {
-                        options.Endpoint = new Uri(configuration.GetValue<string>("Telemetry:Endpoint"));
+                        options.Endpoint = new Uri(configuration["Telemetry:Endpoint"]);
                     })
                     .AddHttpClientInstrumentation()
                     .AddAspNetCoreInstrumentation()

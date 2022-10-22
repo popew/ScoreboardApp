@@ -27,6 +27,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScoreboardApp.Domain", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScoreboardApp.Application", "src\Application\ScoreboardApp.Application\ScoreboardApp.Application.csproj", "{F1CD39C3-F234-4380-A137-EE2CF9575A2A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScoreboardApp.Infrastructure.CustomIdentityService", "src\Infrastructure\ScoreboardApp.Infrastructure.CustomIdentityService\ScoreboardApp.Infrastructure.CustomIdentityService.csproj", "{3AD7FD15-7B4B-4C75-B771-C7B34C5DC8B5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +55,10 @@ Global
 		{F1CD39C3-F234-4380-A137-EE2CF9575A2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F1CD39C3-F234-4380-A137-EE2CF9575A2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F1CD39C3-F234-4380-A137-EE2CF9575A2A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3AD7FD15-7B4B-4C75-B771-C7B34C5DC8B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3AD7FD15-7B4B-4C75-B771-C7B34C5DC8B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3AD7FD15-7B4B-4C75-B771-C7B34C5DC8B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3AD7FD15-7B4B-4C75-B771-C7B34C5DC8B5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -68,6 +74,7 @@ Global
 		{CC1E07E9-FAD2-4B5F-8882-A0975CA2E0C3} = {3F1CBC31-276B-4265-82BC-B2F8CEA48F07}
 		{AC145723-CA9A-419C-81D6-F4BBF310B7E2} = {9657E0EC-8827-4B62-BB74-25061F53EA5B}
 		{F1CD39C3-F234-4380-A137-EE2CF9575A2A} = {E3D51A12-7DEB-484C-84F2-7B618291D586}
+		{3AD7FD15-7B4B-4C75-B771-C7B34C5DC8B5} = {3F1CBC31-276B-4265-82BC-B2F8CEA48F07}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DA1CCF4D-308B-462C-A0D1-27B7EAC168EF}
