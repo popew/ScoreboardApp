@@ -51,38 +51,6 @@ namespace ScoreboardApp.Infrastructure.CustomIdentityService
             // services required using Identity
             services.AddScoped<ITokenService, TokenService>();
 
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(options =>
-            {
-                var tokenSettings = configuration.GetSection(nameof(TokenSettings)).Get<TokenSettings>();
-                byte[] secret = Encoding.ASCII.GetBytes(tokenSettings.Secret);
-
-                options.RequireHttpsMetadata = true;
-                options.SaveToken = true;
-                options.ClaimsIssuer = tokenSettings.Issuer;
-                options.IncludeErrorDetails = true;
-                options.Validate(JwtBearerDefaults.AuthenticationScheme);
-                options.TokenValidationParameters =
-                    new TokenValidationParameters
-                    {
-                        ClockSkew = TimeSpan.Zero,
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
-                        ValidIssuer = tokenSettings.Issuer,
-                        ValidAudience = tokenSettings.Audience,
-                        IssuerSigningKey = new SymmetricSecurityKey(secret),
-                        NameClaimType = ClaimTypes.NameIdentifier,
-                        RequireSignedTokens = true,
-                        RequireExpirationTime = true
-                    };
-            });
-
             return services;
         }
     }

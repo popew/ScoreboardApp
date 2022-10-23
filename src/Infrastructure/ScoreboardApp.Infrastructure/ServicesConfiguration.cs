@@ -3,8 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.IdentityModel.Tokens;
+using ScoreboardApp.Infrastructure.CustomIdentityService;
+using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Options;
 using ScoreboardApp.Infrastructure.Persistence;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
+using System.Text;
 
 namespace ScoreboardApp.Infrastructure
 {
@@ -23,12 +28,39 @@ namespace ScoreboardApp.Infrastructure
                     .AddSqlServer(connectionString: configuration.GetConnectionString("DefaultConnection"),
                                   failureStatus: HealthStatus.Degraded);
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                    .AddJwtBearer(options =>
+            services.AddCustomIdentityService(configuration);
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                var tokenSettings = configuration.GetSection(nameof(TokenSettings)).Get<TokenSettings>();
+                byte[] secret = Encoding.ASCII.GetBytes(tokenSettings.Secret);
+
+                options.RequireHttpsMetadata = true;
+                options.SaveToken = true;
+                options.ClaimsIssuer = tokenSettings.Issuer;
+                options.IncludeErrorDetails = true;
+                options.Validate(JwtBearerDefaults.AuthenticationScheme);
+                options.TokenValidationParameters =
+                    new TokenValidationParameters
                     {
-                        options.Audience = configuration["AAD:ResourceId"]; // Audience -> the API
-                        options.Authority = $"{configuration["AAD:InstanceId"]}{configuration["AAD:TenantId"]}";
-                    });
+                        ClockSkew = TimeSpan.Zero,
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = tokenSettings.Issuer,
+                        ValidAudience = tokenSettings.Audience,
+                        IssuerSigningKey = new SymmetricSecurityKey(secret),
+                        NameClaimType = ClaimTypes.NameIdentifier,
+                        RequireSignedTokens = true,
+                        RequireExpirationTime = true
+                    };
+            });
 
 
             return services;
