@@ -31,6 +31,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Application\ScoreboardApp.Application\ScoreboardApp.Application.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\ScoreboardApp.Infrastructure.CustomIdentityService\ScoreboardApp.Infrastructure.CustomIdentityService.csproj" />
     <ProjectReference Include="..\..\Infrastructure\ScoreboardApp.Infrastructure\ScoreboardApp.Infrastructure.csproj" />
   </ItemGroup>
 

@@ -18,7 +18,7 @@ namespace ScoreboardApp.Infrastructure.CustomIdentityService.Extensions
             {
                 var services = serviceScope.ServiceProvider;
 
-                var dbContext = services.GetRequiredService<AuthorizationDbContext>();
+                var dbContext = services.GetRequiredService<ApplicationIdentityDbContext>();
 
                 dbContext.Database.EnsureCreated();
             }
@@ -37,7 +37,7 @@ namespace ScoreboardApp.Infrastructure.CustomIdentityService.Extensions
                 var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
                 var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
-                await AuthorizationDbContextDataSeed.SeedAsync(userManager, roleManager);
+                await ApplicationIdentityDbContextDataSeed.SeedAsync(userManager, roleManager);
             }
         }
     }

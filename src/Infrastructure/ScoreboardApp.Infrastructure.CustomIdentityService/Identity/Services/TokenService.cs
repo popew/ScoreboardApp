@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Identity;
@@ -12,7 +11,7 @@ using System.Text;
 
 namespace ScoreboardApp.Infrastructure.Identity.Services
 {
-    public class TokenService : ITokenService
+    public sealed class TokenService : ITokenService
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
@@ -22,7 +21,7 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IOptions<TokenSettings> tokenOptions
-            )
+        )
         {
             _userManager = userManager;
             _signInManager = signInManager;

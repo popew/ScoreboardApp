@@ -2,7 +2,7 @@
 
 namespace ScoreboardApp.Infrastructure.CustomIdentityService.Identity
 {
-    public class AuthorizationDbContextDataSeed
+    public static class ApplicationIdentityDbContextDataSeed
     {
         /// <summary>
         ///     Seed users and roles in the Identity database.

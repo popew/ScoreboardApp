@@ -1,6 +1,6 @@
 ﻿namespace ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Options
 {
-    public class TokenSettings
+    public sealed class TokenSettings
     {
         public string Secret { get; set; }
         public string Issuer { get; set; }

@@ -6,9 +6,9 @@ using ScoreboardApp.Infrastructure.CustomIdentityService.Identity;
 
 namespace ScoreboardApp.Infrastructure.CustomIdentityService.Persistence
 {
-    public class AuthorizationDbContext : ApiAuthorizationDbContext<ApplicationUser>
+    public sealed class ApplicationIdentityDbContext : ApiAuthorizationDbContext<ApplicationUser>
     {
-        public AuthorizationDbContext(DbContextOptions options, IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
+        public ApplicationIdentityDbContext(DbContextOptions options, IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
         {
         }
     }
