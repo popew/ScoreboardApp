@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using ScoreboardApp.Api;
 using ScoreboardApp.Application;
 using ScoreboardApp.Infrastructure;
+using ScoreboardApp.Infrastructure.Extensions;
 using ScoreboardApp.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,12 +28,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 
 
-    using (var scope = app.Services.CreateScope())
-    {
-        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
-        dbContext.Database.Migrate();
-    }
+    app.ExecuteApplicationDbContextMigrations();
 }
 
 app.MapHealthChecks("/health");
