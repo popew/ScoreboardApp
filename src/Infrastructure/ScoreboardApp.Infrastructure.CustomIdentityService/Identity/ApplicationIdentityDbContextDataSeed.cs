@@ -23,9 +23,7 @@ namespace ScoreboardApp.Infrastructure.CustomIdentityService.Identity
             {
                 UserName = adminUserName,
                 Email = adminUserName,
-                EmailConfirmed = true,
-                FirstName = "",
-                LastName = "Administrator"
+                EmailConfirmed = true
             };
 
             // Add new user and their role

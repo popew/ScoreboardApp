@@ -5,16 +5,9 @@ namespace ScoreboardApp.Infrastructure.CustomIdentityService.Identity
 {
     public sealed class ApplicationUser : IdentityUser
     {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public string? RefreshToken { get; set; }
 
-        [IgnoreDataMember]
-        public string FullName
-        {
-            get
-            {
-                return $"{FirstName} {LastName}";
-            }
-        }
+        public DateTime RefreshTokenExpiryTime { get; set; }
+
     }
 }

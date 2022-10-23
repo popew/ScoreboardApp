@@ -2,7 +2,7 @@
 {
     public sealed record TokenResponse
     {
-        public string UserName { get; init; } = default!;
         public string Token { get; init; } = default!;
+        public string RefreshToken { get; init; } = default!;
     }
 }

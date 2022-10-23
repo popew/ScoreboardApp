@@ -42,7 +42,6 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
 
                     return new TokenResponse()
                     {
-                        UserName = user.UserName,
                         Token = jwtToken
                     };
                 }
