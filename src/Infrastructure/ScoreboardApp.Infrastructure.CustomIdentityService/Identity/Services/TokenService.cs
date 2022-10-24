@@ -31,13 +31,13 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
             _tokenSettings = tokenOptions.Value;
         }
 
-        public async Task<Result<TokenResponse>> Authenticate(AuthenticationRequest request)
+        public async Task<Result<TokenResponse, Error>> Authenticate(AuthenticationRequest request)
         {
             var signInResult = await SignInUser(request.UserName, request.Password);
 
             if (signInResult.IsFailure)
             {
-                return Result.Failure<TokenResponse>(signInResult.Error);
+                return Result.Failure<TokenResponse, Error>(signInResult.Error);
             }
 
             ApplicationUser user = signInResult.Value;
@@ -50,20 +50,20 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
 
             await _userManager.UpdateAsync(user);
 
-            return Result.Success<TokenResponse>(new TokenResponse()
+            return Result.Success<TokenResponse, Error>(new TokenResponse()
             {
                 Token = token,
                 RefreshToken = refreshToken
             });
         }
 
-        public async Task<Result<TokenResponse>> Refresh(RefreshRequest request)
+        public async Task<Result<TokenResponse, Error>> Refresh(RefreshRequest request)
         {
             var getClaimsPrincipalResult = GetPrincipalFromExpiredToken(request.Token);
             
             if (getClaimsPrincipalResult.IsFailure)
             {
-                return Result.Failure<TokenResponse>(getClaimsPrincipalResult.Error);
+                return Result.Failure< TokenResponse, Error > (getClaimsPrincipalResult.Error);
             }
 
             ClaimsPrincipal principal = getClaimsPrincipalResult.Value;
@@ -72,14 +72,14 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
 
             if(user is null)
             {
-                return Result.Failure<TokenResponse>(Errors.UserNotFoundError);
+                return Result.Failure<TokenResponse, Error>(Errors.UserNotFoundError);
             }
 
             var refreshTokenValidationResult = ValidateRefreshToken(user, request.RefreshToken);
 
             if(refreshTokenValidationResult.IsFailure)
             {
-                return Result.Failure<TokenResponse>(refreshTokenValidationResult.Error);
+                return Result.Failure<TokenResponse, Error>(refreshTokenValidationResult.Error);
             }
 
             string token = await GenerateJwtToken(user);
@@ -90,7 +90,7 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
 
             await _userManager.UpdateAsync(user);
 
-            return Result.Success(new TokenResponse()
+            return Result.Success<TokenResponse, Error>(new TokenResponse()
             {
                 Token = token,
                 RefreshToken = refreshToken
@@ -98,13 +98,13 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
 
         }
 
-        public async Task<Result> Register(RegistrationRequest request)
+        public async Task<UnitResult<Error>> Register(RegistrationRequest request)
         {
             ApplicationUser? existingUser = await GetUserByEmail(request.UserName);
 
             if(existingUser is not null)
             {
-                return Result.Failure(Errors.UserAlreadyExistsError);
+                return UnitResult.Failure(Errors.UserAlreadyExistsError);
             }
 
             ApplicationUser newUser = new()
@@ -116,24 +116,24 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
             var result = await _userManager.CreateAsync(newUser, request.Password);
 
             return result.Succeeded
-                ? Result.Success()
-                : Result.Failure(Errors.RegistrationFailedError);
+                ? UnitResult.Success<Error>()
+                : UnitResult.Failure(Errors.RegistrationFailedError);
         }
 
-        public async Task<Result> Revoke(RevokeRequest request)
+        public async Task<UnitResult<Error>> Revoke(RevokeRequest request)
         {
             ApplicationUser? user = await GetUserByEmail(request.UserName);
 
             if(user is null)
             {
-                return Result.Failure(Errors.UserNotFoundError);
+                return UnitResult.Failure(Errors.UserNotFoundError);
             }
 
             user.RefreshToken = null;
 
             await _userManager.UpdateAsync(user);                
 
-            return Result.Success();
+            return UnitResult.Success<Error>();
         }
 
         private async Task<string> GenerateJwtToken(ApplicationUser user)
@@ -178,7 +178,7 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
         /// </summary>
         /// <param name="token"></param>
         /// <returns>Returns ClaimsPrincipal if input token is valid.</returns>
-        private Result<ClaimsPrincipal> GetPrincipalFromExpiredToken(string token)
+        private Result<ClaimsPrincipal, Error> GetPrincipalFromExpiredToken(string token)
         {
             byte[] secret = Encoding.ASCII.GetBytes(_tokenSettings.Secret);
 
@@ -204,10 +204,10 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
                 !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase) ||
                 principal is null)
             {
-                return Result.Failure<ClaimsPrincipal>(Errors.InvalidTokenError);
+                return Result.Failure<ClaimsPrincipal, Error>(Errors.InvalidTokenError);
             }
 
-            return Result.Success<ClaimsPrincipal>(principal);
+            return Result.Success<ClaimsPrincipal, Error>(principal);
 
         }
 
@@ -222,42 +222,33 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
         /// <param name="username"></param>
         /// <param name="password"></param>
         /// <returns>Returns user object on successful sign in.</returns>
-        private async Task<Result<ApplicationUser>> SignInUser(string username, string password)
+        private async Task<Result<ApplicationUser, Error>> SignInUser(string username, string password)
         {
             ApplicationUser? user = await GetUserByEmail(username);
 
             if (user == null)
             {
-                return Result.Failure<ApplicationUser>(Errors.UserNotFoundError);
+                return Result.Failure<ApplicationUser, Error>(Errors.UserNotFoundError);
             }
 
             SignInResult signInResult = await _signInManager.PasswordSignInAsync(user, password, true, false);
 
             if (!signInResult.Succeeded)
             {
-                return Result.Failure<ApplicationUser>(Errors.SignInFailedError);
+                return Result.Failure<ApplicationUser, Error>(Errors.SignInFailedError);
             }
 
-            return Result.Success<ApplicationUser>(user);
+            return Result.Success<ApplicationUser, Error>(user);
         }
 
-        private Result ValidateRefreshToken(ApplicationUser? user, string refreshToken)                 
+        private UnitResult<Error> ValidateRefreshToken(ApplicationUser? user, string refreshToken)                 
         {
-            var errorList = new List<Result>();
-
-            if(user?.RefreshTokenExpiryTime <= DateTime.UtcNow)
+            if (user?.RefreshTokenExpiryTime <= DateTime.UtcNow || user?.RefreshToken != refreshToken)
             {
-                errorList.Add(Result.Failure(Errors.RefreshTokenExpiredError));
+                return UnitResult.Failure(Errors.InvalidRefreshTokenError);
             }
 
-            if(user?.RefreshToken != refreshToken)
-            {
-                errorList.Add(Result.Failure(Errors.InvalidRefreshTokenError));
-            }
-
-            return errorList.Any()
-                ? Result.Combine(errorList)
-                : Result.Success();
+            return UnitResult.Success<Error>();
         }
     }
 }
