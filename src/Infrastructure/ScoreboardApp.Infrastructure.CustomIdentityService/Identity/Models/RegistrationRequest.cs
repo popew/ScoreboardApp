@@ -12,9 +12,4 @@ namespace ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Models
         public string Password { get; init; } = default!;
         public string Email { get; init; } = default!;
     }
-
-    public sealed record RegistrationResult
-    {
-
-    }
 }

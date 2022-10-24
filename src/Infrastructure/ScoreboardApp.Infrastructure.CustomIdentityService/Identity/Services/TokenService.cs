@@ -104,7 +104,7 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
 
             if(existingUser is not null)
             {
-                return Result.Failure<RegistrationResult>(Errors.UserAlreadyExistsError);
+                return Result.Failure(Errors.UserAlreadyExistsError);
             }
 
             ApplicationUser newUser = new()
@@ -144,7 +144,8 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
             var claims = new List<Claim>()
             {
                 new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.NameIdentifier, user.Id)
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim(ClaimTypes.Email, user.Email)
             };
 
             foreach (var role in roles)
