@@ -1,4 +1,5 @@
-﻿using CSharpFunctionalExtensions;
+﻿using AutoMapper.Internal;
+using CSharpFunctionalExtensions;
 using CSharpFunctionalExtensions.ValueTasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
@@ -10,6 +11,7 @@ using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Models;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Options;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Services;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 
@@ -117,7 +119,7 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
 
             return result.Succeeded
                 ? UnitResult.Success<Error>()
-                : UnitResult.Failure(Errors.RegistrationFailedError);
+                : UnitResult.Failure(Errors.RegistrationFailedError.WithDetails(result.Errors.Select(x=> x.Description)));
         }
 
         public async Task<UnitResult<Error>> Revoke(RevokeRequest request)

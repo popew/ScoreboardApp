@@ -1,15 +1,12 @@
-﻿using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Services;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ScoreboardApp.Application.Authentication;
-using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Errors;
-using System.Reflection.Metadata.Ecma335;
 
 namespace ScoreboardApp.Api.Controllers
 {
     public class UsersController : ApiControllerBase
     {
         [HttpPost("authenticate")]
-        public async Task<IActionResult> Authenticate(AuthenticateRequest request)
+        public async Task<IActionResult> Authenticate(AuthenticateCommand request)
         {
             var result = await Mediator.Send(request);
 
@@ -22,7 +19,7 @@ namespace ScoreboardApp.Api.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register(RegisterRequest request)
+        public async Task<IActionResult> Register(RegisterCommand request)
         {
             var result = await Mediator.Send(request);
 
@@ -35,15 +32,29 @@ namespace ScoreboardApp.Api.Controllers
         }
 
         [HttpPost("refresh")]
-        public async Task<IActionResult> Refresh()
+        public async Task<IActionResult> Refresh(RefreshCommand request)
         {
-            throw new NotImplementedException();
+            var result = await Mediator.Send(request);
+
+            if (result.IsFailure)
+            {
+                return StatusCode(result.Error.StatusCode, result.Error);
+            }
+
+            return Ok();
         }
 
         [HttpPost("revoke")]
-        public async Task<IActionResult> Revoke()
+        public async Task<IActionResult> Revoke(RevokeCommand request)
         {
-            throw new NotImplementedException();
+            var result = await Mediator.Send(request);
+
+            if (result.IsFailure)
+            {
+                return StatusCode(result.Error.StatusCode, result.Error);
+            }
+
+            return Ok();
         }
     }
 }

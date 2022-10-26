@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using ScoreboardApp.Application.CompletionHabitEntries.Commands;
 using ScoreboardApp.Application.CompletionHabitEntries.Queries;
-using ScoreboardApp.Application.EffortHabitEntries.Commands;
-using ScoreboardApp.Application.EffortHabitEntries.Queries;
 
 namespace ScoreboardApp.Api.Controllers
 {

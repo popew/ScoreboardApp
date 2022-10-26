@@ -14,6 +14,6 @@ namespace ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Errors
 
         public static readonly Error UserAlreadyExistsError = new() { Code = nameof(UserAlreadyExistsError), Message = "User with given username already exists.", StatusCode = 409 };
 
-        public static readonly Error RegistrationFailedError = new() { Code = nameof(RegistrationFailedError), Message = "Error occured while trying to create new user." , StatusCode = 500 };
+        public static readonly Error RegistrationFailedError = new() { Code = nameof(RegistrationFailedError), Message = "Error occured while trying to create new user." , StatusCode = 400 };
     }
 }                   

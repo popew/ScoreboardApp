@@ -13,9 +13,18 @@ namespace ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Models
 
         public int StatusCode { get; init; }
 
+        public List<string> Details { get; private set; } = new();
+
         protected override IEnumerable<object> GetEqualityComponents()
         {
             yield return Code;
+        }
+
+        public Error WithDetails(IEnumerable<string> details)
+        {
+            Details = Details.Concat(details).ToList();
+
+            return this;
         }
     }
 }
