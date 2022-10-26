@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using ScoreboardApp.Infrastructure.CustomIdentityService.Persistence.Entities;
 
 namespace ScoreboardApp.Infrastructure.CustomIdentityService.Identity
 {

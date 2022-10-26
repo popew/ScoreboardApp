@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using ScoreboardApp.Infrastructure.CustomIdentityService.Identity;
+using ScoreboardApp.Infrastructure.CustomIdentityService.Persistence.Entities;
 
 namespace ScoreboardApp.Infrastructure.CustomIdentityService.Persistence
 {

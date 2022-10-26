@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Identity;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Persistence;
+using ScoreboardApp.Infrastructure.CustomIdentityService.Persistence.Entities;
 
 namespace ScoreboardApp.Infrastructure.CustomIdentityService.Extensions
 {
