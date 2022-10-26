@@ -1,17 +1,13 @@
-﻿using AutoMapper.Internal;
-using CSharpFunctionalExtensions;
-using CSharpFunctionalExtensions.ValueTasks;
+﻿using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json.Linq;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Errors;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Models;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Options;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Services;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Persistence.Entities;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
 
@@ -62,24 +58,24 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
         public async Task<Result<TokenResponse, Error>> Refresh(RefreshRequest request)
         {
             var getClaimsPrincipalResult = GetPrincipalFromExpiredToken(request.Token);
-            
+
             if (getClaimsPrincipalResult.IsFailure)
             {
-                return Result.Failure< TokenResponse, Error > (getClaimsPrincipalResult.Error);
+                return Result.Failure<TokenResponse, Error>(getClaimsPrincipalResult.Error);
             }
 
             ClaimsPrincipal principal = getClaimsPrincipalResult.Value;
 
             ApplicationUser? user = await GetUserByEmail(principal.Identity!.Name!);
 
-            if(user is null)
+            if (user is null)
             {
                 return Result.Failure<TokenResponse, Error>(Errors.UserNotFoundError);
             }
 
             var refreshTokenValidationResult = ValidateRefreshToken(user, request.RefreshToken);
 
-            if(refreshTokenValidationResult.IsFailure)
+            if (refreshTokenValidationResult.IsFailure)
             {
                 return Result.Failure<TokenResponse, Error>(refreshTokenValidationResult.Error);
             }
@@ -104,7 +100,7 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
         {
             ApplicationUser? existingUser = await GetUserByEmail(request.UserName);
 
-            if(existingUser is not null)
+            if (existingUser is not null)
             {
                 return UnitResult.Failure(Errors.UserAlreadyExistsError);
             }
@@ -119,21 +115,21 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
 
             return result.Succeeded
                 ? UnitResult.Success<Error>()
-                : UnitResult.Failure(Errors.RegistrationFailedError.WithDetails(result.Errors.Select(x=> x.Description)));
+                : UnitResult.Failure(Errors.RegistrationFailedError.WithDetails(result.Errors.Select(x => x.Description)));
         }
 
         public async Task<UnitResult<Error>> Revoke(RevokeRequest request)
         {
             ApplicationUser? user = await GetUserByEmail(request.UserName);
 
-            if(user is null)
+            if (user is null)
             {
                 return UnitResult.Failure(Errors.UserNotFoundError);
             }
 
             user.RefreshToken = null;
 
-            await _userManager.UpdateAsync(user);                
+            await _userManager.UpdateAsync(user);
 
             return UnitResult.Success<Error>();
         }
@@ -243,7 +239,7 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
             return Result.Success<ApplicationUser, Error>(user);
         }
 
-        private UnitResult<Error> ValidateRefreshToken(ApplicationUser? user, string refreshToken)                 
+        private UnitResult<Error> ValidateRefreshToken(ApplicationUser? user, string refreshToken)
         {
             if (user?.RefreshTokenExpiryTime <= DateTime.UtcNow || user?.RefreshToken != refreshToken)
             {

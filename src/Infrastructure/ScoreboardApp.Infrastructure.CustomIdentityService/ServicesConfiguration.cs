@@ -1,16 +1,12 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Options;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Services;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Persistence;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Persistence.Entities;
 using ScoreboardApp.Infrastructure.Identity.Services;
-using System.Security.Claims;
-using System.Text;
 
 namespace ScoreboardApp.Infrastructure.CustomIdentityService
 {
