@@ -113,6 +113,8 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
 
             var result = await _userManager.CreateAsync(newUser, request.Password);
 
+            // TODO: Add email confirmation at some point
+
             return result.Succeeded
                 ? UnitResult.Success<Error>()
                 : UnitResult.Failure(Errors.RegistrationFailedError.WithDetails(result.Errors.Select(x => x.Description)));
