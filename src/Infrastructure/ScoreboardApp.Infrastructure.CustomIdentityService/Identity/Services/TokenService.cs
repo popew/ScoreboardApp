@@ -70,7 +70,7 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
 
             if (user is null)
             {
-                return Result.Failure<TokenResponse, Error>(Errors.UserNotFoundError());
+                return Result.Failure<TokenResponse, Error>(Errors.UserNotFoundError(principal.Identity!.Name!));
             }
 
             var refreshTokenValidationResult = ValidateRefreshToken(user, request.RefreshToken);
@@ -102,7 +102,7 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
 
             if (existingUser is not null)
             {
-                return UnitResult.Failure(Errors.UserAlreadyExistsError());
+                return UnitResult.Failure(Errors.UserAlreadyExistsError(request.UserName));
             }
 
             ApplicationUser newUser = new()
@@ -126,7 +126,7 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
 
             if (user is null)
             {
-                return UnitResult.Failure(Errors.UserNotFoundError());
+                return UnitResult.Failure(Errors.UserNotFoundError(request.UserName));
             }
 
             user.RefreshToken = null;
@@ -228,7 +228,7 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
 
             if (user == null)
             {
-                return Result.Failure<ApplicationUser, Error>(Errors.UserNotFoundError());
+                return Result.Failure<ApplicationUser, Error>(Errors.UserNotFoundError(username));
             }
 
             SignInResult signInResult = await _signInManager.PasswordSignInAsync(user, password, true, false);
