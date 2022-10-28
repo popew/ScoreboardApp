@@ -7,7 +7,7 @@ namespace ScoreboardApp.Application.User.Validators
     public sealed class RegisterCommandValidator : AbstractValidator<RegisterCommand>
     {
         private static readonly Regex EmailRegex =
-            new("^[\\w!#$%&’*+/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            new("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$", RegexOptions.Compiled | RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(200));
 
         public RegisterCommandValidator()
         {
