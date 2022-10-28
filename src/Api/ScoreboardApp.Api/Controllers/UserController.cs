@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ScoreboardApp.Application.Authentication;
+using ScoreboardApp.Application.Commons.Mappings;
+using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Errors;
 
 namespace ScoreboardApp.Api.Controllers
 {
@@ -12,7 +14,7 @@ namespace ScoreboardApp.Api.Controllers
 
             if (result.IsFailure)
             {
-                return BadRequest(result.Error);
+                return StatusCode(ErrorMapping.ErrorToStatusMapping[result.Error.Code], result.Error);
             }
 
             return Ok(result.Value);
@@ -25,7 +27,7 @@ namespace ScoreboardApp.Api.Controllers
 
             if (result.IsFailure)
             {
-                return BadRequest(result.Error);
+                return StatusCode(ErrorMapping.ErrorToStatusMapping[result.Error.Code], result.Error);
             }
 
             return Ok();
@@ -38,7 +40,7 @@ namespace ScoreboardApp.Api.Controllers
 
             if (result.IsFailure)
             {
-                return BadRequest(result.Error);
+                return StatusCode(ErrorMapping.ErrorToStatusMapping[result.Error.Code], result.Error);
             }
 
             return Ok(result.Value);
@@ -51,7 +53,7 @@ namespace ScoreboardApp.Api.Controllers
 
             if (result.IsFailure)
             {
-                return BadRequest(result.Error);
+                return StatusCode(ErrorMapping.ErrorToStatusMapping[result.Error.Code], result.Error);
             }
 
             return Ok();
