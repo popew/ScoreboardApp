@@ -30,7 +30,7 @@ namespace ScoreboardApp.Application.Authentication
                 RefreshToken = request.RefreshToken
             };
 
-            var result = await _tokenService.Refresh(refreshRequest);
+            var result = await _tokenService.Refresh(refreshRequest, cancellationToken);
 
             return result.Map((serviceResponse) => _mapper.Map<RefreshCommandResponse>(serviceResponse));
         }

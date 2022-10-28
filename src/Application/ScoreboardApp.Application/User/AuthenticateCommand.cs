@@ -31,7 +31,7 @@ namespace ScoreboardApp.Application.Authentication
                 Password = request.Password
             };
 
-            var result = await _tokenService.Authenticate(authRequest);
+            var result = await _tokenService.Authenticate(authRequest, cancellationToken);
 
             return result.Map((serviceResponse) => _mapper.Map<AuthenticateResponse>(serviceResponse));
         }

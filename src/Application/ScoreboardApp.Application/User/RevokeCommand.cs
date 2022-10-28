@@ -27,7 +27,7 @@ namespace ScoreboardApp.Application.Authentication
                 UserName = request.UserName
             };
 
-            var result = await _tokenService.Revoke(revokeRequest);
+            var result = await _tokenService.Revoke(revokeRequest, cancellationToken);
 
             return result;
         }

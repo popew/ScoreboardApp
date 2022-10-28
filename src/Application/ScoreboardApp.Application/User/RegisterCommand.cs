@@ -29,7 +29,7 @@ namespace ScoreboardApp.Application.Authentication
                 Email = request.Email
             };
 
-            var result = await _tokenService.Register(registerRequest);
+            var result = await _tokenService.Register(registerRequest, cancellationToken);
 
             return result;
         }

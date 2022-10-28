@@ -29,7 +29,7 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
             _tokenSettings = tokenOptions.Value;
         }
 
-        public async Task<Result<TokenResponse, Error>> Authenticate(AuthenticationRequest request)
+        public async Task<Result<TokenResponse, Error>> Authenticate(AuthenticationRequest request, CancellationToken cancellationToken)
         {
             var signInResult = await SignInUser(request.UserName, request.Password);
 
@@ -55,7 +55,7 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
             });
         }
 
-        public async Task<Result<TokenResponse, Error>> Refresh(RefreshRequest request)
+        public async Task<Result<TokenResponse, Error>> Refresh(RefreshRequest request, CancellationToken cancellationToken)
         {
             var getClaimsPrincipalResult = GetPrincipalFromExpiredToken(request.Token);
 
@@ -96,7 +96,7 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
 
         }
 
-        public async Task<UnitResult<Error>> Register(RegistrationRequest request)
+        public async Task<UnitResult<Error>> Register(RegistrationRequest request, CancellationToken cancellationToken)
         {
             ApplicationUser? existingUser = await GetUserByEmail(request.UserName);
 
@@ -120,7 +120,7 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
                 : UnitResult.Failure(Errors.RegistrationFailedError.WithDetails(result.Errors.Select(x => x.Description)));
         }
 
-        public async Task<UnitResult<Error>> Revoke(RevokeRequest request)
+        public async Task<UnitResult<Error>> Revoke(RevokeRequest request, CancellationToken cancellationToken)
         {
             ApplicationUser? user = await GetUserByEmail(request.UserName);
 

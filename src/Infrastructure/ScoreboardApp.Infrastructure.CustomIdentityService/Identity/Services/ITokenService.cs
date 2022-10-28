@@ -10,22 +10,22 @@ namespace ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Services
         /// </summary>
         /// <param name="request"></param>
         /// <returns>Returns JWT token and refresh token pair.</returns>
-        Task<Result<TokenResponse, Error>> Authenticate(AuthenticationRequest request);
+        Task<Result<TokenResponse, Error>> Authenticate(AuthenticationRequest request, CancellationToken cancellationToken);
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        Task<Result<TokenResponse, Error>> Refresh(RefreshRequest request);
+        Task<Result<TokenResponse, Error>> Refresh(RefreshRequest request, CancellationToken cancellationToken);
 
         /// <summary>
         /// Revokes refresh token for user.
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        Task<UnitResult<Error>> Revoke(RevokeRequest request);
+        Task<UnitResult<Error>> Revoke(RevokeRequest request, CancellationToken cancellationToken);
 
-        Task<UnitResult<Error>> Register(RegistrationRequest request);
+        Task<UnitResult<Error>> Register(RegistrationRequest request, CancellationToken cancellationToken);
     }
 }
