@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using CSharpFunctionalExtensions;
 using MediatR;
-using ScoreboardApp.Application.Commons.Extensions;
 using ScoreboardApp.Application.Commons.Mappings;
 using ScoreboardApp.Application.DTOs;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Models;
@@ -9,11 +8,11 @@ using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Services;
 
 namespace ScoreboardApp.Application.Authentication
 {
-    public sealed record AuthenticateCommand(string UserName, string Password) : IRequest<Result<AuthenticateResponse, ErrorDTO>>;
+    public sealed record AuthenticateCommand(string UserName, string Password) : IRequest<Result<AuthenticateResponse, Error>>;
 
     public sealed record AuthenticateResponse(string Token, string RefreshToken) : IMapFrom<TokenResponse>;
 
-    public sealed class AuthenticateRequestHandler : IRequestHandler<AuthenticateCommand, Result<AuthenticateResponse, ErrorDTO>>
+    public sealed class AuthenticateRequestHandler : IRequestHandler<AuthenticateCommand, Result<AuthenticateResponse, Error>>
     {
         private readonly ITokenService _tokenService;
         private readonly IMapper _mapper;
@@ -24,7 +23,7 @@ namespace ScoreboardApp.Application.Authentication
             _mapper = mapper;
         }
 
-        public async Task<Result<AuthenticateResponse, ErrorDTO>> Handle(AuthenticateCommand request, CancellationToken cancellationToken)
+        public async Task<Result<AuthenticateResponse, Error>> Handle(AuthenticateCommand request, CancellationToken cancellationToken)
         {
             var authRequest = new AuthenticationRequest()
             {
@@ -34,12 +33,7 @@ namespace ScoreboardApp.Application.Authentication
 
             var result = await _tokenService.Authenticate(authRequest);
 
-            if (result.IsSuccess)
-            {
-                return Result.Success<AuthenticateResponse, ErrorDTO>(_mapper.Map<AuthenticateResponse>(result.Value));
-            }
-
-            return result.AutoMap<TokenResponse, Error, AuthenticateResponse, ErrorDTO>(_mapper);
+            return result.Map((serviceResponse) => _mapper.Map<AuthenticateResponse>(serviceResponse));
         }
     }
 }

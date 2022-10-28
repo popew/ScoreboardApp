@@ -25,6 +25,6 @@ namespace ScoreboardApp.Application.User.Validators
         private bool BeAValidEmail(string email)
         {
             return EmailRegex.IsMatch(email);
-        }
+        }               
     }
 }

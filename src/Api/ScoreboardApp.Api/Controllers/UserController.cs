@@ -12,10 +12,10 @@ namespace ScoreboardApp.Api.Controllers
 
             if (result.IsFailure)
             {
-                return StatusCode(result.Error.StatusCode, result.Error);
+                return BadRequest(result.Error);
             }
 
-            return Ok();
+            return Ok(result.Value);
         }
 
         [HttpPost("register")]
@@ -25,7 +25,7 @@ namespace ScoreboardApp.Api.Controllers
 
             if (result.IsFailure)
             {
-                return StatusCode(result.Error.StatusCode, result.Error);
+                return BadRequest(result.Error);
             }
 
             return Ok();
@@ -38,10 +38,10 @@ namespace ScoreboardApp.Api.Controllers
 
             if (result.IsFailure)
             {
-                return StatusCode(result.Error.StatusCode, result.Error);
+                return BadRequest(result.Error);
             }
 
-            return Ok();
+            return Ok(result.Value);
         }
 
         [HttpPost("revoke")]
@@ -51,7 +51,7 @@ namespace ScoreboardApp.Api.Controllers
 
             if (result.IsFailure)
             {
-                return StatusCode(result.Error.StatusCode, result.Error);
+                return BadRequest(result.Error);
             }
 
             return Ok();

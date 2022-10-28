@@ -2,12 +2,10 @@
 
 namespace ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Models
 {
-    public sealed class Error : ValueObject
+    public class Error : ValueObject
     {
         public string Code { get; init; } = default!;
-        public string Message { get; init; } = default!;
-
-        public int StatusCode { get; init; }
+        public string? Message { get; init; } = default!;
 
         public List<string> Details { get; private set; } = new();
 

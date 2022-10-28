@@ -7,9 +7,9 @@ using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Services;
 
 namespace ScoreboardApp.Application.Authentication
 {
-    public sealed record RevokeCommand(string UserName) : IRequest<UnitResult<ErrorDTO>>;
+    public sealed record RevokeCommand(string UserName) : IRequest<UnitResult<Error>>;
 
-    public sealed class RevokeCommandHandler : IRequestHandler<RevokeCommand, UnitResult<ErrorDTO>>
+    public sealed class RevokeCommandHandler : IRequestHandler<RevokeCommand, UnitResult<Error>>
     {
         private readonly ITokenService _tokenService;
         private readonly IMapper _mapper;
@@ -20,7 +20,7 @@ namespace ScoreboardApp.Application.Authentication
             _mapper = mapper;
         }
 
-        public async Task<UnitResult<ErrorDTO>> Handle(RevokeCommand request, CancellationToken cancellationToken)
+        public async Task<UnitResult<Error>> Handle(RevokeCommand request, CancellationToken cancellationToken)
         {
             var revokeRequest = new RevokeRequest()
             {
@@ -29,7 +29,7 @@ namespace ScoreboardApp.Application.Authentication
 
             var result = await _tokenService.Revoke(revokeRequest);
 
-            return result.MapError((error) => _mapper.Map<ErrorDTO>(error)); ;
+            return result;
         }
     }
 }
