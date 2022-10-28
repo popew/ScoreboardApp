@@ -70,7 +70,7 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
 
             if (user is null)
             {
-                return Result.Failure<TokenResponse, Error>(Errors.UserNotFoundError);
+                return Result.Failure<TokenResponse, Error>(Errors.UserNotFoundError());
             }
 
             var refreshTokenValidationResult = ValidateRefreshToken(user, request.RefreshToken);
@@ -102,7 +102,7 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
 
             if (existingUser is not null)
             {
-                return UnitResult.Failure(Errors.UserAlreadyExistsError);
+                return UnitResult.Failure(Errors.UserAlreadyExistsError());
             }
 
             ApplicationUser newUser = new()
@@ -117,7 +117,7 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
 
             return result.Succeeded
                 ? UnitResult.Success<Error>()
-                : UnitResult.Failure(Errors.RegistrationFailedError.WithDetails(result.Errors.Select(x => x.Description)));
+                : UnitResult.Failure(Errors.RegistrationFailedError().WithDetails(result.Errors.Select(x => x.Description)));
         }
 
         public async Task<UnitResult<Error>> Revoke(RevokeRequest request, CancellationToken cancellationToken)
@@ -126,7 +126,7 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
 
             if (user is null)
             {
-                return UnitResult.Failure(Errors.UserNotFoundError);
+                return UnitResult.Failure(Errors.UserNotFoundError());
             }
 
             user.RefreshToken = null;
@@ -204,7 +204,7 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
                 !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase) ||
                 principal is null)
             {
-                return Result.Failure<ClaimsPrincipal, Error>(Errors.InvalidTokenError);
+                return Result.Failure<ClaimsPrincipal, Error>(Errors.InvalidTokenError());
             }
 
             return Result.Success<ClaimsPrincipal, Error>(principal);
@@ -228,14 +228,14 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
 
             if (user == null)
             {
-                return Result.Failure<ApplicationUser, Error>(Errors.UserNotFoundError);
+                return Result.Failure<ApplicationUser, Error>(Errors.UserNotFoundError());
             }
 
             SignInResult signInResult = await _signInManager.PasswordSignInAsync(user, password, true, false);
 
             if (!signInResult.Succeeded)
             {
-                return Result.Failure<ApplicationUser, Error>(Errors.SignInFailedError);
+                return Result.Failure<ApplicationUser, Error>(Errors.SignInFailedError());
             }
 
             return Result.Success<ApplicationUser, Error>(user);
@@ -245,7 +245,7 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
         {
             if (user?.RefreshTokenExpiryTime <= DateTime.UtcNow || user?.RefreshToken != refreshToken)
             {
-                return UnitResult.Failure(Errors.InvalidRefreshTokenError);
+                return UnitResult.Failure(Errors.InvalidRefreshTokenError());
             }
 
             return UnitResult.Success<Error>();
