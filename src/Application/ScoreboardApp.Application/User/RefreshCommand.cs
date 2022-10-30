@@ -8,8 +8,16 @@ using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Services;
 
 namespace ScoreboardApp.Application.Authentication
 {
-    public sealed record RefreshCommand(string Token, string RefreshToken) : IRequest<Result<RefreshCommandResponse, Error>>;
-    public sealed record RefreshCommandResponse(string Token, string RefreshToken) : IMapFrom<TokenResponse>;
+    public sealed record RefreshCommand() : IRequest<Result<RefreshCommandResponse, Error>>
+    {
+        public string Token { get; init; } = default!;
+        public string RefreshToken { get; init; } = default!;
+    }
+    public sealed record RefreshCommandResponse() : IMapFrom<TokenResponse>
+    {
+        public string Token { get; init; } = default!;
+        public string RefreshToken { get; init; } = default!;
+    }
 
     public sealed class RefreshCommandHandler : IRequestHandler<RefreshCommand, Result<RefreshCommandResponse, Error>>
     {

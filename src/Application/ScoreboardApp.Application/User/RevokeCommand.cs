@@ -7,7 +7,10 @@ using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Services;
 
 namespace ScoreboardApp.Application.Authentication
 {
-    public sealed record RevokeCommand(string UserName) : IRequest<UnitResult<Error>>;
+    public sealed record RevokeCommand() : IRequest<UnitResult<Error>>
+    {
+        public string UserName { get; init; } = default!;
+    }
 
     public sealed class RevokeCommandHandler : IRequestHandler<RevokeCommand, UnitResult<Error>>
     {

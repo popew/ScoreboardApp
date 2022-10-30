@@ -7,7 +7,13 @@ using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Services;
 
 namespace ScoreboardApp.Application.Authentication
 {
-    public record RegisterCommand(string UserName, string Email, string Password) : IRequest<UnitResult<Error>>;
+    public record RegisterCommand() : IRequest<UnitResult<Error>>
+    {
+        public string UserName { get; init; } = default!;
+        public string Password { get; init; } = default!;
+
+        public string Email { get; init; } = default!;
+    }
 
     public sealed class RegisterRequestHandler : IRequestHandler<RegisterCommand, UnitResult<Error>>
     {
