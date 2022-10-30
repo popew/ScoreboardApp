@@ -7,7 +7,7 @@ namespace ScoreboardApp.Infrastructure.Persistence
 {
     public sealed class ApplicationDbContext : DbContext, IApplicationDbContext
     {
-        public ApplicationDbContext(DbContextOptions options) : base(options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
 
