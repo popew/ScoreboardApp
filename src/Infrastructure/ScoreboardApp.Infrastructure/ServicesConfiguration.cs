@@ -25,7 +25,11 @@ namespace ScoreboardApp.Infrastructure
             services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
 
             services.AddHealthChecks()
-                    .AddSqlServer(connectionString: configuration.GetConnectionString("DefaultConnection"),
+                    .AddSqlServer(name: "ApiDatabase",
+                                  connectionString: configuration.GetConnectionString("DefaultConnection"),
+                                  failureStatus: HealthStatus.Degraded)
+                    .AddSqlServer(name: "IdentityDatabase",
+                                  connectionString: configuration.GetConnectionString("CustomIdentityDatabase"),
                                   failureStatus: HealthStatus.Degraded);
 
             services.AddCustomIdentityService(configuration);
@@ -50,7 +54,7 @@ namespace ScoreboardApp.Infrastructure
                     {
                         ClockSkew = TimeSpan.Zero,
                         ValidateIssuer = true,
-                        ValidateAudience = true,
+                        ValidateAudience = false,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
                         ValidIssuer = tokenSettings.Issuer,

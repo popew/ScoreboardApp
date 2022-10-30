@@ -3,6 +3,7 @@ using Microsoft.OpenApi.Models;
 using ScoreboardApp.Api;
 using ScoreboardApp.Application;
 using ScoreboardApp.Infrastructure;
+using ScoreboardApp.Infrastructure.CustomIdentityService.Extensions;
 using ScoreboardApp.Infrastructure.Extensions;
 using ScoreboardApp.Infrastructure.Persistence;
 
@@ -56,6 +57,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 
+    app.EnsureIdentityDbIsCreated();
+    await app.SeedIdentityDataAsync();
 
     app.ExecuteApplicationDbContextMigrations();
 }

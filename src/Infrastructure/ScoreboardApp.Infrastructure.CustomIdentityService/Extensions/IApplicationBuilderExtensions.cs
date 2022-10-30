@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Identity;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Persistence;
@@ -21,7 +22,7 @@ namespace ScoreboardApp.Infrastructure.CustomIdentityService.Extensions
 
                 var dbContext = services.GetRequiredService<ApplicationIdentityDbContext>();
 
-                dbContext.Database.EnsureCreated();
+                dbContext.Database.Migrate();
             }
         }
 

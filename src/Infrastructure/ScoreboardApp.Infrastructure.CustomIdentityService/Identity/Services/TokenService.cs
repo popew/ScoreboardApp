@@ -66,7 +66,7 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
 
             ClaimsPrincipal principal = getClaimsPrincipalResult.Value;
 
-            ApplicationUser? user = await GetUserByEmail(principal.Identity!.Name!);
+            ApplicationUser? user = await GetUserByUserName(principal.Identity!.Name!);
 
             if (user is null)
             {
@@ -98,7 +98,7 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
 
         public async Task<UnitResult<Error>> Register(RegistrationRequest request, CancellationToken cancellationToken)
         {
-            ApplicationUser? existingUser = await GetUserByEmail(request.UserName);
+            ApplicationUser? existingUser = await GetUserByUserName(request.UserName);
 
             if (existingUser is not null)
             {
@@ -122,7 +122,7 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
 
         public async Task<UnitResult<Error>> Revoke(RevokeRequest request, CancellationToken cancellationToken)
         {
-            ApplicationUser? user = await GetUserByEmail(request.UserName);
+            ApplicationUser? user = await GetUserByUserName(request.UserName);
 
             if (user is null)
             {
@@ -186,7 +186,7 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
             {
                 ClockSkew = TimeSpan.Zero,
                 ValidateIssuer = true,
-                ValidateAudience = true,
+                ValidateAudience = false,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
                 ValidIssuer = _tokenSettings.Issuer,
@@ -211,9 +211,9 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
 
         }
 
-        private async Task<ApplicationUser?> GetUserByEmail(string email)
+        private async Task<ApplicationUser?> GetUserByUserName(string userName)
         {
-            return await _userManager.FindByEmailAsync(email);
+            return await _userManager.FindByNameAsync(userName);
         }
 
         /// <summary>
@@ -224,7 +224,7 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
         /// <returns>Returns user object on successful sign in.</returns>
         private async Task<Result<ApplicationUser, Error>> SignInUser(string username, string password)
         {
-            ApplicationUser? user = await GetUserByEmail(username);
+            ApplicationUser? user = await GetUserByUserName(username);
 
             if (user == null)
             {

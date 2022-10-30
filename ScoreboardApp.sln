@@ -27,7 +27,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScoreboardApp.Domain", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScoreboardApp.Application", "src\Application\ScoreboardApp.Application\ScoreboardApp.Application.csproj", "{F1CD39C3-F234-4380-A137-EE2CF9575A2A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScoreboardApp.Infrastructure.CustomIdentityService", "src\Infrastructure\ScoreboardApp.Infrastructure.CustomIdentityService\ScoreboardApp.Infrastructure.CustomIdentityService.csproj", "{3AD7FD15-7B4B-4C75-B771-C7B34C5DC8B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScoreboardApp.Infrastructure.CustomIdentityService", "src\Infrastructure\ScoreboardApp.Infrastructure.CustomIdentityService\ScoreboardApp.Infrastructure.CustomIdentityService.csproj", "{3AD7FD15-7B4B-4C75-B771-C7B34C5DC8B5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

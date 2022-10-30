@@ -44,7 +44,7 @@ namespace ScoreboardApp.Infrastructure.CustomIdentityService
                     options.Password.RequiredUniqueChars = 1;
                 });
 
-            // services required using Identity
+
             services.AddScoped<ITokenService, TokenService>();
 
             return services;

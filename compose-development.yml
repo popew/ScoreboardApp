@@ -1,0 +1,51 @@
+﻿version: "3.9"
+services:
+    web:
+        build: .
+        ports:
+            - "5001:443"
+            - "5000:80"
+        environment:
+            - ASPNETCORE_URLS=https://+:443;http://+:80
+            - ASPNETCORE_Telemetry_Endpoint=http://localhost:9411/api/v2/spans
+            - ASPNETCORE_ConnectionStrings_DefaultConnection=Server=localhost,1433;Database=ScoreboardAppDb;User Id=sa;Password=Pa@@word123
+            - ASPNETCORE_ConnectionStrings_CustomIdentityDatabase=Server=localhost,1444;Database=CustomIdentityDb;User Id=sa;Password=Pa@@word123
+            - ASPNETCORE_Kestrel__Certificates__Default__Password=Test1234!
+            - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/cert.pfx
+            - ASPNETCORE_Environment=Development
+            - ASPNETCORE_TokenSettings_Secret=TotallySecretStringThatProbablyShouldntBeInThisFile
+            - ASPNETCORE_TokenSettings_Issuer=http://localhost:5000/
+            - ASPNETCORE_TokenSettings_Audience=""
+            - ASPNETCORE_TokenSettings_Expiry=5
+            - ASPNETCORE_TokenSettings_RefreshExpiry=1440
+        depends_on:
+            db:
+                condition: service_started
+            identity_db:
+                condition: service_started
+        healthcheck:
+          test: curl --silent --fail http://localhost:80/health || exit 1
+          interval: 5s
+          timeout: 10s
+          retries: 3
+
+    db:
+        image: "mcr.microsoft.com/mssql/server:2022-latest"
+        ports:
+            - "1433:1433"
+        environment:
+            SA_PASSWORD: "Pa@@word123"
+            ACCEPT_EULA: "Y"
+
+    identity_db:
+        image: "mcr.microsoft.com/mssql/server:2022-latest"
+        ports:
+            - "1444:1433"
+        environment:
+            SA_PASSWORD: "Pa@@word123"
+            ACCEPT_EULA: "Y"
+
+    zipkin:
+        image: openzipkin/zipkin
+        ports:
+            - "9411:9411"
