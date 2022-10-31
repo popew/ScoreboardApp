@@ -108,12 +108,12 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
             ApplicationUser newUser = new()
             {
                 Email = request.Email,
-                UserName = request.UserName
+                UserName = request.UserName,
+                EmailConfirmed = true // TODO: Add email verification at some point
             };
 
             var result = await _userManager.CreateAsync(newUser, request.Password);
 
-            // TODO: Add email confirmation at some point
 
             return result.Succeeded
                 ? UnitResult.Success<Error>()
