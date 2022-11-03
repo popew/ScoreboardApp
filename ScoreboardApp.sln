@@ -29,6 +29,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScoreboardApp.Application",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScoreboardApp.Infrastructure.CustomIdentityService", "src\Infrastructure\ScoreboardApp.Infrastructure.CustomIdentityService\ScoreboardApp.Infrastructure.CustomIdentityService.csproj", "{3AD7FD15-7B4B-4C75-B771-C7B34C5DC8B5}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Api", "Api", "{9C7D30C9-9E56-40BB-865B-DE706CE6910A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +77,7 @@ Global
 		{AC145723-CA9A-419C-81D6-F4BBF310B7E2} = {9657E0EC-8827-4B62-BB74-25061F53EA5B}
 		{F1CD39C3-F234-4380-A137-EE2CF9575A2A} = {E3D51A12-7DEB-484C-84F2-7B618291D586}
 		{3AD7FD15-7B4B-4C75-B771-C7B34C5DC8B5} = {3F1CBC31-276B-4265-82BC-B2F8CEA48F07}
+		{9C7D30C9-9E56-40BB-865B-DE706CE6910A} = {D06D01C3-A955-4FFE-863A-45C5B58C725A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DA1CCF4D-308B-462C-A0D1-27B7EAC168EF}
