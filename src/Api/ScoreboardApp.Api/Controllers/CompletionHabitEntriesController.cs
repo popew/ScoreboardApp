@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ScoreboardApp.Application.CompletionHabitEntries.Commands;
 using ScoreboardApp.Application.CompletionHabitEntries.Queries;
-using ScoreboardApp.Application.EffortHabitEntries.Commands;
-using ScoreboardApp.Application.EffortHabitEntries.Queries;
 
 namespace ScoreboardApp.Api.Controllers
 {
+    [Authorize]
     public sealed class CompletionHabitEntriesController : ApiControllerBase
     {
         [HttpPost]

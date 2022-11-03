@@ -1,10 +1,11 @@
-﻿
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ScoreboardApp.Application.HabitTrackers.Commands;
 using ScoreboardApp.Application.HabitTrackers.Queries;
 
 namespace ScoreboardApp.Api.Controllers
 {
+    [Authorize]
     public sealed class HabitTrackersController : ApiControllerBase
     {
         [HttpPost]
@@ -34,7 +35,7 @@ namespace ScoreboardApp.Api.Controllers
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> Update(Guid id, UpdateHabitTrackerCommand command)
         {
-            if(id != command.Id)
+            if (id != command.Id)
             {
                 return BadRequest();
             }

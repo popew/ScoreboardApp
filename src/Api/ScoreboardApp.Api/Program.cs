@@ -1,7 +1,10 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using ScoreboardApp.Api;
 using ScoreboardApp.Application;
 using ScoreboardApp.Infrastructure;
+using ScoreboardApp.Infrastructure.CustomIdentityService.Extensions;
+using ScoreboardApp.Infrastructure.Extensions;
 using ScoreboardApp.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,7 +14,35 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c => c.UseDateOnlyTimeOnlyStringConverters());
+builder.Services.AddSwaggerGen(c =>
+{
+    c.UseDateOnlyTimeOnlyStringConverters();
+
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Scheme = "bearer",
+        Description = "Please insert JWT token into field"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+
+});
 
 builder.Services.AddApplicationservices(builder.Configuration);
 builder.Services.AddInfrastructureServices(builder.Configuration);
@@ -26,16 +57,15 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 
+    app.EnsureIdentityDbIsCreated();
+    await app.SeedIdentityDataAsync();
 
-    using (var scope = app.Services.CreateScope())
-    {
-        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
-        dbContext.Database.Migrate();
-    }
+    app.ExecuteApplicationDbContextMigrations();
 }
 
 app.MapHealthChecks("/health");
+
+app.UseAuthentication();
 
 app.UseHttpsRedirection();
 
