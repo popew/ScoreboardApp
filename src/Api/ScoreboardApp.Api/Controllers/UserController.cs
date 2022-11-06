@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ScoreboardApp.Application.Authentication;
 using ScoreboardApp.Application.Commons.Mappings;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Errors;
@@ -46,6 +47,7 @@ namespace ScoreboardApp.Api.Controllers
             return Ok(result.Value);
         }
 
+        [Authorize(Roles = "Administrator")]
         [HttpPost("revoke")]
         public async Task<IActionResult> Revoke(RevokeCommand request)
         {

@@ -7,14 +7,15 @@ services:
             - "5000:80"
         environment:
             - ASPNETCORE_URLS=https://+:443;http://+:80
-            - Telemetry__Endpoint=http://localhost:9411/api/v2/spans
+            - TelemetryOptions__IsEnabled=true
+            - TelemetryOptions__Endpoint=http://localhost:9411/api/v2/spans
             - ConnectionStrings__DefaultConnection=Server=sql_backend,1433;Database=ScoreboardAppDb;User Id=sa;Password=Pa@@word123;TrustServerCertificate=true
             - ConnectionStrings__CustomIdentityDatabase=Server=sql_identity,1433;Database=CustomIdentityDb;User Id=sa;Password=Pa@@word123;TrustServerCertificate=true
             - ASPNETCORE_Kestrel__Certificates__Default__Password=Test1234!
-            - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/cert.pfx
+            - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/cert.pfx # Run this to generate it: dotnet dev-certs https -ep cert.pfx -p Test1234!
             - ASPNETCORE_Environment=Development
             - TokenSettings__Secret=TotallySecretStringThatProbablyShouldntBeInThisFile
-            - TokenSettings__Issuer=http://localhost:5000/
+            - TokenSettings__Issuer=https://localhost:5001/
             - TokenSettings__Audience=""
             - TokenSettings__Expiry=5
             - TokenSettings__RefreshExpiry=1440

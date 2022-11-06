@@ -21,7 +21,7 @@ namespace ScoreboardApp.Infrastructure.CustomIdentityService.Extensions
                 var services = serviceScope.ServiceProvider;
 
                 var dbContext = services.GetRequiredService<ApplicationIdentityDbContext>();
-
+                var cs = dbContext.Database.GetDbConnection().ConnectionString;
                 dbContext.Database.Migrate();
             }
         }
