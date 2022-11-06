@@ -31,8 +31,4 @@
     <ProjectReference Include="..\..\..\src\Api\ScoreboardApp.Api\ScoreboardApp.Api.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="UserController\" />
-  </ItemGroup>
-
 </Project>

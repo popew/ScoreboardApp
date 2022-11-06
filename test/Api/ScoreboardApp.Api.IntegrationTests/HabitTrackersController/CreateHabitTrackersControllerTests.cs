@@ -22,7 +22,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
             _apiClient = apiFactory.CreateClient();
 
             // TODO - Add method(s) to get working authorization token
-            _apiClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "Your Oauth token");
+            _apiClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiFactory.NormalTestUser.Token);
         }
 
         [Fact]
@@ -41,7 +41,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
             var responseObject = await httpResponse.Content.ReadFromJsonAsync<CreateHabitTrackerCommandResponse>();
 
             httpResponse.Headers.Location!.ToString().Should()
-                .Be($"http://localhost/{Endpoint}/{responseObject!.Id}");
+                .Be($"http://localhost/{Endpoint}?Id={responseObject!.Id}");
 
             responseObject.Should().BeEquivalentTo(commandObject);
         }

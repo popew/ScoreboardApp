@@ -16,20 +16,23 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
     public sealed class TokenService : ITokenService
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly ITokenGeneratorService _tokenGeneratorService;
         private readonly TokenSettings _tokenSettings;
         private readonly UserManager<ApplicationUser> _userManager;
         public TokenService(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            IOptions<TokenSettings> tokenOptions
+            ITokenGeneratorService tokenGeneratorService,
+            IOptions<TokenSettings> tokenSettings
         )
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _tokenSettings = tokenOptions.Value;
+            _tokenGeneratorService = tokenGeneratorService;
+            _tokenSettings = tokenSettings.Value;
         }
 
-        public async Task<Result<TokenResponse, Error>> Authenticate(AuthenticationRequest request, CancellationToken cancellationToken)
+        public async Task<Result<TokenResponse, Error>> Authenticate(AuthenticationRequest request, CancellationToken cancellationToken = default!)
         {
             var signInResult = await SignInUser(request.UserName, request.Password);
 
@@ -40,8 +43,10 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
 
             ApplicationUser user = signInResult.Value;
 
-            string token = await GenerateJwtToken(user);
-            string refreshToken = GenerateRefreshToken();
+            var roles = await _userManager.GetRolesAsync(user);
+
+            string token = await _tokenGeneratorService.GenerateJwtTokenAsync(user, roles);
+            string refreshToken = await _tokenGeneratorService.GenerateRefreshTokenAsync();
 
             user.RefreshToken = refreshToken;
             user.RefreshTokenExpiryTime = DateTime.UtcNow.AddMinutes(_tokenSettings.RefreshExpiry);
@@ -55,7 +60,7 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
             });
         }
 
-        public async Task<Result<TokenResponse, Error>> Refresh(RefreshRequest request, CancellationToken cancellationToken)
+        public async Task<Result<TokenResponse, Error>> Refresh(RefreshRequest request, CancellationToken cancellationToken = default!)
         {
             var getClaimsPrincipalResult = GetPrincipalFromExpiredToken(request.Token);
 
@@ -80,8 +85,10 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
                 return Result.Failure<TokenResponse, Error>(refreshTokenValidationResult.Error);
             }
 
-            string token = await GenerateJwtToken(user);
-            string refreshToken = GenerateRefreshToken();
+            var roles = await _userManager.GetRolesAsync(user);
+
+            string token = await _tokenGeneratorService.GenerateJwtTokenAsync(user, roles);
+            string refreshToken = await _tokenGeneratorService.GenerateRefreshTokenAsync();
 
             user.RefreshToken = refreshToken;
             user.RefreshTokenExpiryTime = DateTime.UtcNow.AddMinutes(_tokenSettings.RefreshExpiry);
@@ -96,7 +103,7 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
 
         }
 
-        public async Task<UnitResult<Error>> Register(RegistrationRequest request, CancellationToken cancellationToken)
+        public async Task<UnitResult<Error>> Register(RegistrationRequest request, CancellationToken cancellationToken = default!)
         {
             ApplicationUser? existingUser = await GetUserByUserName(request.UserName);
 
@@ -120,7 +127,7 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
                 : UnitResult.Failure(Errors.RegistrationFailedError().WithDetails(result.Errors.Select(x => x.Description)));
         }
 
-        public async Task<UnitResult<Error>> Revoke(RevokeRequest request, CancellationToken cancellationToken)
+        public async Task<UnitResult<Error>> Revoke(RevokeRequest request, CancellationToken cancellationToken = default!)
         {
             ApplicationUser? user = await GetUserByUserName(request.UserName);
 
@@ -134,43 +141,6 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
             await _userManager.UpdateAsync(user);
 
             return UnitResult.Success<Error>();
-        }
-
-        private async Task<string> GenerateJwtToken(ApplicationUser user)
-        {
-            var roles = await _userManager.GetRolesAsync(user);
-            byte[] secret = Encoding.ASCII.GetBytes(_tokenSettings.Secret);
-
-            var claims = new List<Claim>()
-            {
-                new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.NameIdentifier, user.Id),
-                new Claim(ClaimTypes.Email, user.Email)
-            };
-
-            foreach (var role in roles)
-            {
-                claims.Add(new Claim(ClaimTypes.Role, role));
-            }
-
-            var descriptor = new SecurityTokenDescriptor
-            {
-                Issuer = _tokenSettings.Issuer,
-                Audience = _tokenSettings.Audience,
-                Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddMinutes(_tokenSettings.Expiry),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secret), SecurityAlgorithms.HmacSha256Signature),
-            };
-
-            var handler = new JwtSecurityTokenHandler();
-            SecurityToken token = handler.CreateToken(descriptor);
-
-            return handler.WriteToken(token);
-        }
-
-        private string GenerateRefreshToken()
-        {
-            return Guid.NewGuid().ToString();
         }
 
         /// <summary>

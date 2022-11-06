@@ -14,7 +14,7 @@ namespace ScoreboardApp.Infrastructure.CustomIdentityService.Extensions
         ///     Create Identity DB if not exist
         /// </summary>
         /// <param name="builder"></param>
-        public static void EnsureIdentityDbIsCreated(this IApplicationBuilder builder)
+        public static void EnsureIdentityDbIsMigrations(this IApplicationBuilder builder)
         {
             using (var serviceScope = builder.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
@@ -36,10 +36,11 @@ namespace ScoreboardApp.Infrastructure.CustomIdentityService.Extensions
             {
                 var services = serviceScope.ServiceProvider;
 
-                var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-                var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                var dataSeeder = services.GetRequiredService<IdentityDbContextDataSeeder>();
 
-                await ApplicationIdentityDbContextDataSeed.SeedAsync(userManager, roleManager);
+                await dataSeeder.SeedRolesAsync(Roles.RolesSupported);
+                await dataSeeder.SeedUserAsync("dev_admin@scoreboardapp.com", "DefaultPa@@word123", new string[] { Roles.Administrator, Roles.User });
+                await dataSeeder.SeedUserAsync("dev_testuser@scoreboardapp.com", "DefaultPa@@word123", new string[] { Roles.User });
             }
         }
     }

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ScoreboardApp.Infrastructure.CustomIdentityService.Identity;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Options;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Services;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Persistence;
@@ -45,7 +46,11 @@ namespace ScoreboardApp.Infrastructure.CustomIdentityService
                 });
 
 
+            services.AddScoped<ITokenGeneratorService, TokenGeneratorService>();
             services.AddScoped<ITokenService, TokenService>();
+
+
+            services.AddScoped<IdentityDbContextDataSeeder>();
 
             return services;
         }

@@ -16,17 +16,30 @@ using ScoreboardApp.Infrastructure.Persistence;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
+using ScoreboardApp.Infrastructure.CustomIdentityService.Identity;
+using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Services;
+using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Models;
+using System.Net.Http.Json;
+using ScoreboardApp.Application.Authentication;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using ScoreboardApp.Infrastructure.CustomIdentityService.Persistence.Entities;
 
 namespace ScoreboardApp.Api.IntegrationTests
 {
     public class ScoreboardAppApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifetime
     {
+        public const string DefaultTestPassword = "Pa@@word123";
+
+        public readonly TestUser AdminTestUser = new("test_admin@scoreboardapp.com", DefaultTestPassword, new string[] { Roles.Administrator, Roles.User });
+        public readonly TestUser NormalTestUser = new("test_testuser@scoreboardapp.com", DefaultTestPassword, new string[] { Roles.User });
+
         private readonly TestcontainerDatabase _apiDbContainer =
             new TestcontainersBuilder<MsSqlTestcontainer>()
             .WithDatabase(new MsSqlTestcontainerConfiguration
             {
                 Database = "ApiDb",
-                Password = "Pa@@word123"
+                Password = DefaultTestPassword
             })
             .WithImage("mcr.microsoft.com/mssql/server:2022-latest")
             .WithPortBinding(1433, 1433)
@@ -37,7 +50,7 @@ namespace ScoreboardApp.Api.IntegrationTests
             .WithDatabase(new MsSqlTestcontainerConfiguration
             {
                 Database = "IdentityDb",
-                Password = "Pa@@word123"
+                Password = DefaultTestPassword
             })
             .WithImage("mcr.microsoft.com/mssql/server:2022-latest")
             .WithPortBinding(1444, 1433)
@@ -73,10 +86,54 @@ namespace ScoreboardApp.Api.IntegrationTests
             });
         }
 
+        private async Task SeedTestUsersAsync()
+        {
+            using var scope = Services.CreateScope();
+            {
+                var services = scope.ServiceProvider;
+
+                var dataSeeder = services.GetRequiredService<IdentityDbContextDataSeeder>();
+
+                await dataSeeder.SeedRolesAsync(Roles.RolesSupported);
+
+                await dataSeeder.SeedUserAsync(AdminTestUser.Email, AdminTestUser.Password, AdminTestUser.Roles);
+                await dataSeeder.SeedUserAsync(NormalTestUser.Email, NormalTestUser.Password, NormalTestUser.Roles);
+
+                await Task.WhenAll(GetTokenForTestUser(AdminTestUser), GetTokenForTestUser(NormalTestUser));
+            }
+        }
+
+        private async Task GetTokenForTestUser(TestUser testUser)
+        {
+            using var scope = Services.CreateScope();
+            {
+                var services = scope.ServiceProvider;
+
+                var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+                var tokenGenerator = services.GetRequiredService<ITokenGeneratorService>();
+
+                var applicationUser = await userManager.FindByNameAsync(testUser.UserName);
+                var roles = await userManager.GetRolesAsync(applicationUser);
+
+                testUser.Token = await tokenGenerator.GenerateJwtTokenAsync(applicationUser, roles);
+            }
+
+            // Generating token using API:
+            //using(var client = CreateClient())
+            //{
+            //    var httpResponse = await client.PostAsJsonAsync("api/Users/authenticate", new AuthenticateCommand() { UserName = testUser.UserName, Password = testUser.Password });
+
+            //    var responseObject = await httpResponse.Content.ReadFromJsonAsync<AuthenticateCommandResponse>();
+
+            //    testUser.Token = responseObject!.Token;
+            //}
+        }
+
         public async Task InitializeAsync()
         {
-            await _apiDbContainer.StartAsync();
-            await _identityDbContainer.StartAsync();
+            await Task.WhenAll(_apiDbContainer.StartAsync(), _identityDbContainer.StartAsync());
+
+            await SeedTestUsersAsync();
         }
 
         async Task IAsyncLifetime.DisposeAsync()
