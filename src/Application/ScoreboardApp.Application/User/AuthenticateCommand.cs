@@ -22,12 +22,12 @@ namespace ScoreboardApp.Application.Authentication
 
     public sealed class AuthenticateRequestHandler : IRequestHandler<AuthenticateCommand, Result<AuthenticateCommandResponse, Error>>
     {
-        private readonly IUserService _tokenService;
+        private readonly IUserService _userService;
         private readonly IMapper _mapper;
 
-        public AuthenticateRequestHandler(IUserService tokenService, IMapper mapper)
+        public AuthenticateRequestHandler(IUserService userService, IMapper mapper)
         {
-            _tokenService = tokenService;
+            _userService = userService;
             _mapper = mapper;
         }
 
@@ -39,7 +39,7 @@ namespace ScoreboardApp.Application.Authentication
                 Password = request.Password
             };
 
-            var result = await _tokenService.Authenticate(authRequest, cancellationToken);
+            var result = await _userService.Authenticate(authRequest, cancellationToken);
 
             return result.Map((serviceResponse) => _mapper.Map<AuthenticateCommandResponse>(serviceResponse));
         }

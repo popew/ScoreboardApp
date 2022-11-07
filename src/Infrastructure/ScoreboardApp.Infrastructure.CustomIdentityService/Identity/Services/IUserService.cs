@@ -17,7 +17,7 @@ namespace ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Services
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        Task<Result<TokenResponse, Error>> Refresh(RefreshRequest request, CancellationToken cancellationToken = default!);
+        Task<Result<TokenResponse, Error>> RefreshJwtToken(RefreshRequest request, CancellationToken cancellationToken = default!);
 
         /// <summary>
         /// Revokes refresh token for user.

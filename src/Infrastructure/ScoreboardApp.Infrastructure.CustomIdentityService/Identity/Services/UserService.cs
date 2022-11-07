@@ -57,7 +57,7 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
             });
         }
 
-        public async Task<Result<TokenResponse, Error>> Refresh(RefreshRequest request, CancellationToken cancellationToken = default!)
+        public async Task<Result<TokenResponse, Error>> RefreshJwtToken(RefreshRequest request, CancellationToken cancellationToken = default!)
         {
             var (principal, _) = await _tokenService.ValidateTokenAsync(request.Token);
 
@@ -136,7 +136,7 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
             return UnitResult.Success<Error>();
         }
 
-        private async Task<ApplicationUser?> GetUserByUserName(string userName)
+        public async Task<ApplicationUser?> GetUserByUserName(string userName)
         {
             return await _userManager.FindByNameAsync(userName);
         }

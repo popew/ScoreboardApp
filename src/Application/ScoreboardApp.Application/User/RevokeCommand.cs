@@ -14,12 +14,12 @@ namespace ScoreboardApp.Application.Authentication
 
     public sealed class RevokeCommandHandler : IRequestHandler<RevokeCommand, UnitResult<Error>>
     {
-        private readonly IUserService _tokenService;
+        private readonly IUserService _userService;
         private readonly IMapper _mapper;
 
-        public RevokeCommandHandler(IUserService tokenService, IMapper mapper)
+        public RevokeCommandHandler(IUserService userService, IMapper mapper)
         {
-            _tokenService = tokenService;
+            _userService = userService;
             _mapper = mapper;
         }
 
@@ -30,7 +30,7 @@ namespace ScoreboardApp.Application.Authentication
                 UserName = request.UserName
             };
 
-            var result = await _tokenService.Revoke(revokeRequest, cancellationToken);
+            var result = await _userService.Revoke(revokeRequest, cancellationToken);
 
             return result;
         }

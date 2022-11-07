@@ -17,12 +17,12 @@ namespace ScoreboardApp.Application.Authentication
 
     public sealed class RegisterRequestHandler : IRequestHandler<RegisterCommand, UnitResult<Error>>
     {
-        private readonly IUserService _tokenService;
+        private readonly IUserService _userService;
         private readonly IMapper _mapper;
 
-        public RegisterRequestHandler(IUserService tokenService, IMapper mapper)
+        public RegisterRequestHandler(IUserService userService, IMapper mapper)
         {
-            _tokenService = tokenService;
+            _userService = userService;
             _mapper = mapper;
         }
 
@@ -35,7 +35,7 @@ namespace ScoreboardApp.Application.Authentication
                 Email = request.Email
             };
 
-            var result = await _tokenService.Register(registerRequest, cancellationToken);
+            var result = await _userService.Register(registerRequest, cancellationToken);
 
             return result;
         }

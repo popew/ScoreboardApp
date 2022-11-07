@@ -21,12 +21,12 @@ namespace ScoreboardApp.Application.Authentication
 
     public sealed class RefreshCommandHandler : IRequestHandler<RefreshCommand, Result<RefreshCommandResponse, Error>>
     {
-        private readonly IUserService _tokenService;
+        private readonly IUserService _userService;
         private readonly IMapper _mapper;
 
-        public RefreshCommandHandler(IUserService tokenService, IMapper mapper)
+        public RefreshCommandHandler(IUserService userService, IMapper mapper)
         {
-            _tokenService = tokenService;
+            _userService = userService;
             _mapper = mapper;
         }
 
@@ -38,7 +38,7 @@ namespace ScoreboardApp.Application.Authentication
                 RefreshToken = request.RefreshToken
             };
 
-            var result = await _tokenService.Refresh(refreshRequest, cancellationToken);
+            var result = await _userService.RefreshJwtToken(refreshRequest, cancellationToken);
 
             return result.Map((serviceResponse) => _mapper.Map<RefreshCommandResponse>(serviceResponse));
         }
