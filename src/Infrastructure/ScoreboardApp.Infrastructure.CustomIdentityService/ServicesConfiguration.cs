@@ -1,13 +1,18 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Identity;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Options;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Services;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Persistence;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Persistence.Entities;
 using ScoreboardApp.Infrastructure.Identity.Services;
+using System.Security.Claims;
+using System.Text;
 
 namespace ScoreboardApp.Infrastructure.CustomIdentityService
 {
@@ -49,8 +54,44 @@ namespace ScoreboardApp.Infrastructure.CustomIdentityService
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IUserService, UserService>();
 
-
             services.AddScoped<IdentityDbContextDataSeeder>();
+
+            // Authentication
+            Action<JwtBearerOptions> jwtBearerOptions = options =>
+            {
+                var tokenSettings = configuration.GetSection(nameof(TokenSettings)).Get<TokenSettings>();
+                byte[] secret = Encoding.ASCII.GetBytes(tokenSettings.Secret);
+
+                options.RequireHttpsMetadata = true;
+                options.SaveToken = true;
+                options.ClaimsIssuer = tokenSettings.Issuer;
+                options.IncludeErrorDetails = true;
+                options.Validate(JwtBearerDefaults.AuthenticationScheme);
+                options.TokenValidationParameters =
+                    new TokenValidationParameters
+                    {
+                        ClockSkew = TimeSpan.Zero,
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = tokenSettings.Issuer,
+                        ValidAudience = tokenSettings.Audience,
+                        IssuerSigningKey = new SymmetricSecurityKey(secret),
+                        NameClaimType = ClaimTypes.NameIdentifier,
+                        RequireSignedTokens = true,
+                        RequireExpirationTime = true
+                    };
+            };
+
+            services.Configure<JwtBearerOptions>(jwtBearerOptions);
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(jwtBearerOptions);
 
             return services;
         }

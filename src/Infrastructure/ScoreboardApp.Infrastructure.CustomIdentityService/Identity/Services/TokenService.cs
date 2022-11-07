@@ -1,31 +1,26 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Options;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Persistence.Entities;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Services
 {
     public sealed class TokenService : ITokenService
     {
         private readonly TokenSettings _tokenSettings;
+        private readonly TokenValidationParameters _tokenValidationParameters;
 
-        public TokenService(IOptions<TokenSettings> tokenSettings)
+        public TokenService(IOptions<TokenSettings> tokenSettings, IOptions<JwtBearerOptions> jwtBearerOptions)
         {
             _tokenSettings = tokenSettings.Value;
+            _tokenValidationParameters = jwtBearerOptions.Value.TokenValidationParameters;
         }
 
         public Task<string> GenerateJwtTokenAsync(ApplicationUser user, IList<string> roles)
         {
-            byte[] secret = Encoding.ASCII.GetBytes(_tokenSettings.Secret);
-
             var claims = new List<Claim>()
             {
                 new Claim(ClaimTypes.Name, user.UserName),
@@ -40,11 +35,11 @@ namespace ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Services
 
             var descriptor = new SecurityTokenDescriptor
             {
-                Issuer = _tokenSettings.Issuer,
-                Audience = _tokenSettings.Audience,
+                Issuer = _tokenValidationParameters.ValidIssuer,
+                Audience = _tokenValidationParameters.ValidAudience,
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.UtcNow.AddMinutes(_tokenSettings.Expiry),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secret), SecurityAlgorithms.HmacSha256Signature),
+                SigningCredentials = new SigningCredentials(_tokenValidationParameters.IssuerSigningKey, SecurityAlgorithms.HmacSha256Signature),
             };
 
             var handler = new JwtSecurityTokenHandler();
@@ -56,6 +51,14 @@ namespace ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Services
         public Task<string> GenerateRefreshTokenAsync()
         {
             return Task.FromResult(Guid.NewGuid().ToString());
+        }
+
+        public Task<(ClaimsPrincipal?, SecurityToken?)> ValidateTokenAsync(string token)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var principal = tokenHandler.ValidateToken(token, _tokenValidationParameters, out SecurityToken securityToken);
+
+            return Task.FromResult<(ClaimsPrincipal?, SecurityToken?)>((principal, securityToken));
         }
     }
 }

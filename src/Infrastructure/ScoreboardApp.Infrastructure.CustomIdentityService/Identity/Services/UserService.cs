@@ -1,34 +1,31 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Errors;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Models;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Options;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Services;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Persistence.Entities;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace ScoreboardApp.Infrastructure.Identity.Services
 {
     public sealed class UserService : IUserService
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly ITokenService _tokenGeneratorService;
+        private readonly ITokenService _tokenService;
         private readonly TokenSettings _tokenSettings;
         private readonly UserManager<ApplicationUser> _userManager;
+
         public UserService(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            ITokenService tokenGeneratorService,
+            ITokenService tokenService,
             IOptions<TokenSettings> tokenSettings
         )
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _tokenGeneratorService = tokenGeneratorService;
+            _tokenService = tokenService;
             _tokenSettings = tokenSettings.Value;
         }
 
@@ -45,8 +42,8 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
 
             var roles = await _userManager.GetRolesAsync(user);
 
-            string token = await _tokenGeneratorService.GenerateJwtTokenAsync(user, roles);
-            string refreshToken = await _tokenGeneratorService.GenerateRefreshTokenAsync();
+            string token = await _tokenService.GenerateJwtTokenAsync(user, roles);
+            string refreshToken = await _tokenService.GenerateRefreshTokenAsync();
 
             user.RefreshToken = refreshToken;
             user.RefreshTokenExpiryTime = DateTime.UtcNow.AddMinutes(_tokenSettings.RefreshExpiry);
@@ -62,16 +59,14 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
 
         public async Task<Result<TokenResponse, Error>> Refresh(RefreshRequest request, CancellationToken cancellationToken = default!)
         {
-            var getClaimsPrincipalResult = GetPrincipalFromExpiredToken(request.Token);
+            var (principal, _) = await _tokenService.ValidateTokenAsync(request.Token);
 
-            if (getClaimsPrincipalResult.IsFailure)
+            if (principal is null)
             {
-                return Result.Failure<TokenResponse, Error>(getClaimsPrincipalResult.Error);
+                return Result.Failure<TokenResponse, Error>(Errors.InvalidTokenError());
             }
 
-            ClaimsPrincipal principal = getClaimsPrincipalResult.Value;
-
-            ApplicationUser? user = await GetUserByUserName(principal.Identity!.Name!);
+            ApplicationUser? user = await GetUserByUserName(principal!.Identity!.Name!);
 
             if (user is null)
             {
@@ -87,8 +82,8 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
 
             var roles = await _userManager.GetRolesAsync(user);
 
-            string token = await _tokenGeneratorService.GenerateJwtTokenAsync(user, roles);
-            string refreshToken = await _tokenGeneratorService.GenerateRefreshTokenAsync();
+            string token = await _tokenService.GenerateJwtTokenAsync(user, roles);
+            string refreshToken = await _tokenService.GenerateRefreshTokenAsync();
 
             user.RefreshToken = refreshToken;
             user.RefreshTokenExpiryTime = DateTime.UtcNow.AddMinutes(_tokenSettings.RefreshExpiry);
@@ -100,7 +95,6 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
                 Token = token,
                 RefreshToken = refreshToken
             });
-
         }
 
         public async Task<UnitResult<Error>> Register(RegistrationRequest request, CancellationToken cancellationToken = default!)
@@ -121,7 +115,6 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
 
             var result = await _userManager.CreateAsync(newUser, request.Password);
 
-
             return result.Succeeded
                 ? UnitResult.Success<Error>()
                 : UnitResult.Failure(Errors.RegistrationFailedError().WithDetails(result.Errors.Select(x => x.Description)));
@@ -141,44 +134,6 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
             await _userManager.UpdateAsync(user);
 
             return UnitResult.Success<Error>();
-        }
-
-        /// <summary>
-        /// Validates the token and returns its ClaimsPrincipal (user).
-        /// </summary>
-        /// <param name="token"></param>
-        /// <returns>Returns ClaimsPrincipal if input token is valid.</returns>
-        private Result<ClaimsPrincipal, Error> GetPrincipalFromExpiredToken(string token)
-        {
-            byte[] secret = Encoding.ASCII.GetBytes(_tokenSettings.Secret);
-
-            var tokenValidationParameters = new TokenValidationParameters
-            {
-                ClockSkew = TimeSpan.Zero,
-                ValidateIssuer = true,
-                ValidateAudience = false,
-                ValidateLifetime = true,
-                ValidateIssuerSigningKey = true,
-                ValidIssuer = _tokenSettings.Issuer,
-                ValidAudience = _tokenSettings.Audience,
-                IssuerSigningKey = new SymmetricSecurityKey(secret),
-                NameClaimType = ClaimTypes.NameIdentifier,
-                RequireSignedTokens = true,
-                RequireExpirationTime = true
-            };
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken securityToken);
-
-            if (securityToken is not JwtSecurityToken jwtSecurityToken ||
-                !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase) ||
-                principal is null)
-            {
-                return Result.Failure<ClaimsPrincipal, Error>(Errors.InvalidTokenError());
-            }
-
-            return Result.Success<ClaimsPrincipal, Error>(principal);
-
         }
 
         private async Task<ApplicationUser?> GetUserByUserName(string userName)
