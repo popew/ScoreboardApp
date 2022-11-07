@@ -14,10 +14,10 @@ namespace ScoreboardApp.Application.Authentication
 
     public sealed class RevokeCommandHandler : IRequestHandler<RevokeCommand, UnitResult<Error>>
     {
-        private readonly ITokenService _tokenService;
+        private readonly IUserService _tokenService;
         private readonly IMapper _mapper;
 
-        public RevokeCommandHandler(ITokenService tokenService, IMapper mapper)
+        public RevokeCommandHandler(IUserService tokenService, IMapper mapper)
         {
             _tokenService = tokenService;
             _mapper = mapper;

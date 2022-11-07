@@ -13,7 +13,7 @@ namespace ScoreboardApp.Application.User.Validators
         {
             RuleFor(x => x.Email)
                 .NotEmpty()
-                .Must(BeAValidEmail);
+                .Must(BeAValidEmail).WithMessage("{PropertyValue} is not a valid email.");
 
             RuleFor(x => x.Password)
                 .NotEmpty();

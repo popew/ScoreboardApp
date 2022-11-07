@@ -21,10 +21,10 @@ namespace ScoreboardApp.Application.Authentication
 
     public sealed class RefreshCommandHandler : IRequestHandler<RefreshCommand, Result<RefreshCommandResponse, Error>>
     {
-        private readonly ITokenService _tokenService;
+        private readonly IUserService _tokenService;
         private readonly IMapper _mapper;
 
-        public RefreshCommandHandler(ITokenService tokenService, IMapper mapper)
+        public RefreshCommandHandler(IUserService tokenService, IMapper mapper)
         {
             _tokenService = tokenService;
             _mapper = mapper;

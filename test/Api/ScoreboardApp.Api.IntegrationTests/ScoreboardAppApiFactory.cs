@@ -42,7 +42,6 @@ namespace ScoreboardApp.Api.IntegrationTests
                 Password = DefaultTestPassword
             })
             .WithImage("mcr.microsoft.com/mssql/server:2022-latest")
-            .WithPortBinding(1433, 1433)
             .Build();
 
         private readonly TestcontainerDatabase _identityDbContainer =
@@ -53,7 +52,6 @@ namespace ScoreboardApp.Api.IntegrationTests
                 Password = DefaultTestPassword
             })
             .WithImage("mcr.microsoft.com/mssql/server:2022-latest")
-            .WithPortBinding(1444, 1433)
             .Build();
 
 
@@ -110,7 +108,7 @@ namespace ScoreboardApp.Api.IntegrationTests
                 var services = scope.ServiceProvider;
 
                 var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-                var tokenGenerator = services.GetRequiredService<ITokenGeneratorService>();
+                var tokenGenerator = services.GetRequiredService<ITokenService>();
 
                 var applicationUser = await userManager.FindByNameAsync(testUser.UserName);
                 var roles = await userManager.GetRolesAsync(applicationUser);

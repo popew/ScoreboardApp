@@ -27,14 +27,6 @@ namespace ScoreboardApp.Infrastructure
 
             services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
 
-            services.AddHealthChecks()
-                    .AddSqlServer(name: "ApiDatabase",
-                                  connectionString: configuration.GetConnectionString("DefaultConnection"),
-                                  failureStatus: HealthStatus.Degraded)
-                    .AddSqlServer(name: "IdentityDatabase",
-                                  connectionString: configuration.GetConnectionString("CustomIdentityDatabase"),
-                                  failureStatus: HealthStatus.Degraded);
-
             services.AddCustomIdentityService(configuration);
 
             services.AddAuthentication(options =>
@@ -69,6 +61,16 @@ namespace ScoreboardApp.Infrastructure
                     };
             });
 
+            // Configure HealthChecks
+            services.AddHealthChecks()
+                    .AddSqlServer(name: "ApiDatabase",
+                                  connectionString: configuration.GetConnectionString("DefaultConnection"),
+                                  failureStatus: HealthStatus.Degraded)
+                    .AddSqlServer(name: "IdentityDatabase",
+                                  connectionString: configuration.GetConnectionString("CustomIdentityDatabase"),
+                                  failureStatus: HealthStatus.Degraded);
+
+            // Configure Telemetry
             services.Configure<TelemetryOptions>(configuration.GetSection(nameof(TelemetryOptions)));
 
             var telemetryOptions = configuration.GetSection(nameof(TelemetryOptions)).Get<TelemetryOptions>();

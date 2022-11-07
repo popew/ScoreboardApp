@@ -21,7 +21,6 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
             _apiFactory = apiFactory;
             _apiClient = apiFactory.CreateClient();
 
-            // TODO - Add method(s) to get working authorization token
             _apiClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiFactory.NormalTestUser.Token);
         }
 
@@ -29,21 +28,21 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
         public async Task Create_CreatesHabitTracker_WhenDataIsValid()
         {
             // Arrange
-            var commandObject = _commandGenerator.Generate();
+            var habitTracker = _commandGenerator.Generate();
 
             // Act
-            var httpResponse = await _apiClient.PostAsJsonAsync(Endpoint, commandObject);
+            var httpResponse = await _apiClient.PostAsJsonAsync(Endpoint, habitTracker);
 
 
             // Assert
             httpResponse.StatusCode.Should().Be(HttpStatusCode.Created);
 
-            var responseObject = await httpResponse.Content.ReadFromJsonAsync<CreateHabitTrackerCommandResponse>();
+            var createdObject = await httpResponse.Content.ReadFromJsonAsync<CreateHabitTrackerCommandResponse>();
 
             httpResponse.Headers.Location!.ToString().Should()
-                .Be($"http://localhost/{Endpoint}?Id={responseObject!.Id}");
+                .Be($"http://localhost/{Endpoint}?Id={createdObject!.Id}");
 
-            responseObject.Should().BeEquivalentTo(commandObject);
+            createdObject.Should().BeEquivalentTo(habitTracker);
         }
     }
 }

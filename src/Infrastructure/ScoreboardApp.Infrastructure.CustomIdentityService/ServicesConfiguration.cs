@@ -46,8 +46,8 @@ namespace ScoreboardApp.Infrastructure.CustomIdentityService
                 });
 
 
-            services.AddScoped<ITokenGeneratorService, TokenGeneratorService>();
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IUserService, UserService>();
 
 
             services.AddScoped<IdentityDbContextDataSeeder>();

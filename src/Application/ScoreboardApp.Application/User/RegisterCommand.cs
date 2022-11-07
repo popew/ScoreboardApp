@@ -17,10 +17,10 @@ namespace ScoreboardApp.Application.Authentication
 
     public sealed class RegisterRequestHandler : IRequestHandler<RegisterCommand, UnitResult<Error>>
     {
-        private readonly ITokenService _tokenService;
+        private readonly IUserService _tokenService;
         private readonly IMapper _mapper;
 
-        public RegisterRequestHandler(ITokenService tokenService, IMapper mapper)
+        public RegisterRequestHandler(IUserService tokenService, IMapper mapper)
         {
             _tokenService = tokenService;
             _mapper = mapper;

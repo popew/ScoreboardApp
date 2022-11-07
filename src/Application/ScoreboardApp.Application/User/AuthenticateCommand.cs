@@ -22,10 +22,10 @@ namespace ScoreboardApp.Application.Authentication
 
     public sealed class AuthenticateRequestHandler : IRequestHandler<AuthenticateCommand, Result<AuthenticateCommandResponse, Error>>
     {
-        private readonly ITokenService _tokenService;
+        private readonly IUserService _tokenService;
         private readonly IMapper _mapper;
 
-        public AuthenticateRequestHandler(ITokenService tokenService, IMapper mapper)
+        public AuthenticateRequestHandler(IUserService tokenService, IMapper mapper)
         {
             _tokenService = tokenService;
             _mapper = mapper;
