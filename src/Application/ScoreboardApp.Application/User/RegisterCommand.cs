@@ -43,8 +43,7 @@ namespace ScoreboardApp.Application.Authentication
 
             if (createUserResult.IsFailure)
             {
-                // TODO: Get validation error details from error object
-                throw new ValidationException();
+                throw new ValidationException(createUserResult.Error.Details.ToDictionary(x => x.Key, x => new string[] { x.Value } ));
             }
 
             return Unit.Value;
