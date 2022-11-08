@@ -48,9 +48,12 @@ namespace ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Services
             return Task.FromResult(handler.WriteToken(token));
         }
 
-        public Task<string> GenerateRefreshTokenAsync()
+        public Task<(string RefreshToken, DateTime RefreshTokenExpiry)> GenerateRefreshTokenAsync()
         {
-            return Task.FromResult(Guid.NewGuid().ToString());
+            string refreshToken = Guid.NewGuid().ToString();
+            DateTime refreshTokenExpiry = DateTime.UtcNow.AddMinutes(_tokenSettings.RefreshExpiry);
+
+            return Task.FromResult<(string, DateTime)>((refreshToken, refreshTokenExpiry));
         }
 
         public Task<(ClaimsPrincipal?, SecurityToken?)> ValidateTokenAsync(string token)

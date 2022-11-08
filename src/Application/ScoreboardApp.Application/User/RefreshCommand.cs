@@ -1,14 +1,15 @@
 ﻿using AutoMapper;
-using CSharpFunctionalExtensions;
+using FluentValidation.Results;
 using MediatR;
+using ScoreboardApp.Application.Commons.Exceptions;
 using ScoreboardApp.Application.Commons.Mappings;
-using ScoreboardApp.Application.DTOs;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Models;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Services;
+using ScoreboardApp.Infrastructure.CustomIdentityService.Persistence.Entities;
 
 namespace ScoreboardApp.Application.Authentication
 {
-    public sealed record RefreshCommand() : IRequest<Result<RefreshCommandResponse, Error>>
+    public sealed record RefreshCommand() : IRequest<RefreshCommandResponse>
     {
         public string Token { get; init; } = default!;
         public string RefreshToken { get; init; } = default!;
@@ -17,9 +18,11 @@ namespace ScoreboardApp.Application.Authentication
     {
         public string Token { get; init; } = default!;
         public string RefreshToken { get; init; } = default!;
+
+        public DateTime RefreshTokenExpiry { get; init; }
     }
 
-    public sealed class RefreshCommandHandler : IRequestHandler<RefreshCommand, Result<RefreshCommandResponse, Error>>
+    public sealed class RefreshCommandHandler : IRequestHandler<RefreshCommand, RefreshCommandResponse>
     {
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
@@ -30,17 +33,33 @@ namespace ScoreboardApp.Application.Authentication
             _mapper = mapper;
         }
 
-        public async Task<Result<RefreshCommandResponse, Error>> Handle(RefreshCommand request, CancellationToken cancellationToken)
+        public async Task<RefreshCommandResponse> Handle(RefreshCommand request, CancellationToken cancellationToken)
         {
-            var refreshRequest = new RefreshRequest()
+            var principal = await _userService.GetPrincipalFromTokenAsync(request.Token);
+
+            if (principal is null)
             {
-                Token = request.Token,
-                RefreshToken = request.RefreshToken
-            };
+                throw new ValidationException();
+            }
 
-            var result = await _userService.RefreshJwtToken(refreshRequest, cancellationToken);
+            string username = principal!.Identity!.Name!;
+            ApplicationUser? user = await _userService.GetUserByUserNameAsync(username);
 
-            return result.Map((serviceResponse) => _mapper.Map<RefreshCommandResponse>(serviceResponse));
+            if (user is null)
+            {
+                throw new NotFoundException("user", username);
+            }
+
+            var refreshTokenValidationResult = _userService.ValidateRefreshToken(user, request.RefreshToken);
+
+            if (refreshTokenValidationResult.IsFailure)
+            {
+                throw new ValidationException();
+            }
+
+            var tokenResponse = await _userService.GenerateTokensForUserAsync(user);
+
+            return _mapper.Map<RefreshCommandResponse>(tokenResponse);
         }
     }
 }

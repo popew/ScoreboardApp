@@ -1,31 +1,18 @@
 ﻿using CSharpFunctionalExtensions;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Models;
+using ScoreboardApp.Infrastructure.CustomIdentityService.Persistence.Entities;
+using System.Security.Claims;
 
 namespace ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Services
 {
     public interface IUserService
     {
-        /// <summary>
-        /// Authenticates user.
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns>Returns JWT token and refresh token pair.</returns>
-        Task<Result<TokenResponse, Error>> Authenticate(AuthenticationRequest request, CancellationToken cancellationToken = default!);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        Task<Result<TokenResponse, Error>> RefreshJwtToken(RefreshRequest request, CancellationToken cancellationToken = default!);
-
-        /// <summary>
-        /// Revokes refresh token for user.
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        Task<UnitResult<Error>> Revoke(RevokeRequest request, CancellationToken cancellationToken = default!);
-
-        Task<UnitResult<Error>> Register(RegistrationRequest request, CancellationToken cancellationToken = default!);
+        Task<ApplicationUser?> GetUserByUserNameAsync(string userName);
+        Task<Result> SignInUserAsync(ApplicationUser user, string password);
+        Task<TokenResponse> GenerateTokensForUserAsync(ApplicationUser user);
+        Result ValidateRefreshToken(ApplicationUser? user, string refreshToken);
+        Task<ClaimsPrincipal?> GetPrincipalFromTokenAsync(string jwtToken);
+        Task<Result<string, Error>> CreateUserAsync(ApplicationUser newUser, string password);
+        Task RevokeUsersRefreshTokenAsync(ApplicationUser user);
     }
 }

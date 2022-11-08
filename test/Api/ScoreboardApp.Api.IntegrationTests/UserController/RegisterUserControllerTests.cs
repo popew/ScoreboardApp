@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ScoreboardApp.Application.Authentication;
-using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Errors;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Models;
 using System.Net;
 using System.Net.Http.Json;
@@ -53,10 +52,6 @@ namespace ScoreboardApp.Api.IntegrationTests.UserController
 
             // Assert
             secondRegistraionHttpResponse.StatusCode.Should().Be(HttpStatusCode.Conflict);
-
-            var error = await secondRegistraionHttpResponse.Content.ReadFromJsonAsync<Error>();
-
-            error.Should().Be(Errors.UserAlreadyExistsError(userCredentials.UserName));
         }
 
         [Fact]

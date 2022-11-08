@@ -1,11 +1,11 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
-using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Errors;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Models;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Options;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Services;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Persistence.Entities;
+using System.Security.Claims;
 
 namespace ScoreboardApp.Infrastructure.Identity.Services
 {
@@ -29,151 +29,77 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
             _tokenSettings = tokenSettings.Value;
         }
 
-        public async Task<Result<TokenResponse, Error>> Authenticate(AuthenticationRequest request, CancellationToken cancellationToken = default!)
+        public async Task<Result<string, Error>> CreateUserAsync(ApplicationUser newUser, string password)
         {
-            var signInResult = await SignInUser(request.UserName, request.Password);
+            var identityResult = await _userManager.CreateAsync(newUser, password);
 
-            if (signInResult.IsFailure)
+            if (!identityResult.Succeeded)
             {
-                return Result.Failure<TokenResponse, Error>(signInResult.Error);
+                var error = new Error()
+                {
+                    Details = identityResult.Errors.ToDictionary(x => x.Code, x => x.Description)
+                };
+
+                Result.Failure<string, Error>(error);
             }
 
-            ApplicationUser user = signInResult.Value;
-
-            var roles = await _userManager.GetRolesAsync(user);
-
-            string token = await _tokenService.GenerateJwtTokenAsync(user, roles);
-            string refreshToken = await _tokenService.GenerateRefreshTokenAsync();
-
-            user.RefreshToken = refreshToken;
-            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddMinutes(_tokenSettings.RefreshExpiry);
-
-            await _userManager.UpdateAsync(user);
-
-            return Result.Success<TokenResponse, Error>(new TokenResponse()
-            {
-                Token = token,
-                RefreshToken = refreshToken
-            });
+            return Result.Success<string, Error>(newUser.Id);
         }
 
-        public async Task<Result<TokenResponse, Error>> RefreshJwtToken(RefreshRequest request, CancellationToken cancellationToken = default!)
+        public async Task RevokeUsersRefreshTokenAsync(ApplicationUser user)
         {
-            var (principal, _) = await _tokenService.ValidateTokenAsync(request.Token);
-
-            if (principal is null)
-            {
-                return Result.Failure<TokenResponse, Error>(Errors.InvalidTokenError());
-            }
-
-            ApplicationUser? user = await GetUserByUserName(principal!.Identity!.Name!);
-
-            if (user is null)
-            {
-                return Result.Failure<TokenResponse, Error>(Errors.UserNotFoundError(principal.Identity!.Name!));
-            }
-
-            var refreshTokenValidationResult = ValidateRefreshToken(user, request.RefreshToken);
-
-            if (refreshTokenValidationResult.IsFailure)
-            {
-                return Result.Failure<TokenResponse, Error>(refreshTokenValidationResult.Error);
-            }
-
-            var roles = await _userManager.GetRolesAsync(user);
-
-            string token = await _tokenService.GenerateJwtTokenAsync(user, roles);
-            string refreshToken = await _tokenService.GenerateRefreshTokenAsync();
-
-            user.RefreshToken = refreshToken;
-            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddMinutes(_tokenSettings.RefreshExpiry);
-
-            await _userManager.UpdateAsync(user);
-
-            return Result.Success<TokenResponse, Error>(new TokenResponse()
-            {
-                Token = token,
-                RefreshToken = refreshToken
-            });
-        }
-
-        public async Task<UnitResult<Error>> Register(RegistrationRequest request, CancellationToken cancellationToken = default!)
-        {
-            ApplicationUser? existingUser = await GetUserByUserName(request.UserName);
-
-            if (existingUser is not null)
-            {
-                return UnitResult.Failure(Errors.UserAlreadyExistsError(request.UserName));
-            }
-
-            ApplicationUser newUser = new()
-            {
-                Email = request.Email,
-                UserName = request.UserName,
-                EmailConfirmed = true // TODO: Add email verification at some point
-            };
-
-            var result = await _userManager.CreateAsync(newUser, request.Password);
-
-            return result.Succeeded
-                ? UnitResult.Success<Error>()
-                : UnitResult.Failure(Errors.RegistrationFailedError().WithDetails(result.Errors.Select(x => x.Description)));
-        }
-
-        public async Task<UnitResult<Error>> Revoke(RevokeRequest request, CancellationToken cancellationToken = default!)
-        {
-            ApplicationUser? user = await GetUserByUserName(request.UserName);
-
-            if (user is null)
-            {
-                return UnitResult.Failure(Errors.UserNotFoundError(request.UserName));
-            }
-
             user.RefreshToken = null;
 
             await _userManager.UpdateAsync(user);
-
-            return UnitResult.Success<Error>();
         }
 
-        public async Task<ApplicationUser?> GetUserByUserName(string userName)
+        public async Task<ApplicationUser?> GetUserByUserNameAsync(string userName)
         {
             return await _userManager.FindByNameAsync(userName);
         }
 
-        /// <summary>
-        /// Sign-in user.
-        /// </summary>
-        /// <param name="username"></param>
-        /// <param name="password"></param>
-        /// <returns>Returns user object on successful sign in.</returns>
-        private async Task<Result<ApplicationUser, Error>> SignInUser(string username, string password)
-        {
-            ApplicationUser? user = await GetUserByUserName(username);
-
-            if (user == null)
-            {
-                return Result.Failure<ApplicationUser, Error>(Errors.UserNotFoundError(username));
-            }
-
-            SignInResult signInResult = await _signInManager.PasswordSignInAsync(user, password, true, false);
-
-            if (!signInResult.Succeeded)
-            {
-                return Result.Failure<ApplicationUser, Error>(Errors.SignInFailedError());
-            }
-
-            return Result.Success<ApplicationUser, Error>(user);
-        }
-
-        private UnitResult<Error> ValidateRefreshToken(ApplicationUser? user, string refreshToken)
+        public Result ValidateRefreshToken(ApplicationUser? user, string refreshToken)
         {
             if (user?.RefreshTokenExpiryTime <= DateTime.UtcNow || user?.RefreshToken != refreshToken)
             {
-                return UnitResult.Failure(Errors.InvalidRefreshTokenError());
+                return Result.Failure( "Refresh token is not valid." );
             }
 
-            return UnitResult.Success<Error>();
+            return Result.Success();
+        }
+
+        public async Task<Result> SignInUserAsync(ApplicationUser user, string password)
+        {
+            SignInResult signInResult = await _signInManager.PasswordSignInAsync(user, password, true, false);
+
+            return Result.SuccessIf(signInResult.Succeeded, "Invalid username or password." );
+        }
+
+        public async Task<TokenResponse> GenerateTokensForUserAsync(ApplicationUser user)
+        {
+            var roles = await _userManager.GetRolesAsync(user);
+
+            string token = await _tokenService.GenerateJwtTokenAsync(user, roles);
+            var (refreshToken, refreshTokenExpiry) = await _tokenService.GenerateRefreshTokenAsync();
+
+            user.RefreshToken = refreshToken;
+            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddMinutes(_tokenSettings.RefreshExpiry);
+
+            await _userManager.UpdateAsync(user);
+
+            return new TokenResponse()
+            {
+                Token = token,
+                RefreshToken = refreshToken,
+                RefreshTokenExpiry = refreshTokenExpiry
+            };
+        }
+
+        public async Task<ClaimsPrincipal?> GetPrincipalFromTokenAsync(string jwtToken)
+        {
+            var (principal, _) = await _tokenService.ValidateTokenAsync(jwtToken);
+
+            return principal;
         }
     }
 }

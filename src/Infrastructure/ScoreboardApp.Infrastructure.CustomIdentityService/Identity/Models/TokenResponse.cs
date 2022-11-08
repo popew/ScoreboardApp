@@ -4,5 +4,7 @@
     {
         public string Token { get; init; } = default!;
         public string RefreshToken { get; init; } = default!;
+
+        public DateTime RefreshTokenExpiry { get; init; }
     }
 }

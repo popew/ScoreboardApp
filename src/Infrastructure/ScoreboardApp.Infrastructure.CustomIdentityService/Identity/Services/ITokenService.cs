@@ -8,7 +8,7 @@ namespace ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Services
     public interface ITokenService
     {
         Task<string> GenerateJwtTokenAsync(ApplicationUser user, IList<string> roles);
-        Task<string> GenerateRefreshTokenAsync();
+        Task<(string RefreshToken, DateTime RefreshTokenExpiry)> GenerateRefreshTokenAsync();
         Task<(ClaimsPrincipal?, SecurityToken?)> ValidateTokenAsync(string token);
     }
 }

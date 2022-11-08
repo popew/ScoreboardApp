@@ -1,13 +1,12 @@
-﻿using AutoMapper;
-using CSharpFunctionalExtensions;
-using MediatR;
-using ScoreboardApp.Application.DTOs;
-using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Models;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using ScoreboardApp.Application.Commons.Exceptions;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Services;
+using ScoreboardApp.Infrastructure.CustomIdentityService.Persistence.Entities;
 
 namespace ScoreboardApp.Application.Authentication
 {
-    public record RegisterCommand() : IRequest<UnitResult<Error>>
+    public record RegisterCommand() : IRequest
     {
         public string UserName { get; init; } = default!;
         public string Password { get; init; } = default!;
@@ -15,29 +14,39 @@ namespace ScoreboardApp.Application.Authentication
         public string Email { get; init; } = default!;
     }
 
-    public sealed class RegisterRequestHandler : IRequestHandler<RegisterCommand, UnitResult<Error>>
+    public sealed class RegisterRequestHandler : IRequestHandler<RegisterCommand, Unit>
     {
         private readonly IUserService _userService;
-        private readonly IMapper _mapper;
 
-        public RegisterRequestHandler(IUserService userService, IMapper mapper)
+        public RegisterRequestHandler(IUserService userService)
         {
             _userService = userService;
-            _mapper = mapper;
         }
 
-        public async Task<UnitResult<Error>> Handle(RegisterCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(RegisterCommand request, CancellationToken cancellationToken)
         {
-            var registerRequest = new RegistrationRequest()
+            ApplicationUser? existingUser = await _userService.GetUserByUserNameAsync(request.UserName);
+
+            if (existingUser is not null)
             {
+                throw new ConflictException();
+            }
+
+            ApplicationUser newUser = new()
+            {
+                Email = request.Email,
                 UserName = request.UserName,
-                Password = request.Password,
-                Email = request.Email
+                EmailConfirmed = true // TODO: Add email verification at some point
             };
 
-            var result = await _userService.Register(registerRequest, cancellationToken);
+            var createUserResult = await _userService.CreateUserAsync(newUser, request.Password);
 
-            return result;
+            if (createUserResult.IsFailure)
+            {
+                throw new ValidationException();
+            }
+
+            return Unit.Value;
         }
     }
 }
