@@ -43,6 +43,7 @@ namespace ScoreboardApp.Application.Authentication
 
             if (createUserResult.IsFailure)
             {
+                // TODO: Get validation error details from error object
                 throw new ValidationException();
             }
 
