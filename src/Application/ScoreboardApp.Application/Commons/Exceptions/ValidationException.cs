@@ -18,17 +18,6 @@ namespace ScoreboardApp.Application.Commons.Exceptions
                 .ToDictionary(failureGroup => failureGroup.Key, failureGroup => failureGroup.ToArray());
         }
 
-        public ValidationException(ValidationFailure failure)
-            :this()
-        {
-            var errors = new Dictionary<string, string[]>
-            {
-                { failure.PropertyName, new string[] { failure.ErrorMessage } }
-            };
-
-            Errors = errors;
-        }
-
         public IDictionary<string, string[]> Errors { get; }
     }
 }
