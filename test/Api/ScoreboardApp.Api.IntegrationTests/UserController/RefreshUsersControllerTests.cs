@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ScoreboardApp.Api.IntegrationTests.UserController
 {
-    internal class RefreshUsersControllerTests
+    public class RefreshUsersControllerTests : IClassFixture<ScoreboardAppApiFactory>
     {
         private const string EndpointUnderTest = "api/Users/refresh";
         private const string ValidPassword = "Pa@@word123";
@@ -31,6 +31,9 @@ namespace ScoreboardApp.Api.IntegrationTests.UserController
         }
 
         [Fact]
+        public async Task Refresh_ShouldReturnNewToken_WhenInputTokensAreValid()
+        {
 
+        }
     }
 }

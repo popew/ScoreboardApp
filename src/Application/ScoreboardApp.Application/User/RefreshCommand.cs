@@ -37,7 +37,7 @@ namespace ScoreboardApp.Application.Authentication
 
             if (principal is null)
             {
-                throw new ValidationException();
+                throw new UnauthorizedException("Token is invalid.");
             }
 
             string username = principal!.Identity!.Name!;
@@ -45,14 +45,14 @@ namespace ScoreboardApp.Application.Authentication
 
             if (user is null)
             {
-                throw new NotFoundException("user", username);
+                throw new UnauthorizedException("Token is invalid");
             }
 
             var refreshTokenValidationResult = _userService.ValidateRefreshToken(user, request.RefreshToken);
 
             if (refreshTokenValidationResult.IsFailure)
             {
-                throw new ValidationException();
+                throw new UnauthorizedException("Refresh token is invalid or expired.");
             }
 
             var tokenResponse = await _userService.GenerateTokensForUserAsync(user);

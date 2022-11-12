@@ -64,6 +64,12 @@ namespace ScoreboardApp.Api.IntegrationTests
 
         private async Task SeedTestUsersAsync()
         {
+            await Task.WhenAll(SeedTestUserAsync(AdminTestUser), SeedTestUserAsync(NormalTestUser));
+            await Task.WhenAll(GetTokenForTestUser(AdminTestUser), GetTokenForTestUser(NormalTestUser));
+        }
+
+        public async Task SeedTestUserAsync(TestUser testUser)
+        {
             using var scope = Services.CreateScope();
             {
                 var services = scope.ServiceProvider;
@@ -72,14 +78,11 @@ namespace ScoreboardApp.Api.IntegrationTests
 
                 await dataSeeder.SeedRolesAsync(Roles.RolesSupported);
 
-                await dataSeeder.SeedUserAsync(AdminTestUser.Email, AdminTestUser.Password, AdminTestUser.Roles);
-                await dataSeeder.SeedUserAsync(NormalTestUser.Email, NormalTestUser.Password, NormalTestUser.Roles);
-
-                await Task.WhenAll(GetTokenForTestUser(AdminTestUser), GetTokenForTestUser(NormalTestUser));
+                await dataSeeder.SeedUserAsync(testUser.Email, testUser.Password, testUser.Roles);
             }
         }
 
-        private async Task GetTokenForTestUser(TestUser testUser)
+        public async Task GetTokenForTestUser(TestUser testUser)
         {
             using var scope = Services.CreateScope();
             {
