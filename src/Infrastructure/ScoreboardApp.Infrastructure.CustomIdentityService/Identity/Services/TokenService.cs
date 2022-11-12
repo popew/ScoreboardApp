@@ -5,6 +5,7 @@ using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Options;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Persistence.Entities;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Services
 {
@@ -50,7 +51,10 @@ namespace ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Services
 
         public Task<(string RefreshToken, DateTime RefreshTokenExpiry)> GenerateRefreshTokenAsync()
         {
-            string refreshToken = Guid.NewGuid().ToString();
+            string randomString = Guid.NewGuid().ToString();
+            byte[] randomStringBytes = System.Text.Encoding.ASCII.GetBytes(randomString);
+            string refreshToken = Convert.ToBase64String(randomStringBytes);
+
             DateTime refreshTokenExpiry = DateTime.UtcNow.AddMinutes(_tokenSettings.RefreshExpiry);
 
             return Task.FromResult<(string, DateTime)>((refreshToken, refreshTokenExpiry));
