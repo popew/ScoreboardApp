@@ -10,18 +10,18 @@ namespace ScoreboardApp.Api
     {
         public static IServiceCollection AddApiServices(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddDateOnlyTimeOnlyStringConverters();
+
             services.AddControllers(options =>
             {
                 options.Filters.Add<ApiExceptionFilterAttribute>();
-                options.UseDateOnlyTimeOnlyStringConverters();
             })
             .AddJsonOptions(options =>
             {
-                options.UseDateOnlyTimeOnlyStringConverters(); // Correctly serialize and deserialize DateOnly type
-
                 options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); // Use enums as strings instead of numbers in API
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });
+
 
             services.AddApiVersioning(options =>
             {

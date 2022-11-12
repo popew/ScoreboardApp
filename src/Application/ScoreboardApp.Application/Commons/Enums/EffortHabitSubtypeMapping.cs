@@ -1,5 +1,8 @@
-﻿namespace ScoreboardApp.Application.Commons.Enums
+﻿using System.Text.Json.Serialization;
+
+namespace ScoreboardApp.Application.Commons.Enums
 {
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum EffortHabitSubtypeMapping
     {
         NotSet = 0,
