@@ -95,6 +95,12 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
             };
         }
 
+
+        public async Task<ApplicationUser?> GetUserById(string id)
+        {
+            return await _userManager.FindByIdAsync(id);
+        }
+
         public async Task<ClaimsPrincipal?> GetPrincipalFromTokenAsync(string jwtToken)
         {
             var (principal, _) = await _tokenService.ValidateTokenAsync(jwtToken);

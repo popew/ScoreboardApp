@@ -41,8 +41,8 @@ namespace ScoreboardApp.Application.Authentication
             }
 
             string username = principal!.Identity!.Name!;
-            ApplicationUser? user = await _userService.GetUserByUserNameAsync(username);
-
+            ApplicationUser? user = await _userService.GetUserById(username);
+            
             if (user is null)
             {
                 throw new UnauthorizedException("Token is invalid");

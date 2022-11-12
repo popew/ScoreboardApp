@@ -1,7 +1,9 @@
-﻿using ScoreboardApp.Application.Authentication;
+﻿using Microsoft.AspNetCore.Mvc;
+using ScoreboardApp.Application.Authentication;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -30,10 +32,50 @@ namespace ScoreboardApp.Api.IntegrationTests.UserController
             _apiClient = apiFactory.CreateClient();
         }
 
-        [Fact]
-        public async Task Refresh_ShouldReturnNewToken_WhenInputTokensAreValid()
-        {
+        //[Fact]
+        //public async Task Refresh_ShouldReturnNewToken_WhenInputTokensAreValid()
+        //{
 
+        //}
+
+        [Fact]
+        public async Task Refresh_ShouldReturnUnauthorized_WhenTokenIsInvalid()
+        {
+            // Arrange
+
+            var refreshCommand = new RefreshCommand() { Token = "InvalidToken", RefreshToken = _apiFactory.NormalTestUser.RefreshToken };
+
+            // Act
+
+            var httpResponse = await _apiClient.PostAsJsonAsync(EndpointUnderTest, refreshCommand);
+
+            // Assert
+
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+
+            var responseObject = await httpResponse.Content.ReadFromJsonAsync<ProblemDetails>();
+
+            responseObject!.Detail.Should().Be("Token is invalid.");
+        }
+
+        [Fact]
+        public async Task Refresh_ShouldReturnUnauthorized_WhenRefreshTokenIsInvalid()
+        {
+            // Arrange
+
+            var refreshCommand = new RefreshCommand() { Token = _apiFactory.NormalTestUser.Token, RefreshToken = "InvalidToken" };
+
+            // Act
+
+            var httpResponse = await _apiClient.PostAsJsonAsync(EndpointUnderTest, refreshCommand);
+
+            // Assert
+
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+
+            var responseObject = await httpResponse.Content.ReadFromJsonAsync<ProblemDetails>();
+
+            responseObject!.Detail.Should().Be("Refresh token is invalid or expired.");
         }
     }
 }
