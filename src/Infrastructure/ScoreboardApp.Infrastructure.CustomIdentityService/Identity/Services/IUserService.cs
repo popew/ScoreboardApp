@@ -11,9 +11,9 @@ namespace ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Services
         Task<Result> SignInUserAsync(ApplicationUser user, string password);
         Task<TokenResponse> GenerateTokensForUserAsync(ApplicationUser user);
         Result ValidateRefreshToken(ApplicationUser? user, string refreshToken);
-        Task<ClaimsPrincipal?> GetPrincipalFromTokenAsync(string jwtToken);
         Task<Result<string, Error>> CreateUserAsync(ApplicationUser newUser, string password);
         Task RevokeUsersRefreshTokenAsync(ApplicationUser user);
         Task<ApplicationUser?> GetUserById(string id);
+        Task<Result<ClaimsPrincipal?>> GetPrincipalFromTokenAsync(string jwtToken);
     }
 }

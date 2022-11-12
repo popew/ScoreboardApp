@@ -33,9 +33,16 @@ namespace ScoreboardApp.Application.Authentication
 
         public async Task<RefreshCommandResponse> Handle(RefreshCommand request, CancellationToken cancellationToken)
         {
-            var principal = await _userService.GetPrincipalFromTokenAsync(request.Token);
+            var getPrincipalResult = await _userService.GetPrincipalFromTokenAsync(request.Token);
 
-            if (principal is null)
+            if (getPrincipalResult.IsFailure)
+            {
+                throw new UnauthorizedException("Token is invalid.");
+            }
+
+            var principal = getPrincipalResult.Value;
+
+            if(principal is null)
             {
                 throw new UnauthorizedException("Token is invalid.");
             }

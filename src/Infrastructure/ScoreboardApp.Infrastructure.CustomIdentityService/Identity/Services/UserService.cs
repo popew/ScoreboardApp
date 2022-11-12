@@ -101,11 +101,18 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
             return await _userManager.FindByIdAsync(id);
         }
 
-        public async Task<ClaimsPrincipal?> GetPrincipalFromTokenAsync(string jwtToken)
+        public async Task<Result<ClaimsPrincipal?>> GetPrincipalFromTokenAsync(string jwtToken)
         {
-            var (principal, _) = await _tokenService.ValidateTokenAsync(jwtToken);
+            try
+            {
+                var (principal, _) = await _tokenService.ValidateTokenAsync(jwtToken);
 
-            return principal;
+                return Result.Success(principal);
+            }
+            catch (Exception ex)
+            {
+                return Result.Failure<ClaimsPrincipal?>($"Token validation failed due to error: {ex.Message}.");
+            }
         }
     }
 }
