@@ -9,7 +9,7 @@ namespace ScoreboardApp.Api.IntegrationTests.UserController
 {
     internal class RefreshUsersControllerTests
     {
-        private const string EndpointUnderTest = "api/Users/authenticate";
+        private const string EndpointUnderTest = "api/Users/refresh";
         private const string ValidPassword = "Pa@@word123";
 
         private readonly HttpClient _apiClient;
@@ -29,5 +29,7 @@ namespace ScoreboardApp.Api.IntegrationTests.UserController
             _apiFactory = apiFactory;
             _apiClient = apiFactory.CreateClient();
         }
+
+
     }
 }

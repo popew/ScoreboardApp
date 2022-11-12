@@ -85,13 +85,14 @@ namespace ScoreboardApp.Api.IntegrationTests
             {
                 var services = scope.ServiceProvider;
 
-                var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-                var tokenGenerator = services.GetRequiredService<ITokenService>();
+                var userService = services.GetRequiredService<IUserService>();
 
-                var applicationUser = await userManager.FindByNameAsync(testUser.UserName);
-                var roles = await userManager.GetRolesAsync(applicationUser);
+                var applicationUser = await userService.GetUserByUserNameAsync(testUser.UserName);
+                var tokenResponse = await userService.GenerateTokensForUserAsync(applicationUser!);
 
-                testUser.Token = await tokenGenerator.GenerateJwtTokenAsync(applicationUser, roles);
+                testUser.Token = tokenResponse.Token;
+                testUser.RefreshToken = tokenResponse.RefreshToken;
+                testUser.RefreshTokenExpiry = tokenResponse.RefreshTokenExpiry;
             }
 
             // Generating token using API:
