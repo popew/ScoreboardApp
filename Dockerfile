@@ -47,5 +47,6 @@ RUN dotnet publish "ScoreboardApp.Api.csproj" -c Debug -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+# Run this to generate it: dotnet dev-certs https -ep cert.pfx -p Test1234!
 COPY ["cert.pfx", "/https/cert.pfx"]
 ENTRYPOINT ["dotnet", "ScoreboardApp.Api.dll"]

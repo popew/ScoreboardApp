@@ -1,47 +1,55 @@
 ﻿using AutoMapper;
-using CSharpFunctionalExtensions;
 using MediatR;
+using ScoreboardApp.Application.Commons.Exceptions;
 using ScoreboardApp.Application.Commons.Mappings;
-using ScoreboardApp.Application.DTOs;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Models;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Services;
+using ScoreboardApp.Infrastructure.CustomIdentityService.Persistence.Entities;
 
 namespace ScoreboardApp.Application.Authentication
 {
-    public sealed record AuthenticateCommand() : IRequest<Result<AuthenticateResponse, Error>>
+    public sealed record AuthenticateCommand() : IRequest<AuthenticateCommandResponse>
     {
         public string UserName { get; init; } = default!;
         public string Password { get; init; } = default!;
     }
 
-    public sealed record AuthenticateResponse() : IMapFrom<TokenResponse>
+    public sealed record AuthenticateCommandResponse() : IMapFrom<TokenResponse>
     {
         public string Token { get; init; } = default!;
         public string RefreshToken { get; init; } = default!;
     }
 
-    public sealed class AuthenticateRequestHandler : IRequestHandler<AuthenticateCommand, Result<AuthenticateResponse, Error>>
+    public sealed class AuthenticateRequestHandler : IRequestHandler<AuthenticateCommand, AuthenticateCommandResponse>
     {
-        private readonly ITokenService _tokenService;
+        private readonly IUserService _userService;
         private readonly IMapper _mapper;
 
-        public AuthenticateRequestHandler(ITokenService tokenService, IMapper mapper)
+        public AuthenticateRequestHandler(IUserService userService, IMapper mapper)
         {
-            _tokenService = tokenService;
+            _userService = userService;
             _mapper = mapper;
         }
 
-        public async Task<Result<AuthenticateResponse, Error>> Handle(AuthenticateCommand request, CancellationToken cancellationToken)
+        public async Task<AuthenticateCommandResponse> Handle(AuthenticateCommand request, CancellationToken cancellationToken)
         {
-            var authRequest = new AuthenticationRequest()
+            ApplicationUser? user = await _userService.GetUserByUserNameAsync(request.UserName);
+
+            if (user == null)
             {
-                UserName = request.UserName,
-                Password = request.Password
-            };
+                throw new UnauthorizedException();
+            }
 
-            var result = await _tokenService.Authenticate(authRequest, cancellationToken);
+            var result = await _userService.SignInUserAsync(user, request.Password);
 
-            return result.Map((serviceResponse) => _mapper.Map<AuthenticateResponse>(serviceResponse));
+            if (result.IsFailure)
+            {
+                throw new UnauthorizedException(result.Error);
+            }
+
+            var tokenResponse = await _userService.GenerateTokensForUserAsync(user);
+
+            return _mapper.Map<AuthenticateCommandResponse>(tokenResponse);
         }
     }
 }

@@ -30,21 +30,6 @@ namespace ScoreboardApp.Api
             });
 
 
-            services.AddOpenTelemetryTracing(builder =>
-            {
-                builder
-                    .SetResourceBuilder(ResourceBuilder
-                    .CreateDefault()
-                    .AddService("ScoreboardApp"))
-                    .AddZipkinExporter(options =>
-                    {
-                        options.Endpoint = new Uri(configuration["Telemetry:Endpoint"]);
-                    })
-                    .AddHttpClientInstrumentation()
-                    .AddAspNetCoreInstrumentation()
-                    .AddSqlClientInstrumentation();
-            });
-
             return services;
         }
     }

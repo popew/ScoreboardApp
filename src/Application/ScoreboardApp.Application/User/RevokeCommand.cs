@@ -1,38 +1,36 @@
-﻿using AutoMapper;
-using CSharpFunctionalExtensions;
-using MediatR;
-using ScoreboardApp.Application.DTOs;
-using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Models;
+﻿using MediatR;
+using ScoreboardApp.Application.Commons.Exceptions;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Services;
+using ScoreboardApp.Infrastructure.CustomIdentityService.Persistence.Entities;
 
 namespace ScoreboardApp.Application.Authentication
 {
-    public sealed record RevokeCommand() : IRequest<UnitResult<Error>>
+    public sealed record RevokeCommand() : IRequest
     {
         public string UserName { get; init; } = default!;
     }
 
-    public sealed class RevokeCommandHandler : IRequestHandler<RevokeCommand, UnitResult<Error>>
+    public sealed class RevokeCommandHandler : IRequestHandler<RevokeCommand, Unit>
     {
-        private readonly ITokenService _tokenService;
-        private readonly IMapper _mapper;
+        private readonly IUserService _userService;
 
-        public RevokeCommandHandler(ITokenService tokenService, IMapper mapper)
+        public RevokeCommandHandler(IUserService userService)
         {
-            _tokenService = tokenService;
-            _mapper = mapper;
+            _userService = userService;
         }
 
-        public async Task<UnitResult<Error>> Handle(RevokeCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(RevokeCommand request, CancellationToken cancellationToken)
         {
-            var revokeRequest = new RevokeRequest()
+            ApplicationUser? user = await _userService.GetUserByUserNameAsync(request.UserName);
+
+            if (user is null)
             {
-                UserName = request.UserName
-            };
+                throw new NotFoundException();
+            }
 
-            var result = await _tokenService.Revoke(revokeRequest, cancellationToken);
+            await _userService.RevokeUsersRefreshTokenAsync(user);
 
-            return result;
+            return Unit.Value;
         }
     }
 }

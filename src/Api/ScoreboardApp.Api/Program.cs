@@ -57,7 +57,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 
-    app.EnsureIdentityDbIsCreated();
+    app.EnsureIdentityDbIsMigrations();
     await app.SeedIdentityDataAsync();
 
     app.ExecuteApplicationDbContextMigrations();
@@ -74,3 +74,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+
+public partial class Program { } // Workaround to make the integration tests to work. See: https://learn.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-6.0

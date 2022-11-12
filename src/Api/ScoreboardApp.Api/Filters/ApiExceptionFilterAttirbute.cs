@@ -14,7 +14,10 @@ namespace ScoreboardApp.Api.Filters
             _exceptionHandlers = new Dictionary<Type, Action<ExceptionContext>>
             {
                 { typeof(ValidationException), HandleValidationException },
-                { typeof(NotFoundException), HandleNotFoundException }
+                { typeof(NotFoundException), HandleNotFoundException },
+                { typeof(ForbiddenAccessException), HandleForbiddenAccessException },
+                { typeof(UnauthorizedException), HandleUnauthorizedAccessException },
+                { typeof(ConflictException), HandleConflictException }
             };
         }
 
@@ -85,11 +88,13 @@ namespace ScoreboardApp.Api.Filters
 
         private void HandleUnauthorizedAccessException(ExceptionContext context)
         {
+            var exception = (UnauthorizedException)context.Exception;
             var details = new ProblemDetails
             {
                 Status = StatusCodes.Status401Unauthorized,
                 Title = "Unauthorized",
-                Type = "https://tools.ietf.org/html/rfc7235#section-3.1"
+                Type = "https://tools.ietf.org/html/rfc7235#section-3.1",
+                Detail = exception.Message
             };
 
             context.Result = new ObjectResult(details)
@@ -112,6 +117,26 @@ namespace ScoreboardApp.Api.Filters
             context.Result = new ObjectResult(details)
             {
                 StatusCode = StatusCodes.Status403Forbidden
+            };
+
+            context.ExceptionHandled = true;
+        }
+
+        private void HandleConflictException(ExceptionContext context)
+        {
+            var exception = (ConflictException)context.Exception;
+
+            var details = new ProblemDetails
+            {
+                Status = StatusCodes.Status409Conflict,
+                Title = "Conflict",
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.9",
+                Detail = exception.Message
+            };
+
+            context.Result = new ObjectResult(details)
+            {
+                StatusCode = StatusCodes.Status409Conflict
             };
 
             context.ExceptionHandled = true;
