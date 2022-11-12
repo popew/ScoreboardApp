@@ -40,7 +40,7 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
                     Details = identityResult.Errors.ToDictionary(x => x.Code, x => x.Description)
                 };
 
-                Result.Failure<string, Error>(error);
+                return Result.Failure<string, Error>(error);
             }
 
             return Result.Success<string, Error>(newUser.Id);

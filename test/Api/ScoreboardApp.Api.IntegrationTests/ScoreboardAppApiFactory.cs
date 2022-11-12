@@ -23,21 +23,11 @@ namespace ScoreboardApp.Api.IntegrationTests
         public readonly TestUser AdminTestUser = new("test_admin@scoreboardapp.com", DefaultTestPassword, new string[] { Roles.Administrator, Roles.User });
         public readonly TestUser NormalTestUser = new("test_testuser@scoreboardapp.com", DefaultTestPassword, new string[] { Roles.User });
 
-        private readonly TestcontainerDatabase _apiDbContainer =
+        private readonly TestcontainerDatabase _testDbServer =
             new TestcontainersBuilder<MsSqlTestcontainer>()
             .WithDatabase(new MsSqlTestcontainerConfiguration
             {
                 Database = "ApiDb",
-                Password = DefaultTestPassword
-            })
-            .WithImage("mcr.microsoft.com/mssql/server:2022-latest")
-            .Build();
-
-        private readonly TestcontainerDatabase _identityDbContainer =
-            new TestcontainersBuilder<MsSqlTestcontainer>()
-            .WithDatabase(new MsSqlTestcontainerConfiguration
-            {
-                Database = "IdentityDb",
                 Password = DefaultTestPassword
             })
             .WithImage("mcr.microsoft.com/mssql/server:2022-latest")
@@ -61,13 +51,13 @@ namespace ScoreboardApp.Api.IntegrationTests
                 services.Remove<ApplicationDbContext>()
                         .AddDbContext<ApplicationDbContext>(options =>
                         {
-                            options.UseSqlServer($"{_apiDbContainer.ConnectionString};TrustServerCertificate=true");
+                            options.UseSqlServer($"{_testDbServer.ConnectionString};TrustServerCertificate=true");
                         });
 
                 services.Remove<ApplicationIdentityDbContext>()
                         .AddDbContext<ApplicationIdentityDbContext>(options =>
                         {
-                            options.UseSqlServer($"{_identityDbContainer.ConnectionString};TrustServerCertificate=true");
+                            options.UseSqlServer($"{_testDbServer.ConnectionString};TrustServerCertificate=true");
                         });
             });
         }
@@ -117,15 +107,14 @@ namespace ScoreboardApp.Api.IntegrationTests
 
         public async Task InitializeAsync()
         {
-            await Task.WhenAll(_apiDbContainer.StartAsync(), _identityDbContainer.StartAsync());
+            await _testDbServer.StartAsync();
 
             await SeedTestUsersAsync();
         }
 
         async Task IAsyncLifetime.DisposeAsync()
         {
-            await _apiDbContainer.DisposeAsync();
-            await _identityDbContainer.DisposeAsync();
+            await _testDbServer.DisposeAsync();
         }
     }
 }
