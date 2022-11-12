@@ -41,7 +41,6 @@ builder.Services.AddSwaggerGen(c =>
             Array.Empty<string>()
         }
     });
-
 });
 
 builder.Services.AddApplicationservices(builder.Configuration);

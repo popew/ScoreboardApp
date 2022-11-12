@@ -1,12 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using ScoreboardApp.Api.Filters;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
-using OpenTelemetry;
-using OpenTelemetry.Trace;
-using OpenTelemetry.Extensions.Hosting;
-using OpenTelemetry.Resources;
+using ScoreboardApp.Api.Filters;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace ScoreboardApp.Api
 {
@@ -19,7 +15,13 @@ namespace ScoreboardApp.Api
                 options.Filters.Add<ApiExceptionFilterAttribute>();
                 options.UseDateOnlyTimeOnlyStringConverters();
             })
-            .AddJsonOptions(options => options.UseDateOnlyTimeOnlyStringConverters());
+            .AddJsonOptions(options =>
+            {
+                options.UseDateOnlyTimeOnlyStringConverters(); // Correctly serialize and deserialize DateOnly type
+
+                options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); // Use enums as strings instead of numbers in API
+            });
 
             services.AddApiVersioning(options =>
             {
@@ -28,7 +30,6 @@ namespace ScoreboardApp.Api
                 options.ApiVersionReader = new HeaderApiVersionReader("X-api-version");
                 options.ReportApiVersions = true;
             });
-
 
             return services;
         }

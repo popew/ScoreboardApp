@@ -2,7 +2,7 @@
 {
     public enum EffortHabitSubtypeMapping
     {
-        None = 0,
+        NotSet = 0,
         ProgressionHabit = 1,
         ReductionHabit = 2
     }
