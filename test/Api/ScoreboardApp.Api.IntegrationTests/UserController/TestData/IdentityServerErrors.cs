@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ScoreboardApp.Api.IntegrationTests.UserController.TestData
+﻿namespace ScoreboardApp.Api.IntegrationTests.UserController.TestData
 {
     public record IdentityErrorModel(string Code, string Message);
+
     public class IdentityServerErrors
     {
         public static class Password
@@ -16,7 +11,5 @@ namespace ScoreboardApp.Api.IntegrationTests.UserController.TestData
             public static readonly IdentityErrorModel PasswordRequiresNonAlphanumeric = new("PasswordRequiresNonAlphanumeric", "Passwords must have at least one non alphanumeric character.");
             public static readonly IdentityErrorModel PasswordTooShort = new("PasswordTooShort", "Passwords must be at least 6 characters.");
         }
-
     }
-
 }

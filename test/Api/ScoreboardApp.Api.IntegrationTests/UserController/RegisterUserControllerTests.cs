@@ -8,7 +8,7 @@ namespace ScoreboardApp.Api.IntegrationTests.UserController
 {
     public sealed class RegisterUserControllerTests : IClassFixture<ScoreboardAppApiFactory>
     {
-        private const string Endpoint = "api/Users/register";
+        private const string EndpointUnderTest = "api/Users/register";
         private const string ValidPassword = "Pa@@word123";
 
         private readonly HttpClient _apiClient;
@@ -32,7 +32,7 @@ namespace ScoreboardApp.Api.IntegrationTests.UserController
             var userCredentials = _commandGenerator.Generate();
 
             // Act
-            var httpResponse = await _apiClient.PostAsJsonAsync(Endpoint, userCredentials);
+            var httpResponse = await _apiClient.PostAsJsonAsync(EndpointUnderTest, userCredentials);
 
             // Assert
             httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -43,12 +43,12 @@ namespace ScoreboardApp.Api.IntegrationTests.UserController
         {
             // Arrange
             var userCredentials = _commandGenerator.Generate();
-            var httpResponse = await _apiClient.PostAsJsonAsync(Endpoint, userCredentials);
+            var httpResponse = await _apiClient.PostAsJsonAsync(EndpointUnderTest, userCredentials);
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
             // Act
-            var secondRegistraionHttpResponse = await _apiClient.PostAsJsonAsync(Endpoint, userCredentials);
+            var secondRegistraionHttpResponse = await _apiClient.PostAsJsonAsync(EndpointUnderTest, userCredentials);
 
             // Assert
             secondRegistraionHttpResponse.StatusCode.Should().Be(HttpStatusCode.Conflict);
@@ -64,7 +64,7 @@ namespace ScoreboardApp.Api.IntegrationTests.UserController
                                                    .Generate();
 
             // Act
-            var httpResponse = await _apiClient.PostAsJsonAsync(Endpoint, userCredentials);
+            var httpResponse = await _apiClient.PostAsJsonAsync(EndpointUnderTest, userCredentials);
 
             // Assert
             httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -96,7 +96,7 @@ namespace ScoreboardApp.Api.IntegrationTests.UserController
                                                    .Generate();
 
             // Act
-            var httpResponse = await _apiClient.PostAsJsonAsync(Endpoint, userCredentials);
+            var httpResponse = await _apiClient.PostAsJsonAsync(EndpointUnderTest, userCredentials);
 
             // Assert
             httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -106,6 +106,5 @@ namespace ScoreboardApp.Api.IntegrationTests.UserController
             error!.Errors.Should().ContainKey(expectedError.Code);
             error!.Errors[expectedError.Code].Should().Contain(expectedError.Message);
         }
-
     }
 }
