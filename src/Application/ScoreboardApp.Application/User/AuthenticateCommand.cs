@@ -18,8 +18,6 @@ namespace ScoreboardApp.Application.Authentication
     {
         public string Token { get; init; } = default!;
         public string RefreshToken { get; init; } = default!;
-
-        public DateTime RefreshTokenExpiry { get; init; }
     }
 
     public sealed class AuthenticateRequestHandler : IRequestHandler<AuthenticateCommand, AuthenticateCommandResponse>

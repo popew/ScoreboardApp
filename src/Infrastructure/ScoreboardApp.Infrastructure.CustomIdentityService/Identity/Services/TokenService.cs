@@ -5,7 +5,6 @@ using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Options;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Persistence.Entities;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Services
 {

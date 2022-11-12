@@ -30,6 +30,7 @@ namespace ScoreboardApp.Api.IntegrationTests.UserController
             _apiClient = apiFactory.CreateClient();
         }
 
+        [Fact]
 
     }
 }

@@ -47,7 +47,6 @@ namespace ScoreboardApp.Api.IntegrationTests.UserController
             authenticationResponse.Should().NotBeNull();
             authenticationResponse!.RefreshToken.Should().NotBeNullOrEmpty();
             authenticationResponse!.Token.Should().NotBeNullOrEmpty();
-            authenticationResponse!.RefreshTokenExpiry.Should().BeAfter(DateTime.Now);
         }
 
         [Fact]
