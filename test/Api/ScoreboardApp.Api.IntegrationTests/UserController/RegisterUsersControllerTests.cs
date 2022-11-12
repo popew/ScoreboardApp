@@ -6,7 +6,7 @@ using System.Net.Http.Json;
 
 namespace ScoreboardApp.Api.IntegrationTests.UserController
 {
-    public sealed class RegisterUserControllerTests : IClassFixture<ScoreboardAppApiFactory>
+    public sealed class RegisterUsersControllerTests : IClassFixture<ScoreboardAppApiFactory>
     {
         private const string EndpointUnderTest = "api/Users/register";
         private const string ValidPassword = "Pa@@word123";
@@ -14,12 +14,12 @@ namespace ScoreboardApp.Api.IntegrationTests.UserController
         private readonly HttpClient _apiClient;
         private readonly ScoreboardAppApiFactory _apiFactory;
 
-        private readonly Faker<RegisterCommand> _commandGenerator = new Faker<RegisterCommand>()
+        private readonly Faker<RegisterCommand> _registerCommandGenerator = new Faker<RegisterCommand>()
             .RuleFor(x => x.UserName, faker => faker.Internet.UserName())
             .RuleFor(x => x.Email, faker => faker.Internet.Email())
             .RuleFor(x => x.Password, faker => ValidPassword);
 
-        public RegisterUserControllerTests(ScoreboardAppApiFactory apiFactory)
+        public RegisterUsersControllerTests(ScoreboardAppApiFactory apiFactory)
         {
             _apiFactory = apiFactory;
             _apiClient = apiFactory.CreateClient();
@@ -29,7 +29,7 @@ namespace ScoreboardApp.Api.IntegrationTests.UserController
         public async Task Register_RegistersUser_WhenDataIsValid()
         {
             // Arrange
-            var userCredentials = _commandGenerator.Generate();
+            var userCredentials = _registerCommandGenerator.Generate();
 
             // Act
             var httpResponse = await _apiClient.PostAsJsonAsync(EndpointUnderTest, userCredentials);
@@ -42,7 +42,7 @@ namespace ScoreboardApp.Api.IntegrationTests.UserController
         public async Task Register_ReturnsConflict_WhenUserAlreadyExists()
         {
             // Arrange
-            var userCredentials = _commandGenerator.Generate();
+            var userCredentials = _registerCommandGenerator.Generate();
             var httpResponse = await _apiClient.PostAsJsonAsync(EndpointUnderTest, userCredentials);
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -59,7 +59,7 @@ namespace ScoreboardApp.Api.IntegrationTests.UserController
         public async Task Register_ReturnsError_WhenEmailIsInvalid(string invalidEmail)
         {
             // Arrange
-            var userCredentials = _commandGenerator.Clone()
+            var userCredentials = _registerCommandGenerator.Clone()
                                                    .RuleFor(x => x.Email, faker => invalidEmail)
                                                    .Generate();
 
@@ -91,7 +91,7 @@ namespace ScoreboardApp.Api.IntegrationTests.UserController
         public async Task Register_ReturnsError_WhenPasswordIsNotValid(string invalidPassword, IdentityErrorModel expectedError)
         {
             // Arrange
-            var userCredentials = _commandGenerator.Clone()
+            var userCredentials = _registerCommandGenerator.Clone()
                                                    .RuleFor(x => x.Password, faker => invalidPassword)
                                                    .Generate();
 

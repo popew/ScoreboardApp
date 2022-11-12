@@ -4,7 +4,7 @@ using System.Net.Http.Json;
 
 namespace ScoreboardApp.Api.IntegrationTests.UserController
 {
-    public class AuthenticateUserControllerTests : IClassFixture<ScoreboardAppApiFactory>
+    public class AuthenticateUsersControllerTests : IClassFixture<ScoreboardAppApiFactory>
     {
         private const string EndpointUnderTest = "api/Users/authenticate";
         private const string ValidPassword = "Pa@@word123";
@@ -21,7 +21,7 @@ namespace ScoreboardApp.Api.IntegrationTests.UserController
             .RuleFor(x => x.Email, faker => faker.Internet.Email())
             .RuleFor(x => x.Password, faker => ValidPassword);
 
-        public AuthenticateUserControllerTests(ScoreboardAppApiFactory apiFactory)
+        public AuthenticateUsersControllerTests(ScoreboardAppApiFactory apiFactory)
         {
             _apiFactory = apiFactory;
             _apiClient = apiFactory.CreateClient();
@@ -31,12 +31,8 @@ namespace ScoreboardApp.Api.IntegrationTests.UserController
         public async Task Authenticate_AuthenticatesUsers_WhenCredentialsAreCorrect()
         {
             // Arrange
-            // Register valid user
-            var userCredentials = _registerCommandGenerator.Generate();
-            var httpResponseRegistration = await _apiClient.PostAsJsonAsync("api/Users/register", userCredentials);
-            httpResponseRegistration.StatusCode.Should().Be(HttpStatusCode.OK);
 
-            var authenticateCommand = new AuthenticateCommand() { Password = userCredentials.Password, UserName = userCredentials.UserName };
+            var authenticateCommand = new AuthenticateCommand() { Password = _apiFactory.NormalTestUser.Password, UserName = _apiFactory.NormalTestUser.UserName};
 
             // Act
 
@@ -75,11 +71,7 @@ namespace ScoreboardApp.Api.IntegrationTests.UserController
         {
             // Arrange
             // Register valid user
-            var userCredentials = _registerCommandGenerator.Generate();
-            var httpResponseRegistration = await _apiClient.PostAsJsonAsync("api/Users/register", userCredentials);
-            httpResponseRegistration.StatusCode.Should().Be(HttpStatusCode.OK);
-
-            var authenticateCommand = new AuthenticateCommand() { Password = "IncorrectPassword123!", UserName = userCredentials.UserName };
+            var authenticateCommand = new AuthenticateCommand() { Password = "IncorrectPassword123!", UserName = _apiFactory.NormalTestUser.UserName };
 
             // Act
 
