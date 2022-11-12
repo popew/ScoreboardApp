@@ -28,7 +28,8 @@ namespace ScoreboardApp.Infrastructure.Identity.Services
             _tokenService = tokenService;
             _tokenSettings = tokenSettings.Value;
         }
-
+        
+        /// <inheritdoc/>
         public async Task<Result<string, Error>> CreateUserAsync(ApplicationUser newUser, string password)
         {
             var identityResult = await _userManager.CreateAsync(newUser, password);

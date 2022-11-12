@@ -23,6 +23,12 @@ namespace ScoreboardApp.Api.IntegrationTests
         public readonly TestUser AdminTestUser = new("test_admin@scoreboardapp.com", DefaultTestPassword, new string[] { Roles.Administrator, Roles.User });
         public readonly TestUser NormalTestUser = new("test_testuser@scoreboardapp.com", DefaultTestPassword, new string[] { Roles.User });
 
+        public readonly Faker<TestUser> TestUserGenerator = new Faker<TestUser>()
+            .RuleFor(x => x.Email, faker => faker.Internet.Email())
+            .RuleFor(x => x.Password, faker => DefaultTestPassword)
+            .RuleFor(x => x.Roles, faker => new string[] { Roles.User })
+            .RuleFor(x => x.UserName, faker=> faker.Internet.UserName());
+
         private readonly TestcontainerDatabase _testDbServer =
             new TestcontainersBuilder<MsSqlTestcontainer>()
             .WithDatabase(new MsSqlTestcontainerConfiguration
@@ -78,7 +84,7 @@ namespace ScoreboardApp.Api.IntegrationTests
 
                 await dataSeeder.SeedRolesAsync(Roles.RolesSupported);
 
-                await dataSeeder.SeedUserAsync(testUser.Email, testUser.Password, testUser.Roles);
+                await dataSeeder.SeedUserAsync(testUser.Email, testUser.Password, testUser.Roles, testUser.UserName);
             }
         }
 
