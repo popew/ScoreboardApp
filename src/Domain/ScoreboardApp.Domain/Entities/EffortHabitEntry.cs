@@ -1,4 +1,5 @@
-﻿using ScoreboardApp.Domain.Entities.Interfaces;
+﻿using ScoreboardApp.Domain.Commons;
+using ScoreboardApp.Domain.Entities.Interfaces;
 
 namespace ScoreboardApp.Domain.Entities
 {

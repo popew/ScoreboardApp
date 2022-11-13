@@ -1,4 +1,5 @@
-﻿using ScoreboardApp.Domain.Enums;
+﻿using ScoreboardApp.Domain.Commons;
+using ScoreboardApp.Domain.Enums;
 
 namespace ScoreboardApp.Domain.Entities
 {

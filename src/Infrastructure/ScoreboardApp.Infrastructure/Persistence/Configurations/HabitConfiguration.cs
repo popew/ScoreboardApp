@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using ScoreboardApp.Domain.Commons;
 using ScoreboardApp.Domain.Entities;
 using ScoreboardApp.Domain.Entities.Interfaces;
 using ScoreboardApp.Domain.Enums;
