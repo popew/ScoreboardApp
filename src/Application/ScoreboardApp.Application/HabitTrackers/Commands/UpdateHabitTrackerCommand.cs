@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
-using ScoreboardApp.Application.Commons.Enums;
 using ScoreboardApp.Application.Commons.Exceptions;
+using ScoreboardApp.Application.DTOs.Enums;
 using ScoreboardApp.Domain.Entities;
 using ScoreboardApp.Domain.Enums;
 using ScoreboardApp.Infrastructure.Persistence;

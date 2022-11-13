@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http;
 using System.Net.Http.Json;
+using ScoreboardApp.Application.DTOs.Enums;
 
 namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
 {
@@ -14,7 +15,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
 
         private readonly Faker<CreateHabitTrackerCommand> _commandGenerator = new Faker<CreateHabitTrackerCommand>()
             .RuleFor(x => x.Title, faker => faker.Lorem.Word())
-            .RuleFor(x => x.Priority, faker => Application.Commons.Enums.PriorityMapping.NotSet);
+            .RuleFor(x => x.Priority, faker => PriorityMapping.NotSet);
 
         public CreateHabitTrackersControllerTests(ScoreboardAppApiFactory apiFactory)
         {

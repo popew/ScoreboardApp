@@ -1,11 +1,11 @@
 ﻿using MediatR;
-using ScoreboardApp.Application.Commons.Enums;
 using ScoreboardApp.Application.Commons.Exceptions;
 using ScoreboardApp.Domain.Entities;
 using ScoreboardApp.Infrastructure.Persistence;
 using ScoreboardApp.Domain.Enums;
 using ScoreboardApp.Application.Commons.Mappings;
 using AutoMapper;
+using ScoreboardApp.Application.DTOs.Enums;
 
 namespace ScoreboardApp.Application.Habits.Commands
 {
