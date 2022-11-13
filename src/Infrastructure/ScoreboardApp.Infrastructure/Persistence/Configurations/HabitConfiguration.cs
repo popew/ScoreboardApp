@@ -3,13 +3,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ScoreboardApp.Domain.Commons;
 using ScoreboardApp.Domain.Entities;
 using ScoreboardApp.Domain.Entities.Interfaces;
-using ScoreboardApp.Domain.Enums;
 
 namespace ScoreboardApp.Infrastructure.Persistence.Configurations
 {
-    public abstract class HabitConfiguration<THabit, TEntry> : BaseEntityConfiguration<THabit>, IEntityTypeConfiguration<THabit>
-        where THabit : BaseEntity, IHabit<TEntry> 
-        where TEntry : BaseEntity, IHabitEntry<THabit>
+    public abstract class HabitConfiguration<THabit, TEntry> : BaseAuditableEntityConfiguration<THabit>, IEntityTypeConfiguration<THabit>
+        where THabit : BaseAuditableEntity, IHabit<TEntry>
+        where TEntry : BaseAuditableEntity, IHabitEntry<THabit>
     {
         public override void Configure(EntityTypeBuilder<THabit> builder)
         {

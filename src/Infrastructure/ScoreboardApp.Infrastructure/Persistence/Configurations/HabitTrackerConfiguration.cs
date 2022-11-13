@@ -4,7 +4,7 @@ using ScoreboardApp.Domain.Entities;
 
 namespace ScoreboardApp.Infrastructure.Persistence.Configurations
 {
-    public class HabitTrackerConfiguration : BaseEntityConfiguration<HabitTracker>, IEntityTypeConfiguration<HabitTracker>
+    public class HabitTrackerConfiguration : BaseAuditableEntityConfiguration<HabitTracker>, IEntityTypeConfiguration<HabitTracker>
     {
         public override void Configure(EntityTypeBuilder<HabitTracker> builder)
         {

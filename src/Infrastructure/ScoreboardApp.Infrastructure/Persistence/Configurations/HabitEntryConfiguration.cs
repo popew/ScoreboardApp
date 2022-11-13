@@ -3,13 +3,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ScoreboardApp.Domain.Commons;
 using ScoreboardApp.Domain.Entities;
 using ScoreboardApp.Domain.Entities.Interfaces;
-using ScoreboardApp.Domain.Enums;
 
 namespace ScoreboardApp.Infrastructure.Persistence.Configurations
 {
-    public abstract class HabitEntryConfiguration<TEntry, THabit> : BaseEntityConfiguration<TEntry>, IEntityTypeConfiguration<TEntry>
-        where TEntry : BaseEntity, IHabitEntry<THabit>
-        where THabit : BaseEntity, IHabit<TEntry>
+    public abstract class HabitEntryConfiguration<TEntry, THabit> : BaseAuditableEntityConfiguration<TEntry>, IEntityTypeConfiguration<TEntry>
+        where TEntry : BaseAuditableEntity, IHabitEntry<THabit>
+        where THabit : BaseAuditableEntity, IHabit<TEntry>
     {
         public override void Configure(EntityTypeBuilder<TEntry> builder)
         {
@@ -20,7 +19,6 @@ namespace ScoreboardApp.Infrastructure.Persistence.Configurations
 
             builder.Property(e => e.EntryDate)
                 .IsRequired();
-
         }
     }
 

@@ -3,7 +3,7 @@ using ScoreboardApp.Domain.Entities.Interfaces;
 
 namespace ScoreboardApp.Domain.Entities
 {
-    public class CompletionHabit : BaseEntity, IHabit<CompletionHabitEntry>
+    public class CompletionHabit : BaseAuditableEntity, IHabit<CompletionHabitEntry>
     {
         public string? Description { get; set; }
         public IList<CompletionHabitEntry> HabitEntries { get; set; }

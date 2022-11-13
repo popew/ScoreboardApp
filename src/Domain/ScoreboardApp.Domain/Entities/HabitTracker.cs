@@ -3,7 +3,7 @@ using ScoreboardApp.Domain.Enums;
 
 namespace ScoreboardApp.Domain.Entities
 {
-    public class HabitTracker : BaseEntity
+    public class HabitTracker : BaseAuditableEntity
     {
         public string? Title { get; set; }
         public Priority Priority { get; set; } = Priority.None;
