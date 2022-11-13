@@ -1,18 +1,12 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Microsoft.IdentityModel.Tokens;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using ScoreboardApp.Infrastructure.CustomIdentityService;
-using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Options;
 using ScoreboardApp.Infrastructure.Persistence;
 using ScoreboardApp.Infrastructure.Telemetry.Options;
-using System.ComponentModel.DataAnnotations;
-using System.Security.Claims;
-using System.Text;
 
 namespace ScoreboardApp.Infrastructure
 {
@@ -22,7 +16,8 @@ namespace ScoreboardApp.Infrastructure
         {
             services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
+                                     providerOptions => providerOptions.EnableRetryOnFailure());
             });
 
             services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
