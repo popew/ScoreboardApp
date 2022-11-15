@@ -32,12 +32,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Domain\ScoreboardApp.Domain\ScoreboardApp.Domain.csproj" />
-    <ProjectReference Include="..\ScoreboardApp.Infrastructure.CustomIdentityService\ScoreboardApp.Infrastructure.CustomIdentityService.csproj" />
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Migrations\" />
+    <ProjectReference Include="..\..\Application\ScoreboardApp.Application\ScoreboardApp.Application.csproj" />
   </ItemGroup>
 
 </Project>

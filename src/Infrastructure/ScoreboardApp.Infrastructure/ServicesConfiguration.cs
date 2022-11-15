@@ -4,8 +4,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using ScoreboardApp.Application.Commons.Interfaces;
 using ScoreboardApp.Infrastructure.CustomIdentityService;
 using ScoreboardApp.Infrastructure.Persistence;
+using ScoreboardApp.Infrastructure.Services;
 using ScoreboardApp.Infrastructure.Telemetry.Options;
 
 namespace ScoreboardApp.Infrastructure
@@ -21,8 +23,6 @@ namespace ScoreboardApp.Infrastructure
             });
 
             services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
-
-            services.AddCustomIdentityService(configuration);
 
             // Configure HealthChecks
             services.AddHealthChecks()
@@ -55,6 +55,8 @@ namespace ScoreboardApp.Infrastructure
                         .AddSqlClientInstrumentation();
                 });
             }
+
+            services.AddTransient<IDateTime, DateTimeService>();
 
             return services;
         }

@@ -2,14 +2,17 @@ using Microsoft.OpenApi.Models;
 using ScoreboardApp.Api;
 using ScoreboardApp.Application;
 using ScoreboardApp.Infrastructure;
+using ScoreboardApp.Infrastructure.CustomIdentityService;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Extensions;
 using ScoreboardApp.Infrastructure.Extensions;
+using static CSharpFunctionalExtensions.Result;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddApplicationservices(builder.Configuration);
 builder.Services.AddInfrastructureServices(builder.Configuration);
+builder.Services.AddCustomIdentityService(builder.Configuration);
 builder.Services.AddApiServices(builder.Configuration);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

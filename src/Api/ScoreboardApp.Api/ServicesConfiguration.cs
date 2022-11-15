@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using ScoreboardApp.Api.Filters;
+using ScoreboardApp.Api.Services;
+using ScoreboardApp.Application.Commons.Interfaces;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -30,6 +32,8 @@ namespace ScoreboardApp.Api
                 options.ApiVersionReader = new HeaderApiVersionReader("X-api-version");
                 options.ReportApiVersions = true;
             });
+
+            services.AddScoped<ICurrentUserService, CurrentUserService>();
 
             return services;
         }

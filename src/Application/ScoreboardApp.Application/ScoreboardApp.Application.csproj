@@ -18,11 +18,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Infrastructure\ScoreboardApp.Infrastructure\ScoreboardApp.Infrastructure.csproj" />
+    <Folder Include="CompletionHabitEntries\Queries\Validators\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="CompletionHabitEntries\Queries\Validators\" />
+    <ProjectReference Include="..\..\Domain\ScoreboardApp.Domain\ScoreboardApp.Domain.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\ScoreboardApp.Infrastructure.CustomIdentityService\ScoreboardApp.Infrastructure.CustomIdentityService.csproj" />
   </ItemGroup>
 
 </Project>
