@@ -7,6 +7,7 @@ using OpenTelemetry.Trace;
 using ScoreboardApp.Application.Commons.Interfaces;
 using ScoreboardApp.Infrastructure.CustomIdentityService;
 using ScoreboardApp.Infrastructure.Persistence;
+using ScoreboardApp.Infrastructure.Persistence.Interceptors;
 using ScoreboardApp.Infrastructure.Services;
 using ScoreboardApp.Infrastructure.Telemetry.Options;
 
@@ -16,6 +17,8 @@ namespace ScoreboardApp.Infrastructure
     {
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddScoped<AuditableEntitySaveChangesInterceptor>();
+
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
