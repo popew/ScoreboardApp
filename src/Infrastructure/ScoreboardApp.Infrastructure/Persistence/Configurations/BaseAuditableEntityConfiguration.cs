@@ -11,6 +11,12 @@ namespace ScoreboardApp.Infrastructure.Persistence.Configurations
         {
             builder.Property(entity => entity.Id)
                 .ValueGeneratedOnAdd();
+
+            builder.Property(entity => entity.LastModifiedBy)
+                .HasMaxLength(200);
+
+            builder.Property(entity => entity.CreatedBy)
+                .HasMaxLength(200);
         }
     }
 }
