@@ -8,6 +8,8 @@ namespace ScoreboardApp.Infrastructure.Persistence.Configurations
     {
         public override void Configure(EntityTypeBuilder<HabitTracker> builder)
         {
+            builder.ToTable(tb => tb.IsTemporal());
+
             builder.HasMany(ht => ht.EffortHabits)
                 .WithOne(h => h.HabitTracker)
                 .HasForeignKey(h => h.HabitTrackerId)
