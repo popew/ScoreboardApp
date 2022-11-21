@@ -19,4 +19,4 @@ namespace ScoreboardApp.Domain.Entities
         public string? Title { get; set; }
         public string UserId { get; set; }
     }
-}
+}                       

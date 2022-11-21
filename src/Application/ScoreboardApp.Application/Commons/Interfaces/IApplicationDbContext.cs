@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ScoreboardApp.Domain.Entities;
 
-namespace ScoreboardApp.Infrastructure.Persistence
+namespace ScoreboardApp.Application.Commons.Interfaces
 {
     public  interface IApplicationDbContext
     {
