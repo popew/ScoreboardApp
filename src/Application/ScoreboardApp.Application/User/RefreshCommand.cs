@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using FluentValidation.Results;
 using MediatR;
 using ScoreboardApp.Application.Commons.Exceptions;
 using ScoreboardApp.Application.Commons.Mappings;
@@ -42,14 +41,14 @@ namespace ScoreboardApp.Application.Authentication
 
             var principal = getPrincipalResult.Value;
 
-            if(principal is null)
+            if (principal is null)
             {
                 throw new UnauthorizedException("Token is invalid.");
             }
 
             string username = principal!.Identity!.Name!;
             ApplicationUser? user = await _userService.GetUserById(username);
-            
+
             if (user is null)
             {
                 throw new UnauthorizedException("Token is invalid");

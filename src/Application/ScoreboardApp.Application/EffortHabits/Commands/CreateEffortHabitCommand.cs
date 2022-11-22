@@ -1,9 +1,9 @@
-﻿using ScoreboardApp.Domain.Entities;
-using ScoreboardApp.Infrastructure.Persistence;
+﻿using AutoMapper;
 using MediatR;
-using AutoMapper;
+using ScoreboardApp.Application.Commons.Interfaces;
 using ScoreboardApp.Application.Commons.Mappings;
 using ScoreboardApp.Application.DTOs.Enums;
+using ScoreboardApp.Domain.Entities;
 
 namespace ScoreboardApp.Application.Habits.Commands
 {

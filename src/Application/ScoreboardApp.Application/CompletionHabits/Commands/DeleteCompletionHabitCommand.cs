@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ScoreboardApp.Application.Commons.Exceptions;
+using ScoreboardApp.Application.Commons.Interfaces;
 using ScoreboardApp.Domain.Entities;
-using ScoreboardApp.Infrastructure.Persistence;
 
 namespace ScoreboardApp.Application.Habits.Commands
 {

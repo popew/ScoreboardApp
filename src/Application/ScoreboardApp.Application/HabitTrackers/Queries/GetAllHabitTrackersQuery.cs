@@ -2,8 +2,8 @@
 using AutoMapper.QueryableExtensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using ScoreboardApp.Application.Commons.Interfaces;
 using ScoreboardApp.Application.DTOs;
-using ScoreboardApp.Infrastructure.Persistence;
 
 namespace ScoreboardApp.Application.HabitTrackers.Queries
 {

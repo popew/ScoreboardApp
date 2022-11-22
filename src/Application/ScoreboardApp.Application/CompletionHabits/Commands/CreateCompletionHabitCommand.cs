@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using MediatR;
+using ScoreboardApp.Application.Commons.Interfaces;
 using ScoreboardApp.Application.Commons.Mappings;
 using ScoreboardApp.Domain.Entities;
-using ScoreboardApp.Infrastructure.Persistence;
 
 namespace ScoreboardApp.Application.Habits.Commands
 {

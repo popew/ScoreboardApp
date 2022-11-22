@@ -1,17 +1,11 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using MediatR;
+using ScoreboardApp.Application.Commons.Interfaces;
 using ScoreboardApp.Application.Commons.Mappings;
 using ScoreboardApp.Application.Commons.Models;
 using ScoreboardApp.Application.Commons.Queries;
-using ScoreboardApp.Application.EffortHabitEntries.Queries;
 using ScoreboardApp.Application.HabitTrackers.DTOs;
-using ScoreboardApp.Infrastructure.Persistence;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ScoreboardApp.Application.CompletionHabitEntries.Queries
 {

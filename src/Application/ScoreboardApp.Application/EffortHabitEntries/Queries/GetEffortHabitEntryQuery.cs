@@ -1,16 +1,9 @@
 ﻿using AutoMapper;
 using MediatR;
 using ScoreboardApp.Application.Commons.Exceptions;
-using ScoreboardApp.Application.Commons.Mappings;
-using ScoreboardApp.Application.EffortHabits.Queries;
+using ScoreboardApp.Application.Commons.Interfaces;
 using ScoreboardApp.Application.HabitTrackers.DTOs;
 using ScoreboardApp.Domain.Entities;
-using ScoreboardApp.Infrastructure.Persistence;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ScoreboardApp.Application.EffortHabitEntries.Queries
 {

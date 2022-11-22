@@ -2,15 +2,8 @@
 using AutoMapper.QueryableExtensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using ScoreboardApp.Application.DTOs;
+using ScoreboardApp.Application.Commons.Interfaces;
 using ScoreboardApp.Application.HabitTrackers.DTOs;
-using ScoreboardApp.Application.HabitTrackers.Queries;
-using ScoreboardApp.Infrastructure.Persistence;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ScoreboardApp.Application.EffortHabits.Queries
 {
@@ -38,7 +31,7 @@ namespace ScoreboardApp.Application.EffortHabits.Queries
                                 .OrderBy(ht => ht.Title)
                                 .ToListAsync(cancellationToken);
 
-            
+
         }
     }
 }

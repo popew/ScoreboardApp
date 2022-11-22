@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using MediatR;
+using ScoreboardApp.Application.Commons.Interfaces;
 using ScoreboardApp.Application.Commons.Mappings;
 using ScoreboardApp.Application.DTOs.Enums;
 using ScoreboardApp.Domain.Entities;
 using ScoreboardApp.Domain.Enums;
-using ScoreboardApp.Infrastructure.Persistence;
 
 namespace ScoreboardApp.Application.HabitTrackers.Commands
 {

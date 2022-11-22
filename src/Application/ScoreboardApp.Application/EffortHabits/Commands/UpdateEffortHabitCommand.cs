@@ -1,11 +1,11 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using ScoreboardApp.Application.Commons.Exceptions;
-using ScoreboardApp.Domain.Entities;
-using ScoreboardApp.Infrastructure.Persistence;
-using ScoreboardApp.Domain.Enums;
+using ScoreboardApp.Application.Commons.Interfaces;
 using ScoreboardApp.Application.Commons.Mappings;
-using AutoMapper;
 using ScoreboardApp.Application.DTOs.Enums;
+using ScoreboardApp.Domain.Entities;
+using ScoreboardApp.Domain.Enums;
 
 namespace ScoreboardApp.Application.Habits.Commands
 {
@@ -49,9 +49,9 @@ namespace ScoreboardApp.Application.Habits.Commands
         public async Task<UpdateEffortHabitCommandResponse> Handle(UpdateEffortHabitCommand request, CancellationToken cancellationToken)
         {
             var habitEntity = await _context.EffortHabits
-                                            .FindAsync(new object[] {request.Id}, cancellationToken);
+                                            .FindAsync(new object[] { request.Id }, cancellationToken);
 
-            if(habitEntity == null)
+            if (habitEntity == null)
             {
                 throw new NotFoundException(nameof(EffortHabit), request.Id);
             }

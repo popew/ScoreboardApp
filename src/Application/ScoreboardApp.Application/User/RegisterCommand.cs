@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using ScoreboardApp.Application.Commons.Exceptions;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Services;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Persistence.Entities;
@@ -43,7 +42,7 @@ namespace ScoreboardApp.Application.Authentication
 
             if (createUserResult.IsFailure)
             {
-                throw new ValidationException(createUserResult.Error.Details.ToDictionary(x => x.Key, x => new string[] { x.Value } ));
+                throw new ValidationException(createUserResult.Error.Details.ToDictionary(x => x.Key, x => new string[] { x.Value }));
             }
 
             return Unit.Value;
