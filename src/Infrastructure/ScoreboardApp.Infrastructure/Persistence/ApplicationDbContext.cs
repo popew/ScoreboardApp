@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ScoreboardApp.Application.Commons.Interfaces;
 using ScoreboardApp.Domain.Entities;
 using ScoreboardApp.Infrastructure.Persistence.Converters;
 using ScoreboardApp.Infrastructure.Persistence.Interceptors;
