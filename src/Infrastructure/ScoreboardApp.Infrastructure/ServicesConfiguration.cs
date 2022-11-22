@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Options;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using ScoreboardApp.Application.Commons.Interfaces;
@@ -37,7 +38,10 @@ namespace ScoreboardApp.Infrastructure
                                   failureStatus: HealthStatus.Degraded);
 
             // Configure Telemetry
-            services.Configure<TelemetryOptions>(configuration.GetSection(nameof(TelemetryOptions)));
+            services.AddSingleton<IValidateOptions<TelemetryOptions>, TelemetryOptionsValidator>();
+            services.AddOptions<TelemetryOptions>()
+                    .Bind(configuration.GetSection(nameof(TelemetryOptions)))
+                    .ValidateOnStart();
 
             var telemetryOptions = configuration.GetSection(nameof(TelemetryOptions)).Get<TelemetryOptions>();
 
