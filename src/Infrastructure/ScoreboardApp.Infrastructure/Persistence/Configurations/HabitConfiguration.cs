@@ -30,6 +30,9 @@ namespace ScoreboardApp.Infrastructure.Persistence.Configurations
                 .WithOne(e => e.Habit)
                 .HasForeignKey(e => e.HabitId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Property(h => h.UserId)
+                .HasMaxLength(200);
         }
     }
 

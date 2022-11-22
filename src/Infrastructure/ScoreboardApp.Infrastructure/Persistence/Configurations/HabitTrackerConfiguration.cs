@@ -23,6 +23,9 @@ namespace ScoreboardApp.Infrastructure.Persistence.Configurations
             builder.Property(ht => ht.Title)
                 .HasMaxLength(200)
                 .IsRequired();
+
+            builder.Property(ht => ht.UserId)
+                .HasMaxLength(200);
         }
     }
 }

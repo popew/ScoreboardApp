@@ -5,7 +5,7 @@ using ScoreboardApp.Domain.Enums;
 
 namespace ScoreboardApp.Domain.Entities
 {
-    public class EffortHabit : BaseAuditableEntity, IHabit<EffortHabitEntry>, IOwnedEntity
+    public class EffortHabit : BaseAuditableEntity, IHabit<EffortHabitEntry>
     {
         public string? Unit { get; set; }
 

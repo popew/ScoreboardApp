@@ -21,6 +21,9 @@ namespace ScoreboardApp.Infrastructure.Persistence.Configurations
 
             builder.Property(e => e.EntryDate)
                 .IsRequired();
+
+            builder.Property(e => e.UserId)
+                .HasMaxLength(200);
         }
     }
 

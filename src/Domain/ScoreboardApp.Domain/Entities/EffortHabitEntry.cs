@@ -4,7 +4,7 @@ using ScoreboardApp.Domain.Entities.Interfaces;
 
 namespace ScoreboardApp.Domain.Entities
 {
-    public class EffortHabitEntry : BaseAuditableEntity, IHabitEntry<EffortHabit>, IOwnedEntity
+    public class EffortHabitEntry : BaseAuditableEntity, IHabitEntry<EffortHabit>
     {
         public double Effort { get; set; }
 
