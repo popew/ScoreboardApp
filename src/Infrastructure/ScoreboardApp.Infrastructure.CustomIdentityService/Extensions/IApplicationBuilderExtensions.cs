@@ -14,7 +14,7 @@ namespace ScoreboardApp.Infrastructure.CustomIdentityService.Extensions
         ///     Create Identity DB if not exist
         /// </summary>
         /// <param name="builder"></param>
-        public static void EnsureIdentityDbIsMigrations(this IApplicationBuilder builder)
+        public static void EnsureIdentityDbMigrations(this IApplicationBuilder builder)
         {
             using (var serviceScope = builder.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {

@@ -3,11 +3,6 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using ScoreboardApp.Application.Commons.Interfaces;
 using ScoreboardApp.Domain.Commons;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ScoreboardApp.Infrastructure.Persistence.Interceptors
 {

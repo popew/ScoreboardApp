@@ -6,7 +6,6 @@ using Microsoft.Extensions.Options;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using ScoreboardApp.Application.Commons.Interfaces;
-using ScoreboardApp.Infrastructure.CustomIdentityService;
 using ScoreboardApp.Infrastructure.Persistence;
 using ScoreboardApp.Infrastructure.Persistence.Interceptors;
 using ScoreboardApp.Infrastructure.Services;

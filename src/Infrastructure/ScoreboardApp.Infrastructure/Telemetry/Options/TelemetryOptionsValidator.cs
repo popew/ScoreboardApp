@@ -13,4 +13,3 @@ namespace ScoreboardApp.Infrastructure.Telemetry.Options
         }
     }
 }
-                    

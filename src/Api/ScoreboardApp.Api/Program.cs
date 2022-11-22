@@ -54,7 +54,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 
-    app.EnsureIdentityDbIsMigrations();
+    app.EnsureIdentityDbMigrations();
     await app.SeedIdentityDataAsync();
 
     app.ExecuteApplicationDbContextMigrations();
