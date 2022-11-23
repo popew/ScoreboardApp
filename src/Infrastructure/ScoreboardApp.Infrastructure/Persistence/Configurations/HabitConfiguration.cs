@@ -32,7 +32,8 @@ namespace ScoreboardApp.Infrastructure.Persistence.Configurations
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.Property(h => h.UserId)
-                .HasMaxLength(200);
+                .HasMaxLength(200)
+                .IsRequired();
         }
     }
 
