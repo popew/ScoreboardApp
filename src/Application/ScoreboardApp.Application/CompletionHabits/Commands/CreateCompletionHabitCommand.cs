@@ -27,20 +27,25 @@ namespace ScoreboardApp.Application.Habits.Commands
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
+        private readonly ICurrentUserService _currentUserService;
 
-        public CreateCompletionHabitCommandHandler(IApplicationDbContext context, IMapper mapper)
+        public CreateCompletionHabitCommandHandler(IApplicationDbContext context, IMapper mapper, ICurrentUserService currentUserService)
         {
             _context = context;
             _mapper = mapper;
+            _currentUserService = currentUserService;
         }
 
         public async Task<CreateCompletionHabitCommandResponse> Handle(CreateCompletionHabitCommand request, CancellationToken cancellationToken)
         {
+            string? currentUserId = _currentUserService.GetUserId()!;
+
             var habitEntity = new CompletionHabit()
             {
                 Title = request.Title,
-                Description = request.Description,
-                HabitTrackerId = request.HabitTrackerId
+                Description = request.Description,      
+                HabitTrackerId = request.HabitTrackerId,
+                UserId = currentUserId
             };
 
             _context.CompletionHabits.Add(habitEntity);
