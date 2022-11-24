@@ -35,7 +35,7 @@ namespace ScoreboardApp.Api.IntegrationTests.UserController
             var httpResponse = await _apiClient.PostAsJsonAsync(EndpointUnderTest, userCredentials);
 
             // Assert
-            httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
         }
 
         [Fact]
@@ -45,13 +45,13 @@ namespace ScoreboardApp.Api.IntegrationTests.UserController
             var userCredentials = _registerCommandGenerator.Generate();
             var httpResponse = await _apiClient.PostAsJsonAsync(EndpointUnderTest, userCredentials);
 
-            httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             // Act
             var secondRegistraionHttpResponse = await _apiClient.PostAsJsonAsync(EndpointUnderTest, userCredentials);
 
             // Assert
-            secondRegistraionHttpResponse.StatusCode.Should().Be(HttpStatusCode.Conflict);
+            secondRegistraionHttpResponse.Should().HaveStatusCode(HttpStatusCode.Conflict);
         }
 
         [Theory]
@@ -67,7 +67,7 @@ namespace ScoreboardApp.Api.IntegrationTests.UserController
             var httpResponse = await _apiClient.PostAsJsonAsync(EndpointUnderTest, userCredentials);
 
             // Assert
-            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             var error = await httpResponse.Content.ReadFromJsonAsync<ValidationProblemDetails>();
 
@@ -99,7 +99,7 @@ namespace ScoreboardApp.Api.IntegrationTests.UserController
             var httpResponse = await _apiClient.PostAsJsonAsync(EndpointUnderTest, userCredentials);
 
             // Assert
-            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             var error = await httpResponse.Content.ReadFromJsonAsync<ValidationProblemDetails>();
 

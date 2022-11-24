@@ -40,7 +40,7 @@ namespace ScoreboardApp.Api.IntegrationTests.UserController
 
             // Assert
 
-            httpResponseAuthentication.StatusCode.Should().Be(HttpStatusCode.OK);
+            httpResponseAuthentication.Should().HaveStatusCode(HttpStatusCode.OK);
 
             var authenticationResponse = await httpResponseAuthentication.Content.ReadFromJsonAsync<AuthenticateCommandResponse>();
 
@@ -62,7 +62,7 @@ namespace ScoreboardApp.Api.IntegrationTests.UserController
 
             // Assert
 
-            httpResponseAuthentication.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+            httpResponseAuthentication.Should().HaveStatusCode(HttpStatusCode.Unauthorized);
         }
 
         [Fact]
@@ -78,7 +78,7 @@ namespace ScoreboardApp.Api.IntegrationTests.UserController
 
             // Assert
 
-            httpResponseAuthentication.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+            httpResponseAuthentication.Should().HaveStatusCode(HttpStatusCode.Unauthorized);
         }
     }
 }
