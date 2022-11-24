@@ -29,8 +29,9 @@ namespace ScoreboardApp.Application.CompletionHabitEntries.Commands.Validators
         private async Task<bool> BeUniqueDate(CreateCompletionHabitEntryCommand command, DateOnly entryDate, CancellationToken cancellationToken)
         {
             return !await _context.CompletionHabitEntries
-                .Where(x => x.HabitId == command.HabitId)
-                .AnyAsync(x => x.EntryDate == entryDate, cancellationToken);
+                                .AsNoTracking()
+                                .Where(x => x.HabitId == command.HabitId)
+                                .AnyAsync(x => x.EntryDate == entryDate, cancellationToken);
         }
     }
 }

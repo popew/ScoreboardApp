@@ -29,6 +29,7 @@ namespace ScoreboardApp.Application.CompletionHabitEntries.Commands.Validators
         private async Task<bool> BeUniqueDateOrSameEntity(UpdateCompletionHabitEntryCommand command, DateOnly entryDate, CancellationToken cancellationToken)
         {
             var entryEntity = await _context.CompletionHabitEntries
+                                            .AsNoTracking()
                                             .Where(x => x.HabitId == command.HabitId)
                                             .SingleOrDefaultAsync(x => x.EntryDate == entryDate, cancellationToken);
 

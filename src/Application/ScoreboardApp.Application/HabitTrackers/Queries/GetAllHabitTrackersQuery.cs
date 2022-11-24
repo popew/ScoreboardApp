@@ -16,17 +16,22 @@ namespace ScoreboardApp.Application.HabitTrackers.Queries
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
+        private readonly ICurrentUserService _currentUserService;
 
-        public GetAllHabitTrackersQueryHandler(IApplicationDbContext context, IMapper mapper)
+        public GetAllHabitTrackersQueryHandler(IApplicationDbContext context, IMapper mapper, ICurrentUserService currentUserService)
         {
             _context = context;
             _mapper = mapper;
+            _currentUserService = currentUserService;
         }
 
         public async Task<IList<HabitTrackerDTO>> Handle(GetAllHabitTrackersQuery request, CancellationToken cancellationToken)
         {
+            string? currentUserId = _currentUserService.GetUserId()!;
+
             return await _context.HabitTrackers
                 .AsNoTracking()
+                .Where(x => x.UserId == currentUserId)
                 .ProjectTo<HabitTrackerDTO>(_mapper.ConfigurationProvider)
                 .OrderBy(ht => ht.Title)
                 .ToListAsync(cancellationToken);
