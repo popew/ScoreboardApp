@@ -15,17 +15,21 @@ namespace ScoreboardApp.Application.EffortHabitEntries.Commands
     public sealed class DeleteEffortHabitEntryCommandHandler : IRequestHandler<DeleteEffortHabitEntryCommand>
     {
         private readonly IApplicationDbContext _context;
+        private readonly ICurrentUserService _currentUserService;
 
-        public DeleteEffortHabitEntryCommandHandler(IApplicationDbContext context)
+        public DeleteEffortHabitEntryCommandHandler(IApplicationDbContext context, ICurrentUserService currentUserService)
         {
             _context = context;
+            _currentUserService = currentUserService;
         }
 
         public async Task<Unit> Handle(DeleteEffortHabitEntryCommand request, CancellationToken cancellationToken)
         {
+            string? currentUserId = _currentUserService.GetUserId()!;
+
             var entryEntity = await _context.EffortHabitEntries
-                    .Where(h => h.Id == request.Id)
-                    .SingleOrDefaultAsync(cancellationToken);
+                                            .Where(x => x.Id == request.Id && x.UserId == currentUserId)
+                                            .SingleOrDefaultAsync(cancellationToken);
 
             if (entryEntity == null)
             {
