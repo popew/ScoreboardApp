@@ -28,7 +28,9 @@ namespace ScoreboardApp.Application.HabitTrackers.Validators
 
         private async Task<bool> NotExceedNumberOfAllowedTrackers(CreateHabitTrackerCommand command, CancellationToken cancellationToken)
         {
-            return await _context.HabitTrackers.Select(x => x.Id).CountAsync(cancellationToken) < 20;
+            return await _context.HabitTrackers
+                .Select(x => x.Id)
+                .CountAsync(cancellationToken) < 20;
         }
 
         private async Task<bool> BeUniqueTitle(string title, CancellationToken cancellationToken)

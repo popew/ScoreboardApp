@@ -16,17 +16,21 @@ namespace ScoreboardApp.Application.EffortHabits.Queries
 
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
+        private readonly ICurrentUserService _currentUserService;
 
-        public GetAllEffortHabitsQueryHandler(IApplicationDbContext context, IMapper mapper)
+        public GetAllEffortHabitsQueryHandler(IApplicationDbContext context, IMapper mapper, ICurrentUserService currentUserService)
         {
             _context = context;
             _mapper = mapper;
+            _currentUserService = currentUserService;
         }
         public async Task<IList<EffortHabitDTO>> Handle(GetAllEffortHabitsQuery request, CancellationToken cancellationToken)
         {
+            string? currentUserId = _currentUserService.GetUserId()!;
+
             return await _context.EffortHabits
                                 .AsNoTracking()
-                                .Where(x => x.HabitTrackerId == request.HabitTrackerId)
+                                .Where(x => x.HabitTrackerId == request.HabitTrackerId && x.UserId == currentUserId)
                                 .ProjectTo<EffortHabitDTO>(_mapper.ConfigurationProvider)
                                 .OrderBy(ht => ht.Title)
                                 .ToListAsync(cancellationToken);
