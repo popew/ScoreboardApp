@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using ScoreboardApp.Infrastructure.Persistence;
+using ScoreboardApp.Application.Commons.Interfaces;
 
 namespace ScoreboardApp.Application.HabitTrackers.Commands.Validators
 {

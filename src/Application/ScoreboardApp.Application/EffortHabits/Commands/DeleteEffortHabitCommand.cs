@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ScoreboardApp.Application.Commons.Exceptions;
+using ScoreboardApp.Application.Commons.Interfaces;
 using ScoreboardApp.Domain.Entities;
-using ScoreboardApp.Infrastructure.Persistence;
 
 namespace ScoreboardApp.Application.Habits.Commands
 {
@@ -14,15 +14,19 @@ namespace ScoreboardApp.Application.Habits.Commands
     public sealed class DeleteEffortHabitCommandHandler : IRequestHandler<DeleteEffortHabitCommand>
     {
         private readonly IApplicationDbContext _context;
+        private readonly ICurrentUserService _currentUserService;
 
-        public DeleteEffortHabitCommandHandler(IApplicationDbContext context)
+        public DeleteEffortHabitCommandHandler(IApplicationDbContext context, ICurrentUserService currentUserService)
         {
             _context = context;
+            _currentUserService = currentUserService;
         }
         public async Task<Unit> Handle(DeleteEffortHabitCommand request, CancellationToken cancellationToken)
         {
+            string? currentUserId = _currentUserService.GetUserId()!;
+
             var habitEntity = await _context.EffortHabits
-                                .Where(h => h.Id == request.Id)
+                                .Where(h => h.Id == request.Id && h.UserId == currentUserId)
                                 .SingleOrDefaultAsync(cancellationToken);
 
             if (habitEntity == null)

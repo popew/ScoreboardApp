@@ -1,9 +1,9 @@
-﻿using ScoreboardApp.Application.Commons.Enums;
-using ScoreboardApp.Domain.Entities;
-using ScoreboardApp.Infrastructure.Persistence;
+﻿using AutoMapper;
 using MediatR;
-using AutoMapper;
+using ScoreboardApp.Application.Commons.Interfaces;
 using ScoreboardApp.Application.Commons.Mappings;
+using ScoreboardApp.Application.DTOs.Enums;
+using ScoreboardApp.Domain.Entities;
 
 namespace ScoreboardApp.Application.Habits.Commands
 {
@@ -36,22 +36,27 @@ namespace ScoreboardApp.Application.Habits.Commands
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
+        private readonly ICurrentUserService _currentUserService;
 
-        public CreateEfforHabitCommandHandler(IApplicationDbContext context, IMapper mapper)
+        public CreateEfforHabitCommandHandler(IApplicationDbContext context, IMapper mapper, ICurrentUserService currentUserService)
         {
             _context = context;
             _mapper = mapper;
+            _currentUserService = currentUserService;
         }
 
         public async Task<CreateEfforHabitCommandResponse> Handle(CreateEfforHabitCommand request, CancellationToken cancellationToken)
         {
+            string? currentUserId = _currentUserService.GetUserId()!;
+
             var habitEntity = new EffortHabit()
             {
                 Title = request.Title,
                 Description = request.Description,
                 HabitTrackerId = request.HabitTrackerId,
                 Unit = request.Unit,
-                AverageGoal = request.AverageGoal
+                AverageGoal = request.AverageGoal,
+                UserId = currentUserId
             };
 
             _context.EffortHabits.Add(habitEntity);

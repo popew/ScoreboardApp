@@ -1,14 +1,9 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using ScoreboardApp.Application.Commons.Exceptions;
-using ScoreboardApp.Application.EffortHabitEntries.Commands;
+using ScoreboardApp.Application.Commons.Interfaces;
 using ScoreboardApp.Domain.Entities;
-using ScoreboardApp.Infrastructure.Persistence;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ScoreboardApp.Application.CompletionHabitEntries.Commands
 {
@@ -32,16 +27,20 @@ namespace ScoreboardApp.Application.CompletionHabitEntries.Commands
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
+        private readonly ICurrentUserService _currentUserService;
 
-        public UpdateCompletionHabitEntryCommandHanlder(IApplicationDbContext context, IMapper mapper)
+        public UpdateCompletionHabitEntryCommandHanlder(IApplicationDbContext context, IMapper mapper, ICurrentUserService currentUserService)
         {
             _context = context;
             _mapper = mapper;
+            _currentUserService = currentUserService;
         }
         public async Task<UpdateCompletionHabitEntryCommandResponse> Handle(UpdateCompletionHabitEntryCommand request, CancellationToken cancellationToken)
         {
+            string? currentUserId = _currentUserService.GetUserId()!;
+
             var entryEntity = await _context.CompletionHabitEntries
-                                            .FindAsync(new object[] { request.Id }, cancellationToken);
+                                            .FirstOrDefaultAsync(x => x.Id == request.Id && x.UserId == currentUserId, cancellationToken);
 
             if (entryEntity == null)
             {

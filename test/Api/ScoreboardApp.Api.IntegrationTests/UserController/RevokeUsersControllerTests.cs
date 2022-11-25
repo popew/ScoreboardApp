@@ -35,7 +35,7 @@ namespace ScoreboardApp.Api.IntegrationTests.UserController
             var httpResponse = await httpClient.PostAsJsonAsync(EndpointUnderTest, revokeCommand);
 
             // Assert
-            httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
         }
 
         [Fact]
@@ -51,7 +51,7 @@ namespace ScoreboardApp.Api.IntegrationTests.UserController
             var httpResponse = await httpClient.PostAsJsonAsync(EndpointUnderTest, revokeCommand);
 
             // Assert
-            httpResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
         }
 
         [Fact]
@@ -67,7 +67,7 @@ namespace ScoreboardApp.Api.IntegrationTests.UserController
             var httpResponse = await httpClient.PostAsJsonAsync(EndpointUnderTest, revokeCommand);
 
             // Assert
-            httpResponse.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
         }
     }
 }

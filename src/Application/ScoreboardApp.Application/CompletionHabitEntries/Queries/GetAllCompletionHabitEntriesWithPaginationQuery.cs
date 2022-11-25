@@ -1,17 +1,11 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using MediatR;
+using ScoreboardApp.Application.Commons.Interfaces;
 using ScoreboardApp.Application.Commons.Mappings;
 using ScoreboardApp.Application.Commons.Models;
 using ScoreboardApp.Application.Commons.Queries;
-using ScoreboardApp.Application.EffortHabitEntries.Queries;
 using ScoreboardApp.Application.HabitTrackers.DTOs;
-using ScoreboardApp.Infrastructure.Persistence;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ScoreboardApp.Application.CompletionHabitEntries.Queries
 {
@@ -26,17 +20,21 @@ namespace ScoreboardApp.Application.CompletionHabitEntries.Queries
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
+        private readonly ICurrentUserService _currentUserService;
 
-        public GetAllCompletionHabitEntriesWithPaginationQueryHandler(IApplicationDbContext context, IMapper mapper)
+        public GetAllCompletionHabitEntriesWithPaginationQueryHandler(IApplicationDbContext context, IMapper mapper, ICurrentUserService currentUserService)
         {
             _context = context;
             _mapper = mapper;
+            _currentUserService = currentUserService;
         }
 
         public async Task<PaginatedList<CompletionHabitEntryDTO>> Handle(GetAllCompletionHabitEntriesWithPaginationQuery request, CancellationToken cancellationToken)
         {
+            string? currentUserId = _currentUserService.GetUserId()!;
+
             return await _context.CompletionHabitEntries
-                                .Where(x => x.HabitId == request.HabitId)
+                                .Where(x => x.HabitId == request.HabitId && x.UserId == currentUserId)
                                 .OrderBy(x => x.EntryDate)
                                 .ProjectTo<CompletionHabitEntryDTO>(_mapper.ConfigurationProvider)
                                 .PaginatedListAsync(request.PageNumber, request.PageSize);

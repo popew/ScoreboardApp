@@ -1,5 +1,5 @@
-﻿using ScoreboardApp.Application.Commons.Enums;
-using ScoreboardApp.Application.Commons.Mappings;
+﻿using ScoreboardApp.Application.Commons.Mappings;
+using ScoreboardApp.Application.DTOs.Enums;
 using ScoreboardApp.Domain.Entities;
 
 namespace ScoreboardApp.Application.HabitTrackers.DTOs

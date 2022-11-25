@@ -1,11 +1,6 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using ScoreboardApp.Infrastructure.Persistence;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ScoreboardApp.Application.Commons.Interfaces;
 
 namespace ScoreboardApp.Application.CompletionHabitEntries.Commands.Validators
 {
@@ -34,15 +29,16 @@ namespace ScoreboardApp.Application.CompletionHabitEntries.Commands.Validators
         private async Task<bool> BeUniqueDateOrSameEntity(UpdateCompletionHabitEntryCommand command, DateOnly entryDate, CancellationToken cancellationToken)
         {
             var entryEntity = await _context.CompletionHabitEntries
+                                            .AsNoTracking()
                                             .Where(x => x.HabitId == command.HabitId)
                                             .SingleOrDefaultAsync(x => x.EntryDate == entryDate, cancellationToken);
 
-            if(entryEntity == null)
+            if (entryEntity == null)
             {
                 return true;
             }
 
-            if(entryEntity.Id == command.Id)
+            if (entryEntity.Id == command.Id)
             {
                 return true;
             }

@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http;
 using System.Net.Http.Json;
+using ScoreboardApp.Application.DTOs.Enums;
 
 namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
 {
@@ -12,9 +13,9 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
         private readonly HttpClient _apiClient;
         private readonly ScoreboardAppApiFactory _apiFactory;
 
-        private readonly Faker<CreateHabitTrackerCommand> _commandGenerator = new Faker<CreateHabitTrackerCommand>()
+        private readonly Faker<CreateHabitTrackerCommand> _createCommandGenerator = new Faker<CreateHabitTrackerCommand>()
             .RuleFor(x => x.Title, faker => faker.Lorem.Word())
-            .RuleFor(x => x.Priority, faker => Application.Commons.Enums.PriorityMapping.None);
+            .RuleFor(x => x.Priority, faker => PriorityMapping.NotSet);
 
         public CreateHabitTrackersControllerTests(ScoreboardAppApiFactory apiFactory)
         {
@@ -28,14 +29,14 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
         public async Task Create_CreatesHabitTracker_WhenDataIsValid()
         {
             // Arrange
-            var habitTracker = _commandGenerator.Generate();
+            var habitTracker = _createCommandGenerator.Generate();
 
             // Act
             var httpResponse = await _apiClient.PostAsJsonAsync(Endpoint, habitTracker);
 
 
             // Assert
-            httpResponse.StatusCode.Should().Be(HttpStatusCode.Created);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
             var createdObject = await httpResponse.Content.ReadFromJsonAsync<CreateHabitTrackerCommandResponse>();
 

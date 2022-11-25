@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using ScoreboardApp.Application.Commons.Interfaces;
 using ScoreboardApp.Application.Habits.Commands;
-using ScoreboardApp.Infrastructure.Persistence;
 
 namespace ScoreboardApp.Application.CompletionHabits.Commands.Validators
 {

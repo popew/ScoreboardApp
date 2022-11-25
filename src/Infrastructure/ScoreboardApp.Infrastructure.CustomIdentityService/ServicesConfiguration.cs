@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Identity;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Options;
@@ -24,7 +23,8 @@ namespace ScoreboardApp.Infrastructure.CustomIdentityService
 
             services.AddDbContext<ApplicationIdentityDbContext>(options =>
             {
-                options.UseSqlServer(configuration.GetConnectionString("CustomIdentityDatabase"));
+                options.UseSqlServer(configuration.GetConnectionString("CustomIdentityDatabase"),
+                                     providerOptions => providerOptions.EnableRetryOnFailure());
             });
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
@@ -49,7 +49,6 @@ namespace ScoreboardApp.Infrastructure.CustomIdentityService
                     options.Password.RequiredLength = 6;
                     options.Password.RequiredUniqueChars = 1;
                 });
-
 
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IUserService, UserService>();

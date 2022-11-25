@@ -1,14 +1,8 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ScoreboardApp.Application.Commons.Exceptions;
-using ScoreboardApp.Application.EffortHabitEntries.Commands;
+using ScoreboardApp.Application.Commons.Interfaces;
 using ScoreboardApp.Domain.Entities;
-using ScoreboardApp.Infrastructure.Persistence;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ScoreboardApp.Application.CompletionHabitEntries.Commands
 {
@@ -19,16 +13,20 @@ namespace ScoreboardApp.Application.CompletionHabitEntries.Commands
     public class DeleteCompletionHabitEntryCommandHandler : IRequestHandler<DeleteCompletionHabitEntryCommand, Unit>
     {
         private readonly IApplicationDbContext _context;
+        private readonly ICurrentUserService _currentUserService;
 
-        public DeleteCompletionHabitEntryCommandHandler(IApplicationDbContext context)
+        public DeleteCompletionHabitEntryCommandHandler(IApplicationDbContext context, ICurrentUserService currentUserService)
         {
             _context = context;
+            _currentUserService = currentUserService;
         }
 
         public async Task<Unit> Handle(DeleteCompletionHabitEntryCommand request, CancellationToken cancellationToken)
         {
+            string? currentUserId = _currentUserService.GetUserId()!;
+
             var entryEntity = await _context.CompletionHabitEntries
-                    .Where(h => h.Id == request.Id)
+                    .Where(x => x.Id == request.Id && x.UserId == currentUserId)
                     .SingleOrDefaultAsync(cancellationToken);
 
             if (entryEntity == null)

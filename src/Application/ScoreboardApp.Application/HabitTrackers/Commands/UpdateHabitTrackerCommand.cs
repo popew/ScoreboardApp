@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
 using MediatR;
-using ScoreboardApp.Application.Commons.Enums;
+using Microsoft.EntityFrameworkCore;
 using ScoreboardApp.Application.Commons.Exceptions;
+using ScoreboardApp.Application.Commons.Interfaces;
+using ScoreboardApp.Application.DTOs.Enums;
 using ScoreboardApp.Domain.Entities;
 using ScoreboardApp.Domain.Enums;
-using ScoreboardApp.Infrastructure.Persistence;
 
 namespace ScoreboardApp.Application.HabitTrackers.Commands
 {
@@ -27,17 +28,21 @@ namespace ScoreboardApp.Application.HabitTrackers.Commands
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
+        private readonly ICurrentUserService _currentUserService;
 
-        public UpdateHabitTrackerCommandHandler(IApplicationDbContext context, IMapper mapper)
+        public UpdateHabitTrackerCommandHandler(IApplicationDbContext context, IMapper mapper, ICurrentUserService currentUserService)
         {
             _context = context;
             _mapper = mapper;
+            _currentUserService = currentUserService;
         }
 
         public async Task<UpdateHabitTrackerCommandResponse> Handle(UpdateHabitTrackerCommand request, CancellationToken cancellationToken)
         {
+            string? currentUserId = _currentUserService.GetUserId()!;
+
             var habitTrackerEntity = await _context.HabitTrackers
-                                        .FindAsync(new object[] { request.Id }, cancellationToken);
+                                        .FirstOrDefaultAsync(x => x.Id == request.Id && x.UserId == _currentUserService.GetUserId(), cancellationToken);
 
             if (habitTrackerEntity == null)
             {

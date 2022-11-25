@@ -1,12 +1,6 @@
-﻿using ScoreboardApp.Application.EffortHabitEntries.Commands;
-using ScoreboardApp.Infrastructure.Persistence;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FluentValidation;
+﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using ScoreboardApp.Application.Commons.Interfaces;
 
 namespace ScoreboardApp.Application.CompletionHabitEntries.Commands.Validators
 {
@@ -35,8 +29,9 @@ namespace ScoreboardApp.Application.CompletionHabitEntries.Commands.Validators
         private async Task<bool> BeUniqueDate(CreateCompletionHabitEntryCommand command, DateOnly entryDate, CancellationToken cancellationToken)
         {
             return !await _context.CompletionHabitEntries
-                .Where(x => x.HabitId == command.HabitId)
-                .AnyAsync(x => x.EntryDate == entryDate, cancellationToken);
+                                .AsNoTracking()
+                                .Where(x => x.HabitId == command.HabitId)
+                                .AnyAsync(x => x.EntryDate == entryDate, cancellationToken);
         }
     }
 }

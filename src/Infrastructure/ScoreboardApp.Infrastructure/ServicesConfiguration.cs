@@ -1,18 +1,15 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.Options;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
-using ScoreboardApp.Infrastructure.CustomIdentityService;
-using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Options;
+using ScoreboardApp.Application.Commons.Interfaces;
 using ScoreboardApp.Infrastructure.Persistence;
+using ScoreboardApp.Infrastructure.Persistence.Interceptors;
+using ScoreboardApp.Infrastructure.Services;
 using ScoreboardApp.Infrastructure.Telemetry.Options;
-using System.ComponentModel.DataAnnotations;
-using System.Security.Claims;
-using System.Text;
 
 namespace ScoreboardApp.Infrastructure
 {
@@ -20,14 +17,15 @@ namespace ScoreboardApp.Infrastructure
     {
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddScoped<AuditableEntitySaveChangesInterceptor>();
+
             services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
+                                     providerOptions => providerOptions.EnableRetryOnFailure());
             });
 
             services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
-
-            services.AddCustomIdentityService(configuration);
 
             // Configure HealthChecks
             services.AddHealthChecks()
@@ -39,7 +37,10 @@ namespace ScoreboardApp.Infrastructure
                                   failureStatus: HealthStatus.Degraded);
 
             // Configure Telemetry
-            services.Configure<TelemetryOptions>(configuration.GetSection(nameof(TelemetryOptions)));
+            services.AddSingleton<IValidateOptions<TelemetryOptions>, TelemetryOptionsValidator>();
+            services.AddOptions<TelemetryOptions>()
+                    .Bind(configuration.GetSection(nameof(TelemetryOptions)))
+                    .ValidateOnStart();
 
             var telemetryOptions = configuration.GetSection(nameof(TelemetryOptions)).Get<TelemetryOptions>();
 
@@ -60,6 +61,8 @@ namespace ScoreboardApp.Infrastructure
                         .AddSqlClientInstrumentation();
                 });
             }
+
+            services.AddTransient<IDateTime, DateTimeService>();
 
             return services;
         }

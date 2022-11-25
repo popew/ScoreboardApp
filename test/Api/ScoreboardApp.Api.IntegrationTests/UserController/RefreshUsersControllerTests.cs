@@ -32,7 +32,7 @@ namespace ScoreboardApp.Api.IntegrationTests.UserController
             var httpResponse = await _apiClient.PostAsJsonAsync(EndpointUnderTest, refreshCommand);
 
             // Assert
-            httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             var responseObject = await httpResponse.Content.ReadFromJsonAsync<RefreshCommandResponse>();
 
@@ -53,7 +53,7 @@ namespace ScoreboardApp.Api.IntegrationTests.UserController
 
             // Assert
 
-            httpResponse.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Unauthorized);
 
             var responseObject = await httpResponse.Content.ReadFromJsonAsync<ProblemDetails>();
 
@@ -73,7 +73,7 @@ namespace ScoreboardApp.Api.IntegrationTests.UserController
 
             // Assert
 
-            httpResponse.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Unauthorized);
 
             var responseObject = await httpResponse.Content.ReadFromJsonAsync<ProblemDetails>();
 

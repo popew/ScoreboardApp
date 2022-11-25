@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ScoreboardApp.Domain.Entities;
 
-namespace ScoreboardApp.Infrastructure.Persistence
+namespace ScoreboardApp.Application.Commons.Interfaces
 {
-    public  interface IApplicationDbContext
+    public interface IApplicationDbContext
     {
         DbSet<CompletionHabitEntry> CompletionHabitEntries { get; set; }
         DbSet<CompletionHabit> CompletionHabits { get; set; }

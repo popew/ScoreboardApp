@@ -1,8 +1,10 @@
-﻿using ScoreboardApp.Domain.Entities.Interfaces;
+﻿using ScoreboardApp.Domain.Commons;
+using ScoreboardApp.Domain.Commons.Interfaces;
+using ScoreboardApp.Domain.Entities.Interfaces;
 
 namespace ScoreboardApp.Domain.Entities
 {
-    public class EffortHabitEntry : BaseEntity, IHabitEntry<EffortHabit>
+    public class EffortHabitEntry : BaseAuditableEntity, IHabitEntry<EffortHabit>
     {
         public double Effort { get; set; }
 
@@ -10,5 +12,6 @@ namespace ScoreboardApp.Domain.Entities
         public DateOnly EntryDate { get; set; }
         public EffortHabit Habit { get; set; }
         public Guid HabitId { get; set; }
+        public string UserId { get; set; }
     }
 }

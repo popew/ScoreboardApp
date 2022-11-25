@@ -1,6 +1,8 @@
-﻿namespace ScoreboardApp.Domain.Entities.Interfaces
+﻿using ScoreboardApp.Domain.Commons.Interfaces;
+
+namespace ScoreboardApp.Domain.Entities.Interfaces
 {
-    public interface IHabit<TEntry>
+    public interface IHabit<TEntry> : IOwnedEntity
     {
         string? Description { get; set; }
         IList<TEntry> HabitEntries { get; set; }
