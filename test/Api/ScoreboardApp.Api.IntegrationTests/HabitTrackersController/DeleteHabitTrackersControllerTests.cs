@@ -46,5 +46,38 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
             // Assert
             deleteHttpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
         }
+
+        [Fact]
+        public async Task Delete_ReturnsNotFound_WhenHabitTrackerDoesntExists()
+        {
+            // Arrange
+            var randomId = Guid.NewGuid();
+
+            // Act
+            var deleteHttpResponse = await _apiClient.DeleteAsync($"{Endpoint}/{randomId}");
+
+            // Assert
+            deleteHttpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        }
+
+        [Fact]
+        public async Task Delete_ReturnsUnauthorized_WhenUserIsNotLoggedIn()
+        {
+            // Arrange
+            var habitTracker = _createCommandGenerator.Generate();
+            var createHttpResponse = await _apiClient.PostAsJsonAsync(Endpoint, habitTracker);
+
+            createHttpResponse.StatusCode.Should().Be(HttpStatusCode.Created);
+
+            var createdObject = await createHttpResponse.Content.ReadFromJsonAsync<CreateHabitTrackerCommandResponse>();
+
+            var clientNotAuthenticated = _apiFactory.CreateClient();
+
+            // Act
+            var deleteHttpResponse = await clientNotAuthenticated.DeleteAsync($"{Endpoint}/{createdObject!.Id}");
+
+            // Assert
+            deleteHttpResponse.Should().HaveStatusCode(HttpStatusCode.Unauthorized);
+        }
     }
 }
