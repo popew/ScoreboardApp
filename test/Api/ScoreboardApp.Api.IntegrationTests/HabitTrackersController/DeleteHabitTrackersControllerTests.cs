@@ -30,7 +30,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
         }
 
         [Fact]
-        public async Task Delete_HabitTracker_WhenHabitTrackerExists()
+        public async Task Delete_DeletesHabitTracker_WhenHabitTrackerExists()
         {
             // Arrange
             var habitTracker = _createCommandGenerator.Generate();

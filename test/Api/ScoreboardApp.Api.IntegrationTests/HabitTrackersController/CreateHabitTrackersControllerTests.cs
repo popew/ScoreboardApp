@@ -4,6 +4,8 @@ using System.Net.Http.Headers;
 using System.Net.Http;
 using System.Net.Http.Json;
 using ScoreboardApp.Application.DTOs.Enums;
+using Microsoft.AspNetCore.Mvc;
+using ScoreboardApp.Domain.Entities;
 
 namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
 {
@@ -14,7 +16,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
         private readonly ScoreboardAppApiFactory _apiFactory;
 
         private readonly Faker<CreateHabitTrackerCommand> _createCommandGenerator = new Faker<CreateHabitTrackerCommand>()
-            .RuleFor(x => x.Title, faker => faker.Lorem.Word())
+            .RuleFor(x => x.Title, faker => faker.Random.Utf16String(1, 200))
             .RuleFor(x => x.Priority, faker => PriorityMapping.NotSet);
 
         public CreateHabitTrackersControllerTests(ScoreboardAppApiFactory apiFactory)
@@ -44,6 +46,77 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
                 .Be($"http://localhost/{Endpoint}?Id={createdObject!.Id}");
 
             createdObject.Should().BeEquivalentTo(habitTracker);
+        }
+
+        [Fact]
+        public async Task Create_ReturnsValidationError_WhenTitleIsTooLong()
+        {
+            // Arrange
+            var habitTracker = _createCommandGenerator.Clone()
+                                                      .RuleFor(x => x.Title, faker => faker.Random.String(201))
+                                                      .Generate();
+
+            // Act
+            var httpResponse = await _apiClient.PostAsJsonAsync(Endpoint, habitTracker);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+
+            var createdObject = await httpResponse.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+
+            createdObject.Should().NotBeNull();
+            var errors = createdObject!.Errors;
+
+            errors.Should().ContainKey("Title").WhoseValue.Contains("The title is too long.");
+        }
+
+        [Fact]
+        public async Task Create_ReturnsValidationError_WhenTitleIsEmpty()
+        {
+            // Arrange
+            var habitTracker = _createCommandGenerator.Clone()
+                                          .RuleFor(x => x.Title, faker => string.Empty)
+                                          .Generate();
+            // Act
+            var httpResponse = await _apiClient.PostAsJsonAsync(Endpoint, habitTracker);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+
+            var createdObject = await httpResponse.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+
+            createdObject.Should().NotBeNull();
+            var errors = createdObject!.Errors;
+
+            errors.Should().ContainKey("Title").WhoseValue.Contains("The title cannot be null or empty.");
+        }
+
+        [Fact]
+        public async Task Create_ReturnsUnauthorized_WhenUserIsNotLoggedIn()
+        {
+            // Arrange
+            var habitTracker = _createCommandGenerator.Generate();
+            var clientNotAuthenticated = _apiFactory.CreateClient();
+
+            // Act
+            var httpResponse = await clientNotAuthenticated.PostAsJsonAsync(Endpoint, habitTracker);
+
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Unauthorized);
+        }
+
+        [Fact]
+        public async Task Create_ReturnsError_WhenPriorityIsNotInEnum()
+        {
+            // Assert
+            var command = new{ Title = "Title", Priority = "PriorityNotInEnum" };
+
+            // Act
+            var httpResponse = await _apiClient.PostAsJsonAsync(Endpoint, command);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
         }
     }
 }
