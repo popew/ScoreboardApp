@@ -109,7 +109,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
         [Fact]
         public async Task Create_ReturnsError_WhenPriorityIsNotInEnum()
         {
-            // Assert
+            // Arrange
             var command = new{ Title = "Title", Priority = "PriorityNotInEnum" };
 
             // Act

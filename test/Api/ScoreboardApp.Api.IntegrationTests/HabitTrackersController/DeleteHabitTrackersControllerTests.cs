@@ -18,7 +18,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
 
 
         private readonly Faker<CreateHabitTrackerCommand> _createCommandGenerator = new Faker<CreateHabitTrackerCommand>()
-            .RuleFor(x => x.Title, faker => faker.Lorem.Word())
+            .RuleFor(x => x.Title, faker => faker.Random.Utf16String(1, 200))
             .RuleFor(x => x.Priority, faker => PriorityMapping.NotSet);
 
         public DeleteHabitTrackersControllerTests(ScoreboardAppApiFactory apiFactory)
