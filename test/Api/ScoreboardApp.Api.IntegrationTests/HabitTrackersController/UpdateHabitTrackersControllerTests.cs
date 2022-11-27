@@ -131,6 +131,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
             updateHttpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
         }
 
+        [Fact]
         public async Task Update_ReturnsNotFound_WhenHabitTrackerDoesntExist()
         {
             // Arrange
