@@ -18,8 +18,9 @@ namespace ScoreboardApp.Api.IntegrationTests
     {
         public const string DefaultTestPassword = "Pa@@word123";
 
-        public readonly TestUser AdminTestUser = new("test_admin@scoreboardapp.com", DefaultTestPassword, new string[] { Roles.Administrator, Roles.User });
-        public readonly TestUser NormalTestUser = new("test_testuser@scoreboardapp.com", DefaultTestPassword, new string[] { Roles.User });
+        public readonly TestUser AdminTestUser = new("testadmin@scoreboardapp.com", DefaultTestPassword, new string[] { Roles.Administrator, Roles.User });
+        public readonly TestUser TestUser1 = new("testuser1@scoreboardapp.com", DefaultTestPassword, new string[] { Roles.User });
+        public readonly TestUser TestUser2 = new("testuser2@scoreboardapp.com", DefaultTestPassword, new string[] { Roles.User });
 
         public readonly Faker<TestUser> TestUserGenerator = new Faker<TestUser>()
             .RuleFor(x => x.Email, faker => faker.Internet.Email())
@@ -68,8 +69,13 @@ namespace ScoreboardApp.Api.IntegrationTests
 
         private async Task SeedTestUsersAsync()
         {
-            await Task.WhenAll(SeedTestUserAsync(AdminTestUser), SeedTestUserAsync(NormalTestUser));
-            await Task.WhenAll(GetTokenForTestUser(AdminTestUser), GetTokenForTestUser(NormalTestUser));
+            await Task.WhenAll(SeedTestUserAsync(AdminTestUser),
+                               SeedTestUserAsync(TestUser1),
+                               SeedTestUserAsync(TestUser2));
+
+            await Task.WhenAll(GetTokenForTestUser(AdminTestUser),
+                               GetTokenForTestUser(TestUser1),
+                               GetTokenForTestUser(TestUser2));
         }
 
         public async Task SeedTestUserAsync(TestUser testUser)

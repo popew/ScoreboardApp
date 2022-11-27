@@ -22,7 +22,7 @@ namespace ScoreboardApp.Api.IntegrationTests.UserController
         {
             // Arrange
             var httpClient = _apiFactory.CreateClient();
-            var revokeCommand = new RevokeCommand() { UserName = _apiFactory.NormalTestUser.UserName };
+            var revokeCommand = new RevokeCommand() { UserName = _apiFactory.TestUser1.UserName };
 
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiFactory.AdminTestUser.Token);
 
@@ -54,9 +54,9 @@ namespace ScoreboardApp.Api.IntegrationTests.UserController
         {
             // Arrange
             var httpClient = _apiFactory.CreateClient();
-            var revokeCommand = new RevokeCommand() { UserName = _apiFactory.NormalTestUser.UserName };
+            var revokeCommand = new RevokeCommand() { UserName = _apiFactory.TestUser1.UserName };
 
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiFactory.NormalTestUser.Token);
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiFactory.TestUser1.Token);
 
             // Act
             var httpResponse = await httpClient.PostAsJsonAsync(EndpointUnderTest, revokeCommand);

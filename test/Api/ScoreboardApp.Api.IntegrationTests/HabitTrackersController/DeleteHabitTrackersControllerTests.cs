@@ -21,7 +21,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
             _apiFactory = apiFactory;
             _apiClient = apiFactory.CreateClient();
 
-            _apiClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiFactory.NormalTestUser.Token);
+            _apiClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiFactory.TestUser1.Token);
         }
 
         [Fact]
