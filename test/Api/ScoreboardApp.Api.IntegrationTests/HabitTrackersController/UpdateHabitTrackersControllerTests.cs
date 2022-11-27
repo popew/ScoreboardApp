@@ -15,11 +15,11 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
 
 
         private readonly Faker<CreateHabitTrackerCommand> _createCommandGenerator = new Faker<CreateHabitTrackerCommand>()
-            .RuleFor(x => x.Title, faker => faker.Random.Utf16String(1, 200))
+            .RuleFor(x => x.Title, faker => faker.Random.String2(1, 200))
             .RuleFor(x => x.Priority, faker => PriorityMapping.NotSet);
 
         private readonly Faker<UpdateHabitTrackerCommand> _updateCommandGenerator = new Faker<UpdateHabitTrackerCommand>()
-            .RuleFor(x => x.Title, faker => faker.Random.Utf16String(1, 200))
+            .RuleFor(x => x.Title, faker => faker.Random.String2(1, 200))
             .RuleFor(x => x.Priority, faker => PriorityMapping.Important);
 
 
@@ -36,14 +36,11 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
         public async Task Update_UpdatesHabitTracker_WhenDataIsValid()
         {
             // Arrange
-            var habitTracker = _createCommandGenerator.Generate();
-            var createHttpResponse = await _apiClient.PostAsJsonAsync(Endpoint, habitTracker);
+            var createdObject = await CreateHabitTracker();
 
-            createHttpResponse.StatusCode.Should().Be(HttpStatusCode.Created);
-
-            var createdObject = await createHttpResponse.Content.ReadFromJsonAsync<CreateHabitTrackerCommandResponse>();
-
-            var updateCommand = _updateCommandGenerator.Generate();
+            var updateCommand = _updateCommandGenerator.Clone()
+                                                       .RuleFor(x => x.Id, faker => createdObject!.Id)
+                                                       .Generate();
 
             // Act
             var updateHttpResponse = await _apiClient.PutAsJsonAsync($"{Endpoint}/{createdObject!.Id}", updateCommand);
@@ -59,15 +56,11 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
         public async Task Update_ReturnsError_WhenTitleIsTooLong()
         {
             // Arrange
-            var habitTracker = _createCommandGenerator.Generate();
-            var createHttpResponse = await _apiClient.PostAsJsonAsync(Endpoint, habitTracker);
-
-            createHttpResponse.StatusCode.Should().Be(HttpStatusCode.Created);
-
-            var createdObject = await createHttpResponse.Content.ReadFromJsonAsync<CreateHabitTrackerCommandResponse>();
+            var createdObject = await CreateHabitTracker();
 
             var updateCommand = _updateCommandGenerator.Clone()
-                                                       .RuleFor(x => x.Title, faker => faker.Random.Utf16String(201))
+                                                       .RuleFor(x => x.Title, faker => faker.Random.String2(201))
+                                                       .RuleFor(x => x.Id, faker => createdObject!.Id)
                                                        .Generate();
 
             // Act
@@ -87,15 +80,11 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
         public async Task Update_ReturnsError_WhenTitleIsEmpty()
         {
             // Arrange
-            var habitTracker = _createCommandGenerator.Generate();
-            var createHttpResponse = await _apiClient.PostAsJsonAsync(Endpoint, habitTracker);
-
-            createHttpResponse.StatusCode.Should().Be(HttpStatusCode.Created);
-
-            var createdObject = await createHttpResponse.Content.ReadFromJsonAsync<CreateHabitTrackerCommandResponse>();
+            var createdObject = await CreateHabitTracker();
 
             var updateCommand = _updateCommandGenerator.Clone()
                                                        .RuleFor(x => x.Title, faker => string.Empty)
+                                                       .RuleFor(x => x.Id, faker => createdObject!.Id)
                                                        .Generate();
 
             // Act
@@ -115,14 +104,9 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
         public async Task Update_ReturnsError_WhenPriorityIsNotInEnum()
         {
             // Arrange
-            var habitTracker = _createCommandGenerator.Generate();
-            var createHttpResponse = await _apiClient.PostAsJsonAsync(Endpoint, habitTracker);
+            var createdObject = await CreateHabitTracker();
 
-            createHttpResponse.StatusCode.Should().Be(HttpStatusCode.Created);
-
-            var createdObject = await createHttpResponse.Content.ReadFromJsonAsync<CreateHabitTrackerCommandResponse>();
-
-            var updateCommand = new { Title = "Title", Priority = "PriorityNotInEnum" };
+            var updateCommand = new { Id = createdObject!.Id.ToString(), Title = "Title", Priority = "PriorityNotInEnum" };
 
             // Act
             var updateHttpResponse = await _apiClient.PutAsJsonAsync($"{Endpoint}/{createdObject!.Id}", updateCommand);
@@ -135,9 +119,12 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
         public async Task Update_ReturnsNotFound_WhenHabitTrackerDoesntExist()
         {
             // Arrange
-            var updateCommand = _updateCommandGenerator.Generate();
-
             var randomId = Guid.NewGuid();
+
+            var updateCommand = _updateCommandGenerator.Clone()
+                                                       .RuleFor(x => x.Id, faker => randomId)
+                                                       .Generate();
+
 
             // Act
             var updateHttpResponse = await _apiClient.PutAsJsonAsync($"{Endpoint}/{randomId}", updateCommand);
@@ -146,6 +133,16 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
             // Assert
 
             updateHttpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        }
+
+        private async Task<CreateHabitTrackerCommandResponse?> CreateHabitTracker()
+        {
+            var habitTracker = _createCommandGenerator.Generate();
+            var createHttpResponse = await _apiClient.PostAsJsonAsync(Endpoint, habitTracker);
+
+            createHttpResponse.StatusCode.Should().Be(HttpStatusCode.Created);
+
+            return await createHttpResponse.Content.ReadFromJsonAsync<CreateHabitTrackerCommandResponse>();
         }
     }
 }

@@ -13,7 +13,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
 
 
         private readonly Faker<CreateHabitTrackerCommand> _createCommandGenerator = new Faker<CreateHabitTrackerCommand>()
-            .RuleFor(x => x.Title, faker => faker.Random.Utf16String(1, 200))
+            .RuleFor(x => x.Title, faker => faker.Random.String2(1, 200))
             .RuleFor(x => x.Priority, faker => PriorityMapping.NotSet);
 
         public DeleteHabitTrackersControllerTests(ScoreboardAppApiFactory apiFactory)
@@ -28,12 +28,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
         public async Task Delete_DeletesHabitTracker_WhenHabitTrackerExists()
         {
             // Arrange
-            var habitTracker = _createCommandGenerator.Generate();
-            var createHttpResponse = await _apiClient.PostAsJsonAsync(Endpoint, habitTracker);
-
-            createHttpResponse.StatusCode.Should().Be(HttpStatusCode.Created);
-
-            var createdObject = await createHttpResponse.Content.ReadFromJsonAsync<CreateHabitTrackerCommandResponse>();
+            var createdObject = await CreateHabitTracker();
 
             // Act
             var deleteHttpResponse = await _apiClient.DeleteAsync($"{Endpoint}/{createdObject!.Id}");
@@ -59,12 +54,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
         public async Task Delete_ReturnsUnauthorized_WhenUserIsNotLoggedIn()
         {
             // Arrange
-            var habitTracker = _createCommandGenerator.Generate();
-            var createHttpResponse = await _apiClient.PostAsJsonAsync(Endpoint, habitTracker);
-
-            createHttpResponse.StatusCode.Should().Be(HttpStatusCode.Created);
-
-            var createdObject = await createHttpResponse.Content.ReadFromJsonAsync<CreateHabitTrackerCommandResponse>();
+            var createdObject = await CreateHabitTracker();
 
             var clientNotAuthenticated = _apiFactory.CreateClient();
 
@@ -73,6 +63,32 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
 
             // Assert
             deleteHttpResponse.Should().HaveStatusCode(HttpStatusCode.Unauthorized);
+        }
+
+        [Fact]
+        public async Task Delete_ReturnsNotFound_WhenUserDoesntOwnTheEntity()
+        {
+            // Arrange
+            var createdObject = await CreateHabitTracker();
+
+            var secondUserClient = _apiFactory.CreateClient();
+            secondUserClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiFactory.TestUser2.Token);
+
+            // Act
+            var deleteHttpResponse = await secondUserClient.DeleteAsync($"{Endpoint}/{createdObject!.Id}");
+
+            // Assert
+            deleteHttpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        }
+
+        private async Task<CreateHabitTrackerCommandResponse?> CreateHabitTracker()
+        {
+            var habitTracker = _createCommandGenerator.Generate();
+            var createHttpResponse = await _apiClient.PostAsJsonAsync(Endpoint, habitTracker);
+
+            createHttpResponse.StatusCode.Should().Be(HttpStatusCode.Created);
+
+            return await createHttpResponse.Content.ReadFromJsonAsync<CreateHabitTrackerCommandResponse>();
         }
     }
 }

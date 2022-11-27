@@ -13,7 +13,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
         private readonly ScoreboardAppApiFactory _apiFactory;
 
         private readonly Faker<CreateHabitTrackerCommand> _createCommandGenerator = new Faker<CreateHabitTrackerCommand>()
-            .RuleFor(x => x.Title, faker => faker.Random.Utf16String(1, 200))
+            .RuleFor(x => x.Title, faker => faker.Random.String2(1,200))
             .RuleFor(x => x.Priority, faker => PriorityMapping.NotSet);
 
         public CreateHabitTrackersControllerTests(ScoreboardAppApiFactory apiFactory)
@@ -50,7 +50,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
         {
             // Arrange
             var habitTracker = _createCommandGenerator.Clone()
-                                                      .RuleFor(x => x.Title, faker => faker.Random.String(201))
+                                                      .RuleFor(x => x.Title, faker => faker.Random.String2(201))
                                                       .Generate();
 
             // Act
