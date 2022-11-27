@@ -1,5 +1,4 @@
 ﻿using ScoreboardApp.Application.Authentication;
-using System.Net;
 using System.Net.Http.Json;
 
 namespace ScoreboardApp.Api.IntegrationTests.UserController
@@ -32,7 +31,7 @@ namespace ScoreboardApp.Api.IntegrationTests.UserController
         {
             // Arrange
 
-            var authenticateCommand = new AuthenticateCommand() { Password = _apiFactory.NormalTestUser.Password, UserName = _apiFactory.NormalTestUser.UserName};
+            var authenticateCommand = new AuthenticateCommand() { Password = _apiFactory.NormalTestUser.Password, UserName = _apiFactory.NormalTestUser.UserName };
 
             // Act
 

@@ -1,12 +1,7 @@
 ﻿using ScoreboardApp.Application.DTOs.Enums;
 using ScoreboardApp.Application.HabitTrackers.Commands;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
 {

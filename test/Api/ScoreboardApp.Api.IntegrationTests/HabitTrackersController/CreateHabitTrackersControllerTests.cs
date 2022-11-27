@@ -1,11 +1,8 @@
-﻿using ScoreboardApp.Application.HabitTrackers.Commands;
-using System.Net;
-using System.Net.Http.Headers;
-using System.Net.Http;
-using System.Net.Http.Json;
+﻿using Microsoft.AspNetCore.Mvc;
 using ScoreboardApp.Application.DTOs.Enums;
-using Microsoft.AspNetCore.Mvc;
-using ScoreboardApp.Domain.Entities;
+using ScoreboardApp.Application.HabitTrackers.Commands;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
 
 namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
 {
@@ -110,7 +107,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
         public async Task Create_ReturnsError_WhenPriorityIsNotInEnum()
         {
             // Arrange
-            var command = new{ Title = "Title", Priority = "PriorityNotInEnum" };
+            var command = new { Title = "Title", Priority = "PriorityNotInEnum" };
 
             // Act
             var httpResponse = await _apiClient.PostAsJsonAsync(Endpoint, command);

@@ -2,7 +2,6 @@
 using DotNet.Testcontainers.Configurations;
 using DotNet.Testcontainers.Containers;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +10,6 @@ using Microsoft.Extensions.Logging;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Identity;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Identity.Services;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Persistence;
-using ScoreboardApp.Infrastructure.CustomIdentityService.Persistence.Entities;
 using ScoreboardApp.Infrastructure.Persistence;
 
 namespace ScoreboardApp.Api.IntegrationTests
@@ -27,7 +25,7 @@ namespace ScoreboardApp.Api.IntegrationTests
             .RuleFor(x => x.Email, faker => faker.Internet.Email())
             .RuleFor(x => x.Password, faker => DefaultTestPassword)
             .RuleFor(x => x.Roles, faker => new string[] { Roles.User })
-            .RuleFor(x => x.UserName, faker=> faker.Internet.UserName());
+            .RuleFor(x => x.UserName, faker => faker.Internet.UserName());
 
         private readonly TestcontainerDatabase _testDbServer =
             new TestcontainersBuilder<MsSqlTestcontainer>()
