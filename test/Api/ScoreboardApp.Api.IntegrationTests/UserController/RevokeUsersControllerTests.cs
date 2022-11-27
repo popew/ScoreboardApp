@@ -1,6 +1,4 @@
 ﻿using ScoreboardApp.Application.Authentication;
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
 
 namespace ScoreboardApp.Api.IntegrationTests.UserController
 {

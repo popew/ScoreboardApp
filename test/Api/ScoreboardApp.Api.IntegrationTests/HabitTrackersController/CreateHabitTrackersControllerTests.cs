@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ScoreboardApp.Application.DTOs.Enums;
 using ScoreboardApp.Application.HabitTrackers.Commands;
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
 
 namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
 {
@@ -13,7 +11,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
         private readonly ScoreboardAppApiFactory _apiFactory;
 
         private readonly Faker<CreateHabitTrackerCommand> _createCommandGenerator = new Faker<CreateHabitTrackerCommand>()
-            .RuleFor(x => x.Title, faker => faker.Random.String2(1,200))
+            .RuleFor(x => x.Title, faker => faker.Random.String2(1, 200))
             .RuleFor(x => x.Priority, faker => PriorityMapping.NotSet);
 
         public CreateHabitTrackersControllerTests(ScoreboardAppApiFactory apiFactory)

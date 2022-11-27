@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ScoreboardApp.Api.IntegrationTests.UserController.TestData;
 using ScoreboardApp.Application.Authentication;
-using System.Net.Http.Json;
 
 namespace ScoreboardApp.Api.IntegrationTests.UserController
 {

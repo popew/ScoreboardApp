@@ -1,7 +1,5 @@
 ﻿using ScoreboardApp.Application.DTOs.Enums;
 using ScoreboardApp.Application.HabitTrackers.Commands;
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
 
 namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
 {
