@@ -133,6 +133,24 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
             updateHttpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
         }
 
+        [Fact]
+        public async Task Update_ReturnsBadRequest_WhenIdAndCommandIdDoesntMatch()
+        {
+            // Arrange
+            var createdObject = await CreateHabitTracker();
+
+            var updateCommand = _updateCommandGenerator.Clone()
+                                           .RuleFor(x => x.Title, faker => string.Empty)
+                                           .RuleFor(x => x.Id, faker => Guid.NewGuid())
+                                           .Generate();
+
+            // Act
+            var updateHttpResponse = await _apiClient.PutAsJsonAsync($"{Endpoint}/{createdObject!.Id}", updateCommand);
+
+            // Assert
+            updateHttpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+        }
+
         private async Task<CreateHabitTrackerCommandResponse?> CreateHabitTracker()
         {
             var habitTracker = _createCommandGenerator.Generate();

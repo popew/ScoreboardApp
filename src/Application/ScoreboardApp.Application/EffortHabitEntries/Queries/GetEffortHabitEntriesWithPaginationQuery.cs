@@ -34,7 +34,7 @@ namespace ScoreboardApp.Application.EffortHabitEntries.Queries
             string? currentUserId = _currentUserService.GetUserId()!;
 
             return await _context.EffortHabitEntries
-                                .Where(x => x.HabitId == request.HabitId && x.UserId == currentUserId)
+                                .Where(x => x.HabitId == request.HabitId && x.UserId == currentUserId   )
                                 .OrderBy(x => x.EntryDate)
                                 .ProjectTo<EffortHabitEntryDTO>(_mapper.ConfigurationProvider)
                                 .PaginatedListAsync(request.PageNumber, request.PageSize);

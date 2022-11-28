@@ -1,4 +1,5 @@
-﻿using ScoreboardApp.Application.DTOs.Enums;
+﻿using ScoreboardApp.Application.DTOs;
+using ScoreboardApp.Application.DTOs.Enums;
 using ScoreboardApp.Application.HabitTrackers.Commands;
 
 namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
@@ -20,6 +21,69 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
 
             _apiClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiFactory.TestUser1.Token);
         }
+
+        [Fact]
+        public async Task Get_ReturnsHabitTracker_WhenHabitTrackerExists()
+        {
+            // Arrange
+            var createdObject = await CreateHabitTracker();
+
+            // Act
+            var getHttpResponse = await _apiClient.GetAsync($"{Endpoint}/{createdObject!.Id}");
+
+            // Assert
+            getHttpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            var receivedObject = await getHttpResponse.Content.ReadFromJsonAsync<HabitTrackerDTO>();
+
+            receivedObject.Should().NotBeNull();
+            receivedObject.Should().BeEquivalentTo(createdObject);
+        }
+
+        [Fact]
+        public async Task Get_ReturnsNotFound_WhenHabitTrackerDoesntExist()
+        {
+            // Arrange
+            var randomId = Guid.NewGuid();
+
+            // Act
+            var getHttpResponse = await _apiClient.GetAsync($"{Endpoint}/{randomId}");
+
+            // Assert
+            getHttpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        }
+
+        [Fact]
+        public async Task Get_ReturnsNotFound_WhenUserDoesntOwnTheEntity()
+        {
+            // Arrange
+            var createdObject = await CreateHabitTracker();
+
+            var secondUserClient = _apiFactory.CreateClient();
+            secondUserClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiFactory.TestUser2.Token);
+
+            // Act
+            var getHttpResponse = await secondUserClient.GetAsync($"{Endpoint}/{createdObject!.Id}");
+
+            // Assert
+            getHttpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        }
+
+        [Fact]
+        public async Task Get_ReturnsUnauthorized_WhenUserIsNotLoggedIn()
+        {
+            // Arrange
+            var createdObject = await CreateHabitTracker();
+
+            var secondUserClient = _apiFactory.CreateClient();
+
+            // Act
+            var getHttpResponse = await secondUserClient.GetAsync($"{Endpoint}/{createdObject!.Id}");
+
+            // Assert
+            getHttpResponse.Should().HaveStatusCode(HttpStatusCode.Unauthorized);
+        }
+
 
         private async Task<CreateHabitTrackerCommandResponse?> CreateHabitTracker()
         {
