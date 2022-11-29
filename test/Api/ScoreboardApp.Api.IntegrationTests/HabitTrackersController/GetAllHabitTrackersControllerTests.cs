@@ -1,7 +1,6 @@
 ﻿using ScoreboardApp.Application.DTOs;
 using ScoreboardApp.Application.DTOs.Enums;
 using ScoreboardApp.Application.HabitTrackers.Commands;
-using ScoreboardApp.Application.HabitTrackers.Queries;
 
 namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
 {
@@ -30,7 +29,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
             var createdObject = await CreateHabitTracker();
 
             // Act
-            var getHttpResponse = await _apiClient.GetAsync($"{Endpoint}");
+            var getHttpResponse = await _apiClient.GetAsync(Endpoint);
 
             // Assert
             getHttpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -39,6 +38,34 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
 
             receivedObject.Should().NotBeNull();
             receivedObject.Should().ContainEquivalentOf(createdObject);
+        }
+
+        [Fact]
+        public async Task GetAll_ReturnsEmptyResult_WhenHabitTrackersDontExist()
+        {
+            // Act
+            var getHttpResponse = await _apiClient.GetAsync(Endpoint);
+
+            // Assert
+            getHttpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            var receivedObject = await getHttpResponse.Content.ReadFromJsonAsync<List<HabitTrackerDTO>>();
+
+            receivedObject.Should().NotBeNull();
+            receivedObject.Should().BeEmpty();
+        }
+
+        [Fact]
+        public async Task GetAll_ReturnsUnauthorized_WhenUserIsNotLoggedIn()
+        {
+            // Arrange
+            var unauthenticatedClient = _apiFactory.CreateClient();
+
+            // Act
+            var getHttpResponse = await unauthenticatedClient.GetAsync(Endpoint);
+
+            // Assert
+            getHttpResponse.Should().HaveStatusCode(HttpStatusCode.Unauthorized);
         }
 
         private async Task<CreateHabitTrackerCommandResponse?> CreateHabitTracker()
