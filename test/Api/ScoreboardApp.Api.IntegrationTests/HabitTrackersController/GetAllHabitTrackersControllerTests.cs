@@ -10,7 +10,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
         private readonly HttpClient _apiClient;
         private readonly ScoreboardAppApiFactory _apiFactory;
 
-        private readonly Faker<CreateHabitTrackerCommand> _createCommandGenerator = new Faker<CreateHabitTrackerCommand>()
+        private readonly Faker<CreateHabitTrackerCommand> _createTrackerCommandGenerator = new Faker<CreateHabitTrackerCommand>()
             .RuleFor(x => x.Title, faker => faker.Random.String2(1, 200))
             .RuleFor(x => x.Priority, faker => PriorityMapping.NotSet);
 
@@ -70,7 +70,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
 
         private async Task<CreateHabitTrackerCommandResponse?> CreateHabitTracker()
         {
-            var habitTracker = _createCommandGenerator.Generate();
+            var habitTracker = _createTrackerCommandGenerator.Generate();
             var createHttpResponse = await _apiClient.PostAsJsonAsync(Endpoint, habitTracker);
 
             createHttpResponse.StatusCode.Should().Be(HttpStatusCode.Created);

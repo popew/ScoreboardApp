@@ -12,11 +12,11 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
         private readonly ScoreboardAppApiFactory _apiFactory;
 
 
-        private readonly Faker<CreateHabitTrackerCommand> _createCommandGenerator = new Faker<CreateHabitTrackerCommand>()
+        private readonly Faker<CreateHabitTrackerCommand> _createTrackerCommandGenerator = new Faker<CreateHabitTrackerCommand>()
             .RuleFor(x => x.Title, faker => faker.Random.String2(1, 200))
             .RuleFor(x => x.Priority, faker => PriorityMapping.NotSet);
 
-        private readonly Faker<UpdateHabitTrackerCommand> _updateCommandGenerator = new Faker<UpdateHabitTrackerCommand>()
+        private readonly Faker<UpdateHabitTrackerCommand> _updateTrackerCommandGenerator = new Faker<UpdateHabitTrackerCommand>()
             .RuleFor(x => x.Title, faker => faker.Random.String2(1, 200))
             .RuleFor(x => x.Priority, faker => PriorityMapping.Important);
 
@@ -36,7 +36,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
             // Arrange
             var createdObject = await CreateHabitTracker();
 
-            var updateCommand = _updateCommandGenerator.Clone()
+            var updateCommand = _updateTrackerCommandGenerator.Clone()
                                                        .RuleFor(x => x.Id, faker => createdObject!.Id)
                                                        .Generate();
 
@@ -51,12 +51,12 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
         }
 
         [Fact]
-        public async Task Update_ReturnsError_WhenTitleIsTooLong()
+        public async Task Update_ReturnsValidationError_WhenTitleIsTooLong()
         {
             // Arrange
             var createdObject = await CreateHabitTracker();
 
-            var updateCommand = _updateCommandGenerator.Clone()
+            var updateCommand = _updateTrackerCommandGenerator.Clone()
                                                        .RuleFor(x => x.Title, faker => faker.Random.String2(201))
                                                        .RuleFor(x => x.Id, faker => createdObject!.Id)
                                                        .Generate();
@@ -75,12 +75,12 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
         }
 
         [Fact]
-        public async Task Update_ReturnsError_WhenTitleIsEmpty()
+        public async Task Update_ReturnsValidationError_WhenTitleIsEmpty()
         {
             // Arrange
             var createdObject = await CreateHabitTracker();
 
-            var updateCommand = _updateCommandGenerator.Clone()
+            var updateCommand = _updateTrackerCommandGenerator.Clone()
                                                        .RuleFor(x => x.Title, faker => string.Empty)
                                                        .RuleFor(x => x.Id, faker => createdObject!.Id)
                                                        .Generate();
@@ -88,6 +88,8 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
             // Act
             var updateHttpResponse = await _apiClient.PutAsJsonAsync($"{Endpoint}/{createdObject!.Id}", updateCommand);
 
+
+            // Assert
             updateHttpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             var updatedObject = await updateHttpResponse.Content.ReadFromJsonAsync<ValidationProblemDetails>();
@@ -99,7 +101,34 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
         }
 
         [Fact]
-        public async Task Update_ReturnsError_WhenPriorityIsNotInEnum()
+        public async Task Update_ReturnsValidationError_WhenTitleIsNotUnique()
+        {
+            // Arrange
+            var firstCreatedTracker = await CreateHabitTracker();
+            var secondCreatedTracker = await CreateHabitTracker();
+
+            var updateCommand = _updateTrackerCommandGenerator.Clone()
+                                           .RuleFor(x => x.Title, faker => secondCreatedTracker!.Title)
+                                           .RuleFor(x => x.Id, faker => firstCreatedTracker!.Id)
+                                           .Generate();
+
+            // Act
+            var updateHttpResponse = await _apiClient.PutAsJsonAsync($"{Endpoint}/{firstCreatedTracker!.Id}", updateCommand);
+
+            // Assert
+            updateHttpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+
+            var updatedObject = await updateHttpResponse.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+
+            updatedObject.Should().NotBeNull();
+            var errors = updatedObject!.Errors;
+
+            errors.Should().ContainKey("Title").WhoseValue.Contains("The title already exists.");
+
+        }
+
+        [Fact]
+        public async Task Update_ReturnsValidationError_WhenPriorityIsNotInEnum()
         {
             // Arrange
             var createdObject = await CreateHabitTracker();
@@ -119,7 +148,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
             // Arrange
             var randomId = Guid.NewGuid();
 
-            var updateCommand = _updateCommandGenerator.Clone()
+            var updateCommand = _updateTrackerCommandGenerator.Clone()
                                                        .RuleFor(x => x.Id, faker => randomId)
                                                        .Generate();
 
@@ -139,7 +168,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
             // Arrange
             var createdObject = await CreateHabitTracker();
 
-            var updateCommand = _updateCommandGenerator.Clone()
+            var updateCommand = _updateTrackerCommandGenerator.Clone()
                                            .RuleFor(x => x.Title, faker => string.Empty)
                                            .RuleFor(x => x.Id, faker => Guid.NewGuid())
                                            .Generate();
@@ -153,7 +182,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
 
         private async Task<CreateHabitTrackerCommandResponse?> CreateHabitTracker()
         {
-            var habitTracker = _createCommandGenerator.Generate();
+            var habitTracker = _createTrackerCommandGenerator.Generate();
             var createHttpResponse = await _apiClient.PostAsJsonAsync(Endpoint, habitTracker);
 
             createHttpResponse.StatusCode.Should().Be(HttpStatusCode.Created);

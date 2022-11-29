@@ -10,7 +10,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
         private readonly HttpClient _apiClient;
         private readonly ScoreboardAppApiFactory _apiFactory;
 
-        private readonly Faker<CreateHabitTrackerCommand> _createCommandGenerator = new Faker<CreateHabitTrackerCommand>()
+        private readonly Faker<CreateHabitTrackerCommand> _createTrackerCommandGenerator = new Faker<CreateHabitTrackerCommand>()
             .RuleFor(x => x.Title, faker => faker.Random.String2(1, 200))
             .RuleFor(x => x.Priority, faker => PriorityMapping.NotSet);
 
@@ -26,7 +26,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
         public async Task Create_CreatesHabitTracker_WhenDataIsValid()
         {
             // Arrange
-            var habitTracker = _createCommandGenerator.Generate();
+            var habitTracker = _createTrackerCommandGenerator.Generate();
 
             // Act
             var httpResponse = await _apiClient.PostAsJsonAsync(Endpoint, habitTracker);
@@ -47,7 +47,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
         public async Task Create_ReturnsValidationError_WhenTitleIsTooLong()
         {
             // Arrange
-            var habitTracker = _createCommandGenerator.Clone()
+            var habitTracker = _createTrackerCommandGenerator.Clone()
                                                       .RuleFor(x => x.Title, faker => faker.Random.String2(201))
                                                       .Generate();
 
@@ -69,7 +69,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
         public async Task Create_ReturnsValidationError_WhenTitleIsEmpty()
         {
             // Arrange
-            var habitTracker = _createCommandGenerator.Clone()
+            var habitTracker = _createTrackerCommandGenerator.Clone()
                                           .RuleFor(x => x.Title, faker => string.Empty)
                                           .Generate();
             // Act
@@ -87,10 +87,37 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
         }
 
         [Fact]
+        public async Task Create_ReturnsValidationError_WhenTitleIsNotUnique()
+        {
+            // Arrange
+            var firstHabitTracker = _createTrackerCommandGenerator.Generate();
+            var httpResponse = await _apiClient.PostAsJsonAsync(Endpoint, firstHabitTracker);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+
+            var secondHabitTracker = _createTrackerCommandGenerator.Clone()
+                .RuleFor(x => x.Title, faker => firstHabitTracker.Title)
+                .Generate();
+
+            // Act
+            var createSecondTrackerResponse = await _apiClient.PostAsJsonAsync(Endpoint, secondHabitTracker);
+
+            // Assert
+            createSecondTrackerResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+
+            var createdObject = await createSecondTrackerResponse.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+
+            createdObject.Should().NotBeNull();
+            var errors = createdObject!.Errors;
+
+            errors.Should().ContainKey("Title").WhoseValue.Contains("The title already exists.");
+
+        }
+
+        [Fact]
         public async Task Create_ReturnsUnauthorized_WhenUserIsNotLoggedIn()
         {
             // Arrange
-            var habitTracker = _createCommandGenerator.Generate();
+            var habitTracker = _createTrackerCommandGenerator.Generate();
             var clientNotAuthenticated = _apiFactory.CreateClient();
 
             // Act
