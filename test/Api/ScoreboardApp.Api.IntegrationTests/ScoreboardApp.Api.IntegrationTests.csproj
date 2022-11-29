@@ -31,4 +31,9 @@
     <ProjectReference Include="..\..\..\src\Api\ScoreboardApp.Api\ScoreboardApp.Api.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="CompletionHabitsController\" />
+    <Folder Include="CompletionHabitEntriesController\" />
+  </ItemGroup>
+
 </Project>
