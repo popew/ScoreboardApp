@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using ScoreboardApp.Application.DTOs.Enums;
 using ScoreboardApp.Application.Habits.Commands;
 using ScoreboardApp.Application.HabitTrackers.Commands;
@@ -48,7 +49,7 @@ namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitsController
             // Assert
             createCompletionHabitResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            var createdObject = await createCompletionHabitResponse.Content.ReadFromJsonAsync<CreateHabitTrackerCommandResponse>();
+            var createdObject = await createCompletionHabitResponse.Content.ReadFromJsonAsync<CreateCompletionHabitCommandResponse>();
 
             createCompletionHabitResponse.Headers.Location!.ToString().Should()
                 .Be($"http://localhost/{Endpoint}?Id={createdObject!.Id}");
@@ -60,10 +61,25 @@ namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitsController
         public async Task Create_ReturnsValidationError_WhenTitleIsTooLong()
         {
             // Arrange
+            var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
+
+            var completionHabit = _createCompletionHabitCommandGenerator.Clone()
+                .RuleFor(x => x.Title, faker => faker.Random.String2(201))
+                .RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id)
+                .Generate();
 
             // Act 
+            var createCompletionHabitResponse = await _apiClient.PostAsJsonAsync(Endpoint, completionHabit);
 
             // Assert
+            createCompletionHabitResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+
+            var createdObject = await createCompletionHabitResponse.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+
+            createdObject.Should().NotBeNull();
+            var errors = createdObject!.Errors;
+
+            errors.Should().ContainKey("Title").WhoseValue.Contains("The title is too long.");
         }
 
         [Fact]

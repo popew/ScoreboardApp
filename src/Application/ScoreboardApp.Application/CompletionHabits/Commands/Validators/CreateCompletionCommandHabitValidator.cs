@@ -15,13 +15,14 @@ namespace ScoreboardApp.Application.CompletionHabits.Commands.Validators
 
             RuleFor(x => x.HabitTrackerId)
                 .NotEmpty()
-                .MustAsync(BeValidHabitTrackerId);
+                .MustAsync(BeValidHabitTrackerId).WithMessage("The {PropertyName} must be a valid id.");
 
             RuleFor(x => x.Title)
-                .NotEmpty();
+                .NotEmpty().WithMessage("The title cannot be null or empty.")
+                .MaximumLength(200).WithMessage("The {PropertyName} length cannot exceed {MaxLength} characters.");
 
             RuleFor(x => x.Description)
-                .MaximumLength(400);
+                .MaximumLength(400).WithMessage("The {PropertyName} length cannot exceed {MaxLength} characters.");
         }
 
         private async Task<bool> BeValidHabitTrackerId(Guid habitTrackerId, CancellationToken cancellationToken)

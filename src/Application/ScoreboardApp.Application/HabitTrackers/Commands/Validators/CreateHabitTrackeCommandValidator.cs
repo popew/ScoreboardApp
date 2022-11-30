@@ -20,12 +20,12 @@ namespace ScoreboardApp.Application.HabitTrackers.Validators
                 .MustAsync(NotExceedNumberOfAllowedTrackers).WithMessage("Cannot create more than 20 HabitTrackers pers user.");
 
             RuleFor(x => x.Title)
-                .NotEmpty().WithMessage("The title cannot be null or empty.")
-                .MaximumLength(200).WithMessage("The title is too long.")
-                .MustAsync(BeUniqueTitle).WithMessage("The title already exists.");
+                .NotEmpty().WithMessage("The {PropertyName} cannot be null or empty.")
+                .MaximumLength(200).WithMessage("The {PropertyName} length cannot exceed {MaxLength} characters.")
+                .MustAsync(BeUniqueTitle).WithMessage("The {PropertyName} already exists.");
 
             RuleFor(x => x.Priority)
-                .IsInEnum().WithMessage("Unrecognized priority category.");
+                .IsInEnum().WithMessage("Unrecognized {PropertyName} category.");
 
         }
 

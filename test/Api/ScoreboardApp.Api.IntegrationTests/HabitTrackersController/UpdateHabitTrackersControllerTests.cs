@@ -71,7 +71,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
             updatedObject.Should().NotBeNull();
             var errors = updatedObject!.Errors;
 
-            errors.Should().ContainKey("Title").WhoseValue.Contains("The title is too long.");
+            errors.Should().ContainKey("Title").WhoseValue.Contains("The Title length cannot exceed 200 characters.");
         }
 
         [Fact]
@@ -97,7 +97,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
             updatedObject.Should().NotBeNull();
             var errors = updatedObject!.Errors;
 
-            errors.Should().ContainKey("Title").WhoseValue.Contains("The title cannot be null or empty.");
+            errors.Should().ContainKey("Title").WhoseValue.Contains("The Title cannot be null or empty.");
         }
 
         [Fact]
@@ -123,7 +123,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
             updatedObject.Should().NotBeNull();
             var errors = updatedObject!.Errors;
 
-            errors.Should().ContainKey("Title").WhoseValue.Contains("The title already exists.");
+            errors.Should().ContainKey("Title").WhoseValue.Contains("The Title already exists.");
 
         }
 
