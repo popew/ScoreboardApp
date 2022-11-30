@@ -6,7 +6,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
 {
     public class GetHabitTrackersControllerTests : IClassFixture<ScoreboardAppApiFactory>
     {
-        private const string Endpoint = "api/HabitTrackers";
+        private const string Endpoint = TestHelpers.Endpoints.HabitTrackers;
         private readonly HttpClient _apiClient;
         private readonly ScoreboardAppApiFactory _apiFactory;
 
@@ -26,7 +26,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
         public async Task Get_ReturnsHabitTracker_WhenHabitTrackerExists()
         {
             // Arrange
-            var createdObject = await CreateHabitTracker();
+            var createdObject = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
 
             // Act
             var getHttpResponse = await _apiClient.GetAsync($"{Endpoint}/{createdObject!.Id}");
@@ -57,7 +57,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
         public async Task Get_ReturnsNotFound_WhenUserDoesntOwnTheEntity()
         {
             // Arrange
-            var createdObject = await CreateHabitTracker();
+            var createdObject = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
 
             var secondUserClient = _apiFactory.CreateClient();
             secondUserClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiFactory.TestUser2.Token);
@@ -73,7 +73,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
         public async Task Get_ReturnsUnauthorized_WhenUserIsNotLoggedIn()
         {
             // Arrange
-            var createdObject = await CreateHabitTracker();
+            var createdObject = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
 
             var secondUserClient = _apiFactory.CreateClient();
 
@@ -82,17 +82,6 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
 
             // Assert
             getHttpResponse.Should().HaveStatusCode(HttpStatusCode.Unauthorized);
-        }
-
-
-        private async Task<CreateHabitTrackerCommandResponse?> CreateHabitTracker()
-        {
-            var habitTracker = _createTrackerCommandGenerator.Generate();
-            var createHttpResponse = await _apiClient.PostAsJsonAsync(Endpoint, habitTracker);
-
-            createHttpResponse.StatusCode.Should().Be(HttpStatusCode.Created);
-
-            return await createHttpResponse.Content.ReadFromJsonAsync<CreateHabitTrackerCommandResponse>();
         }
     }
 }

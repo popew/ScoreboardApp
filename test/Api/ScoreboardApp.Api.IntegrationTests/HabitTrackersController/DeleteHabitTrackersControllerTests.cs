@@ -5,7 +5,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
 {
     public class DeleteHabitTrackersControllerTests : IClassFixture<ScoreboardAppApiFactory>
     {
-        private const string Endpoint = "api/HabitTrackers";
+        private const string Endpoint = TestHelpers.Endpoints.HabitTrackers;
         private readonly HttpClient _apiClient;
         private readonly ScoreboardAppApiFactory _apiFactory;
 
@@ -26,7 +26,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
         public async Task Delete_DeletesHabitTracker_WhenHabitTrackerExists()
         {
             // Arrange
-            var createdObject = await CreateHabitTracker();
+            var createdObject = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
 
             // Act
             var deleteHttpResponse = await _apiClient.DeleteAsync($"{Endpoint}/{createdObject!.Id}");
@@ -52,7 +52,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
         public async Task Delete_ReturnsUnauthorized_WhenUserIsNotLoggedIn()
         {
             // Arrange
-            var createdObject = await CreateHabitTracker();
+            var createdObject = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
 
             var clientNotAuthenticated = _apiFactory.CreateClient();
 
@@ -67,7 +67,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
         public async Task Delete_ReturnsNotFound_WhenUserDoesntOwnTheEntity()
         {
             // Arrange
-            var createdObject = await CreateHabitTracker();
+            var createdObject = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
 
             var secondUserClient = _apiFactory.CreateClient();
             secondUserClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiFactory.TestUser2.Token);
@@ -77,16 +77,6 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
 
             // Assert
             deleteHttpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
-        }
-
-        private async Task<CreateHabitTrackerCommandResponse?> CreateHabitTracker()
-        {
-            var habitTracker = _createTrackerCommandGenerator.Generate();
-            var createHttpResponse = await _apiClient.PostAsJsonAsync(Endpoint, habitTracker);
-
-            createHttpResponse.StatusCode.Should().Be(HttpStatusCode.Created);
-
-            return await createHttpResponse.Content.ReadFromJsonAsync<CreateHabitTrackerCommandResponse>();
         }
     }
 }

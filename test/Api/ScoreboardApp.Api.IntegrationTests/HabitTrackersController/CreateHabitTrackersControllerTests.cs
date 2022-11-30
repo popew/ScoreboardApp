@@ -6,7 +6,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
 {
     public class CreateHabitTrackersControllerTests : IClassFixture<ScoreboardAppApiFactory>
     {
-        private const string Endpoint = "api/HabitTrackers";
+        private const string Endpoint = TestHelpers.Endpoints.HabitTrackers;
         private readonly HttpClient _apiClient;
         private readonly ScoreboardAppApiFactory _apiFactory;
 

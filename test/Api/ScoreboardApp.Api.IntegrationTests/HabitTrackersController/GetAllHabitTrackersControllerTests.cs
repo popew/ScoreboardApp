@@ -6,7 +6,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
 {
     public class GetAllHabitTrackersControllerTests : IClassFixture<ScoreboardAppApiFactory>
     {
-        private const string Endpoint = "api/HabitTrackers";
+        private const string Endpoint = TestHelpers.Endpoints.HabitTrackers;
         private readonly HttpClient _apiClient;
         private readonly ScoreboardAppApiFactory _apiFactory;
 
@@ -26,7 +26,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
         public async Task GetAll_ReturnsListOfHabitTrackers_WhenHabitTrackersExist()
         {
             // Arrange
-            var createdObject = await CreateHabitTracker();
+            var createdObject = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
 
             // Act
             var getHttpResponse = await _apiClient.GetAsync(Endpoint);
@@ -67,17 +67,6 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
             // Assert
             getHttpResponse.Should().HaveStatusCode(HttpStatusCode.Unauthorized);
         }
-
-        private async Task<CreateHabitTrackerCommandResponse?> CreateHabitTracker()
-        {
-            var habitTracker = _createTrackerCommandGenerator.Generate();
-            var createHttpResponse = await _apiClient.PostAsJsonAsync(Endpoint, habitTracker);
-
-            createHttpResponse.StatusCode.Should().Be(HttpStatusCode.Created);
-
-            return await createHttpResponse.Content.ReadFromJsonAsync<CreateHabitTrackerCommandResponse>();
-        }
-
     }
 
 }
