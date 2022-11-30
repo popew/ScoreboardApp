@@ -3,11 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using ScoreboardApp.Application.DTOs.Enums;
 using ScoreboardApp.Application.Habits.Commands;
 using ScoreboardApp.Application.HabitTrackers.Commands;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitsController
 {
@@ -79,68 +74,127 @@ namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitsController
             createdObject.Should().NotBeNull();
             var errors = createdObject!.Errors;
 
-            errors.Should().ContainKey("Title").WhoseValue.Contains("The title is too long.");
+            errors.Should().ContainKey("Title").WhoseValue.Contains("The Title length cannot exceed 200 characters.");
         }
 
         [Fact]
         public async Task Create_ReturnsValidationError_WhenTitleIsEmpty()
         {
             // Arrange
+            var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
+
+            var completionHabit = _createCompletionHabitCommandGenerator.Clone()
+                .RuleFor(x => x.Title, faker => string.Empty)
+                .RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id)
+                .Generate();
 
             // Act 
+            var createCompletionHabitResponse = await _apiClient.PostAsJsonAsync(Endpoint, completionHabit);
 
             // Assert
-        }
+            createCompletionHabitResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-        [Fact]
-        public async Task Create_ReturnsValidationError_WhenTitleIsNotUnique()
-        {
-            // Arrange
+            var createdObject = await createCompletionHabitResponse.Content.ReadFromJsonAsync<ValidationProblemDetails>();
 
-            // Act 
+            createdObject.Should().NotBeNull();
+            var errors = createdObject!.Errors;
 
-            // Assert
+            errors.Should().ContainKey("Title").WhoseValue.Contains("The Title cannot be null or empty.");
         }
 
         [Fact]
         public async Task Create_ReturnsValidationError_WhenDescriptionIsTooLong()
         {
             // Arrange
+            var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
+
+            var completionHabit = _createCompletionHabitCommandGenerator.Clone()
+                .RuleFor(x => x.Description, faker => faker.Random.String2(401))
+                .RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id)
+                .Generate();
 
             // Act 
+            var createCompletionHabitResponse = await _apiClient.PostAsJsonAsync(Endpoint, completionHabit);
 
             // Assert
+            createCompletionHabitResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+
+            var createdObject = await createCompletionHabitResponse.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+
+            createdObject.Should().NotBeNull();
+            var errors = createdObject!.Errors;
+
+            errors.Should().ContainKey("Description").WhoseValue.Contains("The Description length cannot exceed 400 characters.");
         }
 
         [Fact]
-        public async Task Create_ReturnsValidationError_WhenDescriptionIsEmpty()
+        public async Task Create_ReturnsUnauthorized_WhenUserIsNotLogedIn()
         {
             // Arrange
+            var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
+
+            var completionHabit = _createCompletionHabitCommandGenerator.Clone()
+                .RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id)
+                .Generate();
+
+            var unauthenticatedClient = _apiFactory.CreateClient();
 
             // Act 
+            var createCompletionHabitResponse = await unauthenticatedClient.PostAsJsonAsync(Endpoint, completionHabit);
 
             // Assert
-        }
-
-        [Fact]
-        public async Task Create_ReturnsUnauthorized_WhenUserDoesntExist()
-        {
-            // Arrange
-
-            // Act 
-
-            // Assert
+            createCompletionHabitResponse.Should().HaveStatusCode(HttpStatusCode.Unauthorized);
         }
 
         [Fact]
         public async Task Create_ReturnsValidationError_WhenHabitTrackerIdIsNotValid()
         {
             // Arrange
+            var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
+
+            var completionHabit = _createCompletionHabitCommandGenerator.Clone()
+                .RuleFor(x => x.HabitTrackerId, faker => Guid.NewGuid())
+                .Generate();
 
             // Act 
+            var createCompletionHabitResponse = await _apiClient.PostAsJsonAsync(Endpoint, completionHabit);
 
             // Assert
+            createCompletionHabitResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+
+            var createdObject = await createCompletionHabitResponse.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+
+            createdObject.Should().NotBeNull();
+            var errors = createdObject!.Errors;
+
+            errors.Should().ContainKey("HabitTrackerId").WhoseValue.Contains("The HabitTrackerId must be a valid id.");
         }
 
+        [Fact]
+        public async Task Create_ReturnsBadRequest_WhenUserDoesntOwnTheHabitTracker()
+        {
+            // Arrange
+            var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
+
+            var completionHabit = _createCompletionHabitCommandGenerator.Clone()
+                .RuleFor(x => x.HabitTrackerId, faker => Guid.NewGuid())
+                .Generate();
+
+            var secondUsersClient = _apiFactory.CreateClient();
+            secondUsersClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiFactory.TestUser2.Token);
+
+            // Act 
+            var createCompletionHabitResponse = await secondUsersClient.PostAsJsonAsync(Endpoint, completionHabit);
+
+            // Assert
+            createCompletionHabitResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+
+            var createdObject = await createCompletionHabitResponse.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+
+            createdObject.Should().NotBeNull();
+            var errors = createdObject!.Errors;
+
+            errors.Should().ContainKey("HabitTrackerId").WhoseValue.Contains("The HabitTrackerId must be a valid id.");
+        }
     }
 }

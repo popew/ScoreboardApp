@@ -1,4 +1,5 @@
 ﻿using ScoreboardApp.Api.Controllers;
+using ScoreboardApp.Application.Habits.Commands;
 using ScoreboardApp.Application.HabitTrackers.Commands;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,16 @@ namespace ScoreboardApp.Api.IntegrationTests
             createHttpResponse.StatusCode.Should().Be(HttpStatusCode.Created);
 
             return await createHttpResponse.Content.ReadFromJsonAsync<CreateHabitTrackerCommandResponse>();
+        }
+
+        public static async Task<CreateCompletionHabitCommandResponse?> CreateCompletionHabit(HttpClient httpClient, Faker<CreateCompletionHabitCommand> createCompletionHabitCommandGenerator)
+        {
+            var completionHabit = createCompletionHabitCommandGenerator.Generate();
+            var createCompletionHabitResponse = await httpClient.PostAsJsonAsync(Endpoints.CompletionHabits, completionHabit);
+
+            createCompletionHabitResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+
+            return await createCompletionHabitResponse.Content.ReadFromJsonAsync<CreateCompletionHabitCommandResponse>();
         }
     }
 }

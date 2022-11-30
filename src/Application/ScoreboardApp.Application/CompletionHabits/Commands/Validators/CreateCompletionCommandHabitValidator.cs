@@ -8,10 +8,12 @@ namespace ScoreboardApp.Application.CompletionHabits.Commands.Validators
     public class CreateCompletionCommandHabitValidator : AbstractValidator<CreateCompletionHabitCommand>
     {
         private readonly IApplicationDbContext _context;
+        private readonly ICurrentUserService _currentUserService;
 
-        public CreateCompletionCommandHabitValidator(IApplicationDbContext context)
+        public CreateCompletionCommandHabitValidator(IApplicationDbContext context, ICurrentUserService currentUserService)
         {
             _context = context;
+            _currentUserService = currentUserService;
 
             RuleFor(x => x.HabitTrackerId)
                 .NotEmpty()
@@ -27,7 +29,7 @@ namespace ScoreboardApp.Application.CompletionHabits.Commands.Validators
 
         private async Task<bool> BeValidHabitTrackerId(Guid habitTrackerId, CancellationToken cancellationToken)
         {
-            return await _context.HabitTrackers.AnyAsync(x => x.Id == habitTrackerId, cancellationToken);
+            return await _context.HabitTrackers.AnyAsync(x => x.Id == habitTrackerId && x.UserId == _currentUserService.GetUserId(), cancellationToken);
         }
     }
 }
