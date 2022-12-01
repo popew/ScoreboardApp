@@ -38,10 +38,64 @@ namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitsController
             var completionHabit = await TestHelpers.CreateCompletionHabit(_apiClient, completionHabitGenerator);
 
             // Act
-            var deleteCompletionHabitResponse = await _apiClient.DeleteAsync($"{Endpoint}/{completionHabit!.Id}");
+            var deleteHabitResponse = await _apiClient.DeleteAsync($"{Endpoint}/{completionHabit!.Id}");
 
             // Assert
-            deleteCompletionHabitResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+            deleteHabitResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        }
+
+        [Fact]
+        public async Task Delete_ReturnsNotFound_WhenHabitDoesntExist()
+        {
+            // Arrange
+            var randomId = Guid.NewGuid();
+
+            // Act
+            var deleteHabitResponse = await _apiClient.DeleteAsync($"{Endpoint}/{randomId}");
+
+            // Assert
+            deleteHabitResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        }
+
+        [Fact]
+        public async Task Delete_ReturnsNotFound_WhenUserDoesntOwnTheEntity()
+        {
+            // Arrange
+            var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
+
+            var completionHabitGenerator = _createCompletionHabitCommandGenerator.Clone()
+                .RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id);
+
+            var completionHabit = await TestHelpers.CreateCompletionHabit(_apiClient, completionHabitGenerator);
+
+            var secondUserClient = _apiFactory.CreateClient();
+            secondUserClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiFactory.TestUser2.Token);
+
+            // Act
+            var deleteHabitResponse = await secondUserClient.DeleteAsync($"{Endpoint}/{completionHabit!.Id}");
+
+            // Assert
+            deleteHabitResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        }
+
+        [Fact]
+        public async Task Delete_ReturnsUnauthorized_WhenUserIsNotLoggedIn()
+        {
+            // Arrange
+            var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
+
+            var completionHabitGenerator = _createCompletionHabitCommandGenerator.Clone()
+                .RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id);
+
+            var completionHabit = await TestHelpers.CreateCompletionHabit(_apiClient, completionHabitGenerator);
+
+            var secondUserClient = _apiFactory.CreateClient();
+
+            // Act
+            var deleteHabitResponse = await secondUserClient.DeleteAsync($"{Endpoint}/{completionHabit!.Id}");
+
+            // Assert
+            deleteHabitResponse.Should().HaveStatusCode(HttpStatusCode.Unauthorized);
         }
     }
 }
