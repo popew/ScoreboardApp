@@ -55,10 +55,35 @@ namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitsController
 
 
             // Assert
+            updateHabitResponse.Should().HaveStatusCode(HttpStatusCode.OK);
             var updatedObject = await updateHabitResponse.Content.ReadFromJsonAsync<UpdateCompletionHabitCommandResponse>();
 
             updatedObject.Should().NotBeNull();
             updatedObject.Should().BeEquivalentTo(updateCommand);
+        }
+
+        [Fact]
+        public async Task Update_ReturnsNotFound_WhenCompletionHabitDoesntExist()
+        {
+            // Arrange
+            var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
+
+            var createHabitCommand = _createCompletionHabitCommandGenerator.Clone().RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id);
+            var completionHabit = await TestHelpers.CreateCompletionHabit(_apiClient, createHabitCommand);
+
+            var randomId = Guid.NewGuid();
+
+            var updateCommand = _updateCompletionHabitCommandGenerator.Clone()
+                .RuleFor(x => x.Id, faker => randomId)
+                .RuleFor(x => x.HabitTrackerId, fkaer => completionHabit!.HabitTrackerId)
+                .Generate();
+
+            // Act
+            var updateHabitResponse = await _apiClient.PutAsJsonAsync($"{Endpoint}/{randomId}", updateCommand);
+
+
+            // Assert
+            updateHabitResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
         }
 
     }
