@@ -1,11 +1,5 @@
-﻿using ScoreboardApp.Api.Controllers;
-using ScoreboardApp.Application.Habits.Commands;
+﻿using ScoreboardApp.Application.Habits.Commands;
 using ScoreboardApp.Application.HabitTrackers.Commands;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ScoreboardApp.Api.IntegrationTests
 {

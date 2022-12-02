@@ -27,7 +27,7 @@ namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitsController
         }
 
         [Fact]
-        public async Task Delete_DeletesCompletionHabit_WhenHabitExists()
+        public async Task Delete_DeletesHabit_WhenHabitExists()
         {
             // Arrange
             var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
@@ -35,10 +35,10 @@ namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitsController
             var completionHabitGenerator = _createCompletionHabitCommandGenerator.Clone()
                 .RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id);
 
-            var completionHabit = await TestHelpers.CreateCompletionHabit(_apiClient, completionHabitGenerator);
+            var habit = await TestHelpers.CreateCompletionHabit(_apiClient, completionHabitGenerator);
 
             // Act
-            var deleteHabitResponse = await _apiClient.DeleteAsync($"{Endpoint}/{completionHabit!.Id}");
+            var deleteHabitResponse = await _apiClient.DeleteAsync($"{Endpoint}/{habit!.Id}");
 
             // Assert
             deleteHabitResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
@@ -66,13 +66,13 @@ namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitsController
             var completionHabitGenerator = _createCompletionHabitCommandGenerator.Clone()
                 .RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id);
 
-            var completionHabit = await TestHelpers.CreateCompletionHabit(_apiClient, completionHabitGenerator);
+            var habit = await TestHelpers.CreateCompletionHabit(_apiClient, completionHabitGenerator);
 
             var secondUserClient = _apiFactory.CreateClient();
             secondUserClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiFactory.TestUser2.Token);
 
             // Act
-            var deleteHabitResponse = await secondUserClient.DeleteAsync($"{Endpoint}/{completionHabit!.Id}");
+            var deleteHabitResponse = await secondUserClient.DeleteAsync($"{Endpoint}/{habit!.Id}");
 
             // Assert
             deleteHabitResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
@@ -87,12 +87,12 @@ namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitsController
             var completionHabitGenerator = _createCompletionHabitCommandGenerator.Clone()
                 .RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id);
 
-            var completionHabit = await TestHelpers.CreateCompletionHabit(_apiClient, completionHabitGenerator);
+            var habit = await TestHelpers.CreateCompletionHabit(_apiClient, completionHabitGenerator);
 
             var secondUserClient = _apiFactory.CreateClient();
 
             // Act
-            var deleteHabitResponse = await secondUserClient.DeleteAsync($"{Endpoint}/{completionHabit!.Id}");
+            var deleteHabitResponse = await secondUserClient.DeleteAsync($"{Endpoint}/{habit!.Id}");
 
             // Assert
             deleteHabitResponse.Should().HaveStatusCode(HttpStatusCode.Unauthorized);

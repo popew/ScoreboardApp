@@ -2,17 +2,10 @@
 using ScoreboardApp.Application.DTOs.Enums;
 using ScoreboardApp.Application.Habits.Commands;
 using ScoreboardApp.Application.HabitTrackers.Commands;
-using ScoreboardApp.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
 
 namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitsController
 {
-    public  class UpdateCompletionHabitsControllerTests : IClassFixture<ScoreboardAppApiFactory>
+    public class UpdateCompletionHabitsControllerTests : IClassFixture<ScoreboardAppApiFactory>
     {
         private const string Endpoint = TestHelpers.Endpoints.CompletionHabits;
         private readonly HttpClient _apiClient;
@@ -45,15 +38,15 @@ namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitsController
             var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
 
             var createHabitCommand = _createCompletionHabitCommandGenerator.Clone().RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id);
-            var completionHabit = await TestHelpers.CreateCompletionHabit(_apiClient, createHabitCommand);
+            var habit = await TestHelpers.CreateCompletionHabit(_apiClient, createHabitCommand);
 
             var updateCommand = _updateCompletionHabitCommandGenerator.Clone()
-                .RuleFor(x => x.Id, faker => completionHabit!.Id)
-                .RuleFor(x => x.HabitTrackerId, faker => completionHabit!.HabitTrackerId)
+                .RuleFor(x => x.Id, faker => habit!.Id)
+                .RuleFor(x => x.HabitTrackerId, faker => habit!.HabitTrackerId)
                 .Generate();
 
             // Act
-            var updateHabitResponse = await _apiClient.PutAsJsonAsync($"{Endpoint}/{completionHabit!.Id}", updateCommand);
+            var updateHabitResponse = await _apiClient.PutAsJsonAsync($"{Endpoint}/{habit!.Id}", updateCommand);
 
 
             // Assert
@@ -65,19 +58,19 @@ namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitsController
         }
 
         [Fact]
-        public async Task Update_ReturnsNotFound_WhenCompletionHabitDoesntExist()
+        public async Task Update_ReturnsNotFound_WhenHabitDoesntExist()
         {
             // Arrange
             var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
 
             var createHabitCommand = _createCompletionHabitCommandGenerator.Clone().RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id);
-            var completionHabit = await TestHelpers.CreateCompletionHabit(_apiClient, createHabitCommand);
+            var habit = await TestHelpers.CreateCompletionHabit(_apiClient, createHabitCommand);
 
             var randomId = Guid.NewGuid();
 
             var updateCommand = _updateCompletionHabitCommandGenerator.Clone()
                 .RuleFor(x => x.Id, faker => randomId)
-                .RuleFor(x => x.HabitTrackerId, fkaer => completionHabit!.HabitTrackerId)
+                .RuleFor(x => x.HabitTrackerId, fkaer => habit!.HabitTrackerId)
                 .Generate();
 
             // Act
@@ -95,16 +88,16 @@ namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitsController
             var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
 
             var createHabitCommand = _createCompletionHabitCommandGenerator.Clone().RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id);
-            var completionHabit = await TestHelpers.CreateCompletionHabit(_apiClient, createHabitCommand);
+            var habit = await TestHelpers.CreateCompletionHabit(_apiClient, createHabitCommand);
 
             var updateCommand = _updateCompletionHabitCommandGenerator.Clone()
                 .RuleFor(x => x.Title, faker => faker.Random.String2(201))
-                .RuleFor(x => x.Id, faker => completionHabit!.Id)
-                .RuleFor(x => x.HabitTrackerId, faker => completionHabit!.HabitTrackerId)
+                .RuleFor(x => x.Id, faker => habit!.Id)
+                .RuleFor(x => x.HabitTrackerId, faker => habit!.HabitTrackerId)
                 .Generate();
 
             // Act
-            var updateHabitResponse = await _apiClient.PutAsJsonAsync($"{Endpoint}/{completionHabit!.Id}", updateCommand);
+            var updateHabitResponse = await _apiClient.PutAsJsonAsync($"{Endpoint}/{habit!.Id}", updateCommand);
 
 
             // Assert
@@ -125,16 +118,16 @@ namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitsController
             var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
 
             var createHabitCommand = _createCompletionHabitCommandGenerator.Clone().RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id);
-            var completionHabit = await TestHelpers.CreateCompletionHabit(_apiClient, createHabitCommand);
+            var habit = await TestHelpers.CreateCompletionHabit(_apiClient, createHabitCommand);
 
             var updateCommand = _updateCompletionHabitCommandGenerator.Clone()
                 .RuleFor(x => x.Title, faker => string.Empty)
-                .RuleFor(x => x.Id, faker => completionHabit!.Id)
-                .RuleFor(x => x.HabitTrackerId, faker => completionHabit!.HabitTrackerId)
+                .RuleFor(x => x.Id, faker => habit!.Id)
+                .RuleFor(x => x.HabitTrackerId, faker => habit!.HabitTrackerId)
                 .Generate();
 
             // Act
-            var updateHabitResponse = await _apiClient.PutAsJsonAsync($"{Endpoint}/{completionHabit!.Id}", updateCommand);
+            var updateHabitResponse = await _apiClient.PutAsJsonAsync($"{Endpoint}/{habit!.Id}", updateCommand);
 
 
             // Assert
@@ -155,16 +148,16 @@ namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitsController
             var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
 
             var createHabitCommand = _createCompletionHabitCommandGenerator.Clone().RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id);
-            var completionHabit = await TestHelpers.CreateCompletionHabit(_apiClient, createHabitCommand);
+            var habit = await TestHelpers.CreateCompletionHabit(_apiClient, createHabitCommand);
 
             var updateCommand = _updateCompletionHabitCommandGenerator.Clone()
                 .RuleFor(x => x.Description, faker => faker.Random.String2(401))
-                .RuleFor(x => x.Id, faker => completionHabit!.Id)
-                .RuleFor(x => x.HabitTrackerId, faker => completionHabit!.HabitTrackerId)
+                .RuleFor(x => x.Id, faker => habit!.Id)
+                .RuleFor(x => x.HabitTrackerId, faker => habit!.HabitTrackerId)
                 .Generate();
 
             // Act
-            var updateHabitResponse = await _apiClient.PutAsJsonAsync($"{Endpoint}/{completionHabit!.Id}", updateCommand);
+            var updateHabitResponse = await _apiClient.PutAsJsonAsync($"{Endpoint}/{habit!.Id}", updateCommand);
 
 
             // Assert
@@ -190,16 +183,16 @@ namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitsController
             var createHabitCommand = _createCompletionHabitCommandGenerator.Clone()
                                                                            .RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id);
 
-            var completionHabit = await TestHelpers.CreateCompletionHabit(_apiClient, createHabitCommand);
+            var habit = await TestHelpers.CreateCompletionHabit(_apiClient, createHabitCommand);
 
             var updateCommand = _updateCompletionHabitCommandGenerator.Clone()
                 .RuleFor(x => x.Description, faker => faker.Random.String2(401))
-                .RuleFor(x => x.Id, faker => completionHabit!.Id)
-                .RuleFor(x => x.HabitTrackerId, faker => completionHabit!.HabitTrackerId)
+                .RuleFor(x => x.Id, faker => habit!.Id)
+                .RuleFor(x => x.HabitTrackerId, faker => habit!.HabitTrackerId)
                 .Generate();
 
             // Act
-            var updateHabitResponse = await unauthenticatedClient.PutAsJsonAsync($"{Endpoint}/{completionHabit!.Id}", updateCommand);
+            var updateHabitResponse = await unauthenticatedClient.PutAsJsonAsync($"{Endpoint}/{habit!.Id}", updateCommand);
 
             // Assert
             updateHabitResponse.Should().HaveStatusCode(HttpStatusCode.Unauthorized);
@@ -217,15 +210,15 @@ namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitsController
             var secondUsersHabitTracker = await TestHelpers.CreateHabitTracker(secondUserClient, _createTrackerCommandGenerator);
 
             var createHabitCommand = _createCompletionHabitCommandGenerator.Clone().RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id);
-            var completionHabit = await TestHelpers.CreateCompletionHabit(_apiClient, createHabitCommand);
+            var habit = await TestHelpers.CreateCompletionHabit(_apiClient, createHabitCommand);
 
             var updateCommand = _updateCompletionHabitCommandGenerator.Clone()
-                .RuleFor(x => x.Id, faker => completionHabit!.Id)
+                .RuleFor(x => x.Id, faker => habit!.Id)
                 .RuleFor(x => x.HabitTrackerId, faker => secondUsersHabitTracker!.Id)
                 .Generate();
 
             // Act
-            var updateHabitResponse = await _apiClient.PutAsJsonAsync($"{Endpoint}/{completionHabit!.Id}", updateCommand);
+            var updateHabitResponse = await _apiClient.PutAsJsonAsync($"{Endpoint}/{habit!.Id}", updateCommand);
 
 
             // Assert
@@ -248,16 +241,16 @@ namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitsController
             var createHabitCommand = _createCompletionHabitCommandGenerator.Clone()
                                                                            .RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id);
 
-            var completionHabit = await TestHelpers.CreateCompletionHabit(_apiClient, createHabitCommand);
+            var habit = await TestHelpers.CreateCompletionHabit(_apiClient, createHabitCommand);
 
             var updateCommand = _updateCompletionHabitCommandGenerator.Clone()
                 .RuleFor(x => x.Description, faker => faker.Random.String2(401))
-                .RuleFor(x => x.Id, faker => completionHabit!.Id)
+                .RuleFor(x => x.Id, faker => habit!.Id)
                 .RuleFor(x => x.HabitTrackerId, faker => Guid.NewGuid())
                 .Generate();
 
             // Act
-            var updateHabitResponse = await _apiClient.PutAsJsonAsync($"{Endpoint}/{completionHabit!.Id}", updateCommand);
+            var updateHabitResponse = await _apiClient.PutAsJsonAsync($"{Endpoint}/{habit!.Id}", updateCommand);
 
 
             // Assert
@@ -285,15 +278,15 @@ namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitsController
             var createHabitCommand = _createCompletionHabitCommandGenerator.Clone()
                                                                            .RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id);
 
-            var completionHabit = await TestHelpers.CreateCompletionHabit(_apiClient, createHabitCommand);
+            var habit = await TestHelpers.CreateCompletionHabit(_apiClient, createHabitCommand);
 
             var updateCommand = _updateCompletionHabitCommandGenerator.Clone()
-                .RuleFor(x => x.Id, faker => completionHabit!.Id)
+                .RuleFor(x => x.Id, faker => habit!.Id)
                 .RuleFor(x => x.HabitTrackerId, faker => secondUsersHabitTracker!.Id)
                 .Generate();
 
             // Act
-            var updateHabitResponse = await secondUserClient.PutAsJsonAsync($"{Endpoint}/{completionHabit!.Id}", updateCommand);
+            var updateHabitResponse = await secondUserClient.PutAsJsonAsync($"{Endpoint}/{habit!.Id}", updateCommand);
 
 
             // Assert

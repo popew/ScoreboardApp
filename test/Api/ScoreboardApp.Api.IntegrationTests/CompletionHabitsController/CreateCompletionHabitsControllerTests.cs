@@ -29,27 +29,27 @@ namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitsController
         }
 
         [Fact]
-        public async Task Create_CreatesCompletionHabit_WhenDataIsValid()
+        public async Task Create_CreatesHabit_WhenDataIsValid()
         {
             // Arrange
             var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
 
-            var completionHabit = _createCompletionHabitCommandGenerator.Clone()
+            var habit = _createCompletionHabitCommandGenerator.Clone()
                 .RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id)
                 .Generate();
 
             // Act 
-            var createCompletionHabitResponse = await _apiClient.PostAsJsonAsync(Endpoint, completionHabit);
+            var createHabitResponse = await _apiClient.PostAsJsonAsync(Endpoint, habit);
 
             // Assert
-            createCompletionHabitResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+            createHabitResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            var createdObject = await createCompletionHabitResponse.Content.ReadFromJsonAsync<CreateCompletionHabitCommandResponse>();
+            var createdObject = await createHabitResponse.Content.ReadFromJsonAsync<CreateCompletionHabitCommandResponse>();
 
-            createCompletionHabitResponse.Headers.Location!.ToString().Should()
+            createHabitResponse.Headers.Location!.ToString().Should()
                 .Be($"http://localhost/{Endpoint}?Id={createdObject!.Id}");
 
-            createdObject.Should().BeEquivalentTo(completionHabit);
+            createdObject.Should().BeEquivalentTo(habit);
         }
 
         [Fact]
@@ -58,18 +58,18 @@ namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitsController
             // Arrange
             var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
 
-            var completionHabit = _createCompletionHabitCommandGenerator.Clone()
+            var habit = _createCompletionHabitCommandGenerator.Clone()
                 .RuleFor(x => x.Title, faker => faker.Random.String2(201))
                 .RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id)
                 .Generate();
 
             // Act 
-            var createCompletionHabitResponse = await _apiClient.PostAsJsonAsync(Endpoint, completionHabit);
+            var createHabitResponse = await _apiClient.PostAsJsonAsync(Endpoint, habit);
 
             // Assert
-            createCompletionHabitResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+            createHabitResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            var createdObject = await createCompletionHabitResponse.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+            var createdObject = await createHabitResponse.Content.ReadFromJsonAsync<ValidationProblemDetails>();
 
             createdObject.Should().NotBeNull();
             var errors = createdObject!.Errors;
@@ -83,18 +83,18 @@ namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitsController
             // Arrange
             var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
 
-            var completionHabit = _createCompletionHabitCommandGenerator.Clone()
+            var habit = _createCompletionHabitCommandGenerator.Clone()
                 .RuleFor(x => x.Title, faker => string.Empty)
                 .RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id)
                 .Generate();
 
             // Act 
-            var createCompletionHabitResponse = await _apiClient.PostAsJsonAsync(Endpoint, completionHabit);
+            var createHabitResponse = await _apiClient.PostAsJsonAsync(Endpoint, habit);
 
             // Assert
-            createCompletionHabitResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+            createHabitResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            var createdObject = await createCompletionHabitResponse.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+            var createdObject = await createHabitResponse.Content.ReadFromJsonAsync<ValidationProblemDetails>();
 
             createdObject.Should().NotBeNull();
             var errors = createdObject!.Errors;
@@ -108,18 +108,18 @@ namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitsController
             // Arrange
             var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
 
-            var completionHabit = _createCompletionHabitCommandGenerator.Clone()
+            var habit = _createCompletionHabitCommandGenerator.Clone()
                 .RuleFor(x => x.Description, faker => faker.Random.String2(401))
                 .RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id)
                 .Generate();
 
             // Act 
-            var createCompletionHabitResponse = await _apiClient.PostAsJsonAsync(Endpoint, completionHabit);
+            var createHabitResponse = await _apiClient.PostAsJsonAsync(Endpoint, habit);
 
             // Assert
-            createCompletionHabitResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+            createHabitResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            var createdObject = await createCompletionHabitResponse.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+            var createdObject = await createHabitResponse.Content.ReadFromJsonAsync<ValidationProblemDetails>();
 
             createdObject.Should().NotBeNull();
             var errors = createdObject!.Errors;
@@ -133,17 +133,17 @@ namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitsController
             // Arrange
             var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
 
-            var completionHabit = _createCompletionHabitCommandGenerator.Clone()
+            var habit = _createCompletionHabitCommandGenerator.Clone()
                 .RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id)
                 .Generate();
 
             var unauthenticatedClient = _apiFactory.CreateClient();
 
             // Act 
-            var createCompletionHabitResponse = await unauthenticatedClient.PostAsJsonAsync(Endpoint, completionHabit);
+            var createHabitResponse = await unauthenticatedClient.PostAsJsonAsync(Endpoint, habit);
 
             // Assert
-            createCompletionHabitResponse.Should().HaveStatusCode(HttpStatusCode.Unauthorized);
+            createHabitResponse.Should().HaveStatusCode(HttpStatusCode.Unauthorized);
         }
 
         [Fact]
@@ -152,17 +152,17 @@ namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitsController
             // Arrange
             var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
 
-            var completionHabit = _createCompletionHabitCommandGenerator.Clone()
+            var habit = _createCompletionHabitCommandGenerator.Clone()
                 .RuleFor(x => x.HabitTrackerId, faker => Guid.NewGuid())
                 .Generate();
 
             // Act 
-            var createCompletionHabitResponse = await _apiClient.PostAsJsonAsync(Endpoint, completionHabit);
+            var createHabitResponse = await _apiClient.PostAsJsonAsync(Endpoint, habit);
 
             // Assert
-            createCompletionHabitResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+            createHabitResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            var createdObject = await createCompletionHabitResponse.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+            var createdObject = await createHabitResponse.Content.ReadFromJsonAsync<ValidationProblemDetails>();
 
             createdObject.Should().NotBeNull();
             var errors = createdObject!.Errors;
@@ -176,7 +176,7 @@ namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitsController
             // Arrange
             var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
 
-            var completionHabit = _createCompletionHabitCommandGenerator.Clone()
+            var habit = _createCompletionHabitCommandGenerator.Clone()
                 .RuleFor(x => x.HabitTrackerId, faker => Guid.NewGuid())
                 .Generate();
 
@@ -184,12 +184,12 @@ namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitsController
             secondUsersClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiFactory.TestUser2.Token);
 
             // Act 
-            var createCompletionHabitResponse = await secondUsersClient.PostAsJsonAsync(Endpoint, completionHabit);
+            var createHabitResponse = await secondUsersClient.PostAsJsonAsync(Endpoint, habit);
 
             // Assert
-            createCompletionHabitResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+            createHabitResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            var createdObject = await createCompletionHabitResponse.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+            var createdObject = await createHabitResponse.Content.ReadFromJsonAsync<ValidationProblemDetails>();
 
             createdObject.Should().NotBeNull();
             var errors = createdObject!.Errors;
