@@ -38,8 +38,11 @@ namespace ScoreboardApp.Application.HabitTrackers.Validators
 
         private async Task<bool> BeUniqueTitle(string title, CancellationToken cancellationToken)
         {
+            string currentUserId = _currentUserService.GetUserId()!;
+
             return await _context.HabitTrackers
-                .AllAsync(x => x.Title != title && x.UserId == _currentUserService.GetUserId(), cancellationToken);
+                .Where(x => x.UserId == currentUserId)
+                .AllAsync(x => x.Title != title, cancellationToken);
         }
     }
 }

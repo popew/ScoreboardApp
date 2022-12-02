@@ -29,7 +29,11 @@ namespace ScoreboardApp.Application.CompletionHabits.Commands.Validators
 
         private async Task<bool> BeValidHabitTrackerId(Guid habitTrackerId, CancellationToken cancellationToken)
         {
-            return await _context.HabitTrackers.AnyAsync(x => x.Id == habitTrackerId && x.UserId == _currentUserService.GetUserId(), cancellationToken);
+            string currentUserId = _currentUserService.GetUserId()!;
+
+            return await _context.HabitTrackers
+                .Where(x => x.UserId == currentUserId)
+                .AnyAsync(x => x.Id == habitTrackerId, cancellationToken);
         }
     }
 }
