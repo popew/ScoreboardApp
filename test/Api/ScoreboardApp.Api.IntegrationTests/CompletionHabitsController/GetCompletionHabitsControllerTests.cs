@@ -34,9 +34,9 @@ namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitsController
         public async Task Get_ReturnsHabit_WhenHabitExists()
         {
             // Arrange
-            var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
+            var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator.Generate());
 
-            var createHabitCommand = _createCompletionHabitCommandGenerator.Clone().RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id);
+            var createHabitCommand = _createCompletionHabitCommandGenerator.Clone().RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id).Generate();
             var habit = await TestHelpers.CreateCompletionHabit(_apiClient, createHabitCommand);
 
             // Act
@@ -68,9 +68,9 @@ namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitsController
         public async Task Get_ReturnsNotFound_WhenUserDoesntOwnTheEntity()
         {
             // Arrange
-            var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
+            var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator.Generate());
 
-            var createHabitCommand = _createCompletionHabitCommandGenerator.Clone().RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id);
+            var createHabitCommand = _createCompletionHabitCommandGenerator.Clone().RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id).Generate();
             var habit = await TestHelpers.CreateCompletionHabit(_apiClient, createHabitCommand);
 
             var secondUserClient = _apiFactory.CreateClient();
@@ -87,9 +87,9 @@ namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitsController
         public async Task Get_ReturnsUnauthorized_WhenUserIsNotLoggedIn()
         {
             // Arrange
-            var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
+            var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator.Generate());
 
-            var createHabitCommand = _createCompletionHabitCommandGenerator.Clone().RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id);
+            var createHabitCommand = _createCompletionHabitCommandGenerator.Clone().RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id).Generate();
             var habit = await TestHelpers.CreateCompletionHabit(_apiClient, createHabitCommand);
 
             var secondUserClient = _apiFactory.CreateClient();

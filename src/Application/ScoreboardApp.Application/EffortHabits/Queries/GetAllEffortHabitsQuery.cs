@@ -4,12 +4,13 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ScoreboardApp.Application.Commons.Interfaces;
 using ScoreboardApp.Application.HabitTrackers.DTOs;
+using ScoreboardApp.Domain.Entities;
 
 namespace ScoreboardApp.Application.EffortHabits.Queries
 {
     public sealed record GetAllEffortHabitsQuery : IRequest<IList<EffortHabitDTO>>
     {
-        public Guid HabitTrackerId { get; init; }
+        public Guid? HabitTrackerId { get; init; }
     }
     public sealed class GetAllEffortHabitsQueryHandler : IRequestHandler<GetAllEffortHabitsQuery, IList<EffortHabitDTO>>
     {
@@ -28,14 +29,24 @@ namespace ScoreboardApp.Application.EffortHabits.Queries
         {
             string? currentUserId = _currentUserService.GetUserId()!;
 
-            return await _context.EffortHabits
+            return await _context.CompletionHabits
                                 .AsNoTracking()
-                                .Where(x => x.HabitTrackerId == request.HabitTrackerId && x.UserId == currentUserId)
+                                .Where(x => x.UserId == currentUserId)
+                                .Where(x => request.HabitTrackerId == null || x.HabitTrackerId == request.HabitTrackerId)
                                 .ProjectTo<EffortHabitDTO>(_mapper.ConfigurationProvider)
                                 .OrderBy(ht => ht.Title)
                                 .ToListAsync(cancellationToken);
 
+        }
 
+        private static bool HabitBelongsToTracker(Guid habitsHabitTrackerId, Guid? queryHabitTrackerId)
+        {
+            if (queryHabitTrackerId is null)
+            {
+                return true;
+            }
+
+            return habitsHabitTrackerId == queryHabitTrackerId;
         }
     }
 }

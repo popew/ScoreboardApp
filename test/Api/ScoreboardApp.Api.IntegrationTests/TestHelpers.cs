@@ -15,20 +15,18 @@ namespace ScoreboardApp.Api.IntegrationTests
             public const string EffortHabitEntries = $"{ApiBasePath}/EffortHabitEntries";
         }
 
-        public static async Task<CreateHabitTrackerCommandResponse?> CreateHabitTracker(HttpClient httpClient, Faker<CreateHabitTrackerCommand> createTrackerCommandGenerator)
+        public static async Task<CreateHabitTrackerCommandResponse?> CreateHabitTracker(HttpClient httpClient, CreateHabitTrackerCommand createTrackerCommand)
         {
-            var habitTracker = createTrackerCommandGenerator.Generate();
-            var createHttpResponse = await httpClient.PostAsJsonAsync(Endpoints.HabitTrackers, habitTracker);
+            var createHttpResponse = await httpClient.PostAsJsonAsync(Endpoints.HabitTrackers, createTrackerCommand);
 
             createHttpResponse.StatusCode.Should().Be(HttpStatusCode.Created);
 
             return await createHttpResponse.Content.ReadFromJsonAsync<CreateHabitTrackerCommandResponse>();
         }
 
-        public static async Task<CreateCompletionHabitCommandResponse?> CreateCompletionHabit(HttpClient httpClient, Faker<CreateCompletionHabitCommand> createCompletionHabitCommandGenerator)
+        public static async Task<CreateCompletionHabitCommandResponse?> CreateCompletionHabit(HttpClient httpClient, CreateCompletionHabitCommand createCompletionHabitCommand)
         {
-            var completionHabit = createCompletionHabitCommandGenerator.Generate();
-            var createCompletionHabitResponse = await httpClient.PostAsJsonAsync(Endpoints.CompletionHabits, completionHabit);
+            var createCompletionHabitResponse = await httpClient.PostAsJsonAsync(Endpoints.CompletionHabits, createCompletionHabitCommand);
 
             createCompletionHabitResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 

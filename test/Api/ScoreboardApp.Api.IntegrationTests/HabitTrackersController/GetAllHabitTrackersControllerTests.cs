@@ -26,7 +26,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
         public async Task GetAll_ReturnsListOfHabitTrackers_WhenHabitTrackersExist()
         {
             // Arrange
-            var createdObject = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
+            var createdObject = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator.Generate());
 
             // Act
             var getHttpResponse = await _apiClient.GetAsync(Endpoint);

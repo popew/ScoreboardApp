@@ -26,7 +26,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
         public async Task Get_ReturnsHabitTracker_WhenHabitTrackerExists()
         {
             // Arrange
-            var createdObject = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
+            var createdObject = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator.Generate());
 
             // Act
             var getHttpResponse = await _apiClient.GetAsync($"{Endpoint}/{createdObject!.Id}");
@@ -57,7 +57,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
         public async Task Get_ReturnsNotFound_WhenUserDoesntOwnTheEntity()
         {
             // Arrange
-            var createdObject = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
+            var createdObject = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator.Generate());
 
             var secondUserClient = _apiFactory.CreateClient();
             secondUserClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiFactory.TestUser2.Token);
@@ -73,7 +73,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
         public async Task Get_ReturnsUnauthorized_WhenUserIsNotLoggedIn()
         {
             // Arrange
-            var createdObject = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
+            var createdObject = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator.Generate());
 
             var secondUserClient = _apiFactory.CreateClient();
 

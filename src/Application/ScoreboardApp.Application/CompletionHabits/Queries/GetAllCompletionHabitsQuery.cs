@@ -4,12 +4,13 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ScoreboardApp.Application.Commons.Interfaces;
 using ScoreboardApp.Application.HabitTrackers.DTOs;
+using ScoreboardApp.Domain.Entities;
 
 namespace ScoreboardApp.Application.CompletionHabits.Queries
 {
     public sealed record GetAllCompletionHabitsQuery : IRequest<IList<CompletionHabitDTO>>
     {
-        public Guid HabitTrackerId { get; init; }
+        public Guid? HabitTrackerId { get; init; }
     }
 
     public sealed class GetAllCompletionHabitsQueryHandler : IRequestHandler<GetAllCompletionHabitsQuery, IList<CompletionHabitDTO>>
@@ -30,7 +31,8 @@ namespace ScoreboardApp.Application.CompletionHabits.Queries
 
             return await _context.CompletionHabits
                                 .AsNoTracking()
-                                .Where(x => x.HabitTrackerId == request.HabitTrackerId && x.UserId == currentUserId)
+                                .Where(x => x.UserId == currentUserId)
+                                .Where(x => request.HabitTrackerId == null || x.HabitTrackerId == request.HabitTrackerId)
                                 .ProjectTo<CompletionHabitDTO>(_mapper.ConfigurationProvider)
                                 .OrderBy(ht => ht.Title)
                                 .ToListAsync(cancellationToken);

@@ -26,7 +26,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
         public async Task Delete_DeletesHabitTracker_WhenHabitTrackerExists()
         {
             // Arrange
-            var createdObject = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
+            var createdObject = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator.Generate());
 
             // Act
             var deleteHttpResponse = await _apiClient.DeleteAsync($"{Endpoint}/{createdObject!.Id}");
@@ -52,7 +52,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
         public async Task Delete_ReturnsUnauthorized_WhenUserIsNotLoggedIn()
         {
             // Arrange
-            var createdObject = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
+            var createdObject = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator.Generate());
 
             var clientNotAuthenticated = _apiFactory.CreateClient();
 
@@ -67,7 +67,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
         public async Task Delete_ReturnsNotFound_WhenUserDoesntOwnTheEntity()
         {
             // Arrange
-            var createdObject = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
+            var createdObject = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator.Generate());
 
             var secondUserClient = _apiFactory.CreateClient();
             secondUserClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiFactory.TestUser2.Token);

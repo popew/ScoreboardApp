@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using FluentValidation.Validators;
 using Microsoft.EntityFrameworkCore;
 using ScoreboardApp.Application.Commons.Interfaces;
 using System;
@@ -7,14 +8,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ScoreboardApp.Application.EffortHabits.Queries.Validators
+namespace ScoreboardApp.Application.CompletionHabits.Queries.Validators
 {
-    public class GetAllEffortHabitsQueryValidator : AbstractValidator<GetAllEffortHabitsQuery>
+    public class GetAllCompletionHabitsQueryValidator : AbstractValidator<GetAllCompletionHabitsQuery>
     {
         private readonly IApplicationDbContext _context;
         private readonly ICurrentUserService _currentUserService;
 
-        public GetAllEffortHabitsQueryValidator(IApplicationDbContext context, ICurrentUserService currentUserService)
+        public GetAllCompletionHabitsQueryValidator(IApplicationDbContext context, ICurrentUserService currentUserService)
         {
             _context = context;
             _currentUserService = currentUserService;
@@ -25,7 +26,7 @@ namespace ScoreboardApp.Application.EffortHabits.Queries.Validators
 
         private async Task<bool> BeValidHabitTrackerIdOrEmpty(Guid? habitTrackerId, CancellationToken cancellationToken)
         {
-            if (habitTrackerId is null)
+            if(habitTrackerId is null)
             {
                 return true;
             }

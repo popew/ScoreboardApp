@@ -32,7 +32,7 @@ namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitsController
         public async Task Create_CreatesHabit_WhenDataIsValid()
         {
             // Arrange
-            var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
+            var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator.Generate());
 
             var habit = _createCompletionHabitCommandGenerator.Clone()
                 .RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id)
@@ -56,7 +56,7 @@ namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitsController
         public async Task Create_ReturnsValidationError_WhenTitleIsTooLong()
         {
             // Arrange
-            var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
+            var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator.Generate());
 
             var habit = _createCompletionHabitCommandGenerator.Clone()
                 .RuleFor(x => x.Title, faker => faker.Random.String2(201))
@@ -81,7 +81,7 @@ namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitsController
         public async Task Create_ReturnsValidationError_WhenTitleIsEmpty()
         {
             // Arrange
-            var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
+            var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator.Generate());
 
             var habit = _createCompletionHabitCommandGenerator.Clone()
                 .RuleFor(x => x.Title, faker => string.Empty)
@@ -106,7 +106,7 @@ namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitsController
         public async Task Create_ReturnsValidationError_WhenDescriptionIsTooLong()
         {
             // Arrange
-            var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
+            var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator.Generate());
 
             var habit = _createCompletionHabitCommandGenerator.Clone()
                 .RuleFor(x => x.Description, faker => faker.Random.String2(401))
@@ -131,7 +131,7 @@ namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitsController
         public async Task Create_ReturnsUnauthorized_WhenUserIsNotLogedIn()
         {
             // Arrange
-            var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
+            var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator.Generate());
 
             var habit = _createCompletionHabitCommandGenerator.Clone()
                 .RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id)
@@ -150,7 +150,7 @@ namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitsController
         public async Task Create_ReturnsValidationError_WhenHabitTrackerIdIsNotValid()
         {
             // Arrange
-            var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
+            var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator.Generate());
 
             var habit = _createCompletionHabitCommandGenerator.Clone()
                 .RuleFor(x => x.HabitTrackerId, faker => Guid.NewGuid())
@@ -174,7 +174,7 @@ namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitsController
         public async Task Create_ReturnsBadRequest_WhenUserDoesntOwnTheHabitTracker()
         {
             // Arrange
-            var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
+            var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator.Generate());
 
             var habit = _createCompletionHabitCommandGenerator.Clone()
                 .RuleFor(x => x.HabitTrackerId, faker => Guid.NewGuid())

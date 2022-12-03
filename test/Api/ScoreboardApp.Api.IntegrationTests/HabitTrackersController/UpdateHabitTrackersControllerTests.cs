@@ -34,7 +34,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
         public async Task Update_UpdatesHabitTracker_WhenDataIsValid()
         {
             // Arrange
-            var createdObject = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
+            var createdObject = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator.Generate());
 
             var updateCommand = _updateTrackerCommandGenerator.Clone()
                                                        .RuleFor(x => x.Id, faker => createdObject!.Id)
@@ -54,7 +54,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
         public async Task Update_ReturnsValidationError_WhenTitleIsTooLong()
         {
             // Arrange
-            var createdObject = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
+            var createdObject = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator.Generate());
 
             var updateCommand = _updateTrackerCommandGenerator.Clone()
                                                        .RuleFor(x => x.Title, faker => faker.Random.String2(201))
@@ -78,7 +78,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
         public async Task Update_ReturnsValidationError_WhenTitleIsEmpty()
         {
             // Arrange
-            var createdObject = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
+            var createdObject = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator.Generate());
 
             var updateCommand = _updateTrackerCommandGenerator.Clone()
                                                        .RuleFor(x => x.Title, faker => string.Empty)
@@ -104,8 +104,8 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
         public async Task Update_ReturnsValidationError_WhenTitleIsNotUnique()
         {
             // Arrange
-            var firstCreatedTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
-            var secondCreatedTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
+            var firstCreatedTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator.Generate());
+            var secondCreatedTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator.Generate());
 
             var updateCommand = _updateTrackerCommandGenerator.Clone()
                                            .RuleFor(x => x.Title, faker => secondCreatedTracker!.Title)
@@ -131,7 +131,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
         public async Task Update_ReturnsValidationError_WhenPriorityIsNotInEnum()
         {
             // Arrange
-            var createdObject = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
+            var createdObject = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator.Generate());
 
             var updateCommand = new { Id = createdObject!.Id.ToString(), Title = "Title", Priority = "PriorityNotInEnum" };
 
@@ -166,7 +166,7 @@ namespace ScoreboardApp.Api.IntegrationTests.HabitTrackersController
         public async Task Update_ReturnsBadRequest_WhenIdAndCommandIdDoesntMatch()
         {
             // Arrange
-            var createdObject = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
+            var createdObject = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator.Generate());
 
             var updateCommand = _updateTrackerCommandGenerator.Clone()
                                            .RuleFor(x => x.Title, faker => string.Empty)

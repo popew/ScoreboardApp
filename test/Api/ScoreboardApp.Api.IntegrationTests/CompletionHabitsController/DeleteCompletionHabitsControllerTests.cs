@@ -30,12 +30,13 @@ namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitsController
         public async Task Delete_DeletesHabit_WhenHabitExists()
         {
             // Arrange
-            var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
+            var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator.Generate());
 
-            var completionHabitGenerator = _createCompletionHabitCommandGenerator.Clone()
-                .RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id);
+            var createHabitCommand = _createCompletionHabitCommandGenerator.Clone()
+                .RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id)
+                .Generate();
 
-            var habit = await TestHelpers.CreateCompletionHabit(_apiClient, completionHabitGenerator);
+            var habit = await TestHelpers.CreateCompletionHabit(_apiClient, createHabitCommand);
 
             // Act
             var deleteHabitResponse = await _apiClient.DeleteAsync($"{Endpoint}/{habit!.Id}");
@@ -61,12 +62,13 @@ namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitsController
         public async Task Delete_ReturnsNotFound_WhenUserDoesntOwnTheEntity()
         {
             // Arrange
-            var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
+            var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator.Generate());
 
-            var completionHabitGenerator = _createCompletionHabitCommandGenerator.Clone()
-                .RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id);
+            var createHabitCommand = _createCompletionHabitCommandGenerator.Clone()
+                .RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id)
+                .Generate();
 
-            var habit = await TestHelpers.CreateCompletionHabit(_apiClient, completionHabitGenerator);
+            var habit = await TestHelpers.CreateCompletionHabit(_apiClient, createHabitCommand);
 
             var secondUserClient = _apiFactory.CreateClient();
             secondUserClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiFactory.TestUser2.Token);
@@ -82,12 +84,13 @@ namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitsController
         public async Task Delete_ReturnsUnauthorized_WhenUserIsNotLoggedIn()
         {
             // Arrange
-            var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator);
+            var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator.Generate());
 
-            var completionHabitGenerator = _createCompletionHabitCommandGenerator.Clone()
-                .RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id);
+            var createHabitCommand = _createCompletionHabitCommandGenerator.Clone()
+                .RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id)
+                .Generate();
 
-            var habit = await TestHelpers.CreateCompletionHabit(_apiClient, completionHabitGenerator);
+            var habit = await TestHelpers.CreateCompletionHabit(_apiClient, createHabitCommand);
 
             var secondUserClient = _apiFactory.CreateClient();
 
