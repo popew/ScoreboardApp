@@ -7,7 +7,7 @@ namespace ScoreboardApp.Api.IntegrationTests.EffortHabitsController
 {
     public class CreateEffortHabitsControllerTests : IClassFixture<ScoreboardAppApiFactory>
     {
-        private const string Endpoint = TestHelpers.Endpoints.CompletionHabits;
+        private const string Endpoint = TestHelpers.Endpoints.EffortHabits;
         private readonly HttpClient _apiClient;
         private readonly ScoreboardAppApiFactory _apiFactory;
 

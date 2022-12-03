@@ -26,7 +26,7 @@ namespace ScoreboardApp.Application.Habits.Commands
             string? currentUserId = _currentUserService.GetUserId()!;
 
             var habitEntity = await _context.EffortHabits
-                                .Where(h => h.Id == request.Id && h.UserId == currentUserId)
+                                .Where(x => x.Id == request.Id && x.UserId == currentUserId)
                                 .SingleOrDefaultAsync(cancellationToken);
 
             if (habitEntity == null)

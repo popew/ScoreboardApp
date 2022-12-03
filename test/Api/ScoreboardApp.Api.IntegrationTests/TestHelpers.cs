@@ -26,11 +26,20 @@ namespace ScoreboardApp.Api.IntegrationTests
 
         public static async Task<CreateCompletionHabitCommandResponse?> CreateCompletionHabit(HttpClient httpClient, CreateCompletionHabitCommand createCompletionHabitCommand)
         {
-            var createCompletionHabitResponse = await httpClient.PostAsJsonAsync(Endpoints.CompletionHabits, createCompletionHabitCommand);
+            var createHabitResponse = await httpClient.PostAsJsonAsync(Endpoints.CompletionHabits, createCompletionHabitCommand);
 
-            createCompletionHabitResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+            createHabitResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            return await createCompletionHabitResponse.Content.ReadFromJsonAsync<CreateCompletionHabitCommandResponse>();
+            return await createHabitResponse.Content.ReadFromJsonAsync<CreateCompletionHabitCommandResponse>();
+        }
+
+        public static async Task<CreateEfforHabitCommandResponse?> CreateEffortHabit(HttpClient httpClient, CreateEfforHabitCommand createCompletionHabitCommand)
+        {
+            var createHabitResponse = await httpClient.PostAsJsonAsync(Endpoints.EffortHabits, createCompletionHabitCommand);
+
+            createHabitResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+
+            return await createHabitResponse.Content.ReadFromJsonAsync<CreateEfforHabitCommandResponse>();
         }
     }
 }

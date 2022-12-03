@@ -4,6 +4,7 @@ using ScoreboardApp.Application.Commons.Interfaces;
 using ScoreboardApp.Application.Commons.Mappings;
 using ScoreboardApp.Application.DTOs.Enums;
 using ScoreboardApp.Domain.Entities;
+using ScoreboardApp.Domain.Enums;
 
 namespace ScoreboardApp.Application.Habits.Commands
 {
@@ -56,7 +57,8 @@ namespace ScoreboardApp.Application.Habits.Commands
                 HabitTrackerId = request.HabitTrackerId,
                 Unit = request.Unit,
                 AverageGoal = request.AverageGoal,
-                UserId = currentUserId
+                UserId = currentUserId,
+                Subtype = (EffortHabitSubtype)request.Subtype
             };
 
             _context.EffortHabits.Add(habitEntity);
