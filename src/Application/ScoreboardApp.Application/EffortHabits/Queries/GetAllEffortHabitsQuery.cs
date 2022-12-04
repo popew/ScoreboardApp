@@ -29,7 +29,7 @@ namespace ScoreboardApp.Application.EffortHabits.Queries
         {
             string? currentUserId = _currentUserService.GetUserId()!;
 
-            return await _context.CompletionHabits
+            return await _context.EffortHabits
                                 .AsNoTracking()
                                 .Where(x => x.UserId == currentUserId)
                                 .Where(x => request.HabitTrackerId == null || x.HabitTrackerId == request.HabitTrackerId)
@@ -37,16 +37,6 @@ namespace ScoreboardApp.Application.EffortHabits.Queries
                                 .OrderBy(ht => ht.Title)
                                 .ToListAsync(cancellationToken);
 
-        }
-
-        private static bool HabitBelongsToTracker(Guid habitsHabitTrackerId, Guid? queryHabitTrackerId)
-        {
-            if (queryHabitTrackerId is null)
-            {
-                return true;
-            }
-
-            return habitsHabitTrackerId == queryHabitTrackerId;
         }
     }
 }
