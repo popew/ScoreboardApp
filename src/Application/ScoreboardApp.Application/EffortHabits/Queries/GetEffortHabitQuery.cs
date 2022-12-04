@@ -29,7 +29,8 @@ namespace ScoreboardApp.Application.EffortHabits.Queries
         {
             string? currentUserId = _currentUserService.GetUserId()!;
 
-            var effortHabitEntity = await _context.EffortHabits.FirstOrDefaultAsync(x => x.Id == request.Id && x.UserId == currentUserId, cancellationToken);
+            var effortHabitEntity = await _context.EffortHabits
+                                                  .FirstOrDefaultAsync(x => x.Id == request.Id && x.UserId == currentUserId, cancellationToken);
 
             if (effortHabitEntity == null)
             {
