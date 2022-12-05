@@ -8,7 +8,7 @@ namespace ScoreboardApp.Application.EffortHabitEntries.Commands
 {
     public sealed record DeleteEffortHabitEntryCommand(Guid Id) : IRequest<Unit>
     {
-        public Guid Id { get; init; }
+        public Guid Id { get; init; } = Id;
     }
 
 
