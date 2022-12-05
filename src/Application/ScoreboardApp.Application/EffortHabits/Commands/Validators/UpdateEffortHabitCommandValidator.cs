@@ -35,8 +35,9 @@ namespace ScoreboardApp.Application.EffortHabits.Commands.Validators
             string currentUserId = _currentUserService.GetUserId()!;
 
             return await _context.HabitTrackers
-                .Where(x => x.UserId == currentUserId)
-                .AnyAsync(x => x.Id == habitTrackerId, cancellationToken);
+                                 .AsNoTracking()
+                                 .Where(x => x.UserId == currentUserId)
+                                 .AnyAsync(x => x.Id == habitTrackerId, cancellationToken);
         }
     }
 }

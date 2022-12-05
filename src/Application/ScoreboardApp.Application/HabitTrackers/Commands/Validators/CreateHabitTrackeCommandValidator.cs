@@ -32,6 +32,7 @@ namespace ScoreboardApp.Application.HabitTrackers.Validators
         private async Task<bool> NotExceedNumberOfAllowedTrackers(CreateHabitTrackerCommand command, CancellationToken cancellationToken)
         {
             return await _context.HabitTrackers
+                .AsNoTracking()
                 .Select(x => x.Id)
                 .CountAsync(cancellationToken) < 20;
         }
@@ -41,6 +42,7 @@ namespace ScoreboardApp.Application.HabitTrackers.Validators
             string currentUserId = _currentUserService.GetUserId()!;
 
             return await _context.HabitTrackers
+                .AsNoTracking()
                 .Where(x => x.UserId == currentUserId)
                 .AllAsync(x => x.Title != title, cancellationToken);
         }

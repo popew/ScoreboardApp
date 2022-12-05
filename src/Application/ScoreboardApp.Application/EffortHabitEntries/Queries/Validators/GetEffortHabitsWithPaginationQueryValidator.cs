@@ -24,7 +24,9 @@ namespace ScoreboardApp.Application.EffortHabitEntries.Queries.Validators
 
         private async Task<bool> BeValidEffortHabitId(Guid habitId, CancellationToken cancellationToken)
         {
-            return await _context.EffortHabits.AnyAsync(x => x.Id == habitId, cancellationToken);
+            return await _context.EffortHabits
+                                 .AsNoTracking()
+                                 .AnyAsync(x => x.Id == habitId, cancellationToken);
         }
     }
 }

@@ -30,6 +30,7 @@ namespace ScoreboardApp.Application.EffortHabitEntries.Commands.Validators
             var currentUserId = _currentUserService.GetUserId();
 
             return await _context.EffortHabits
+                .AsNoTracking()
                 .Where(x => x.UserId == currentUserId)
                 .AnyAsync(x => x.Id == habitId, cancellationToken);
         }
@@ -37,6 +38,7 @@ namespace ScoreboardApp.Application.EffortHabitEntries.Commands.Validators
         private async Task<bool> BeUniqueDate(CreateEffortHabitEntryCommand command, DateOnly entryDate, CancellationToken cancellationToken)
         {
             return !await _context.EffortHabitEntries
+                .AsNoTracking()
                 .Where(x => x.HabitId == command.HabitId)
                 .AnyAsync(x => x.EntryDate == entryDate, cancellationToken);
         }

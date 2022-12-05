@@ -29,6 +29,7 @@ namespace ScoreboardApp.Application.CompletionHabitEntries.Commands.Validators
             var currentUserId = _currentUserService.GetUserId();
 
             return await _context.CompletionHabits
+                                 .AsNoTracking()
                                  .Where(x => x.UserId == currentUserId)
                                  .AnyAsync(x => x.Id == habitId, cancellationToken);
         }
@@ -37,11 +38,13 @@ namespace ScoreboardApp.Application.CompletionHabitEntries.Commands.Validators
         {
             var currentUserId = _currentUserService.GetUserId();
 
-            return !await _context.CompletionHabitEntries
+            var result = !await _context.CompletionHabitEntries
                                 .AsNoTracking()
                                 .Where(x => x.UserId == currentUserId)
                                 .Where(x => x.HabitId == command.HabitId)
                                 .AnyAsync(x => x.EntryDate == entryDate, cancellationToken);
+
+            return result;
         }
     }
 }
