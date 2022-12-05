@@ -1,4 +1,5 @@
 ﻿using ScoreboardApp.Application.CompletionHabitEntries.Commands;
+using ScoreboardApp.Application.EffortHabitEntries.Commands;
 using ScoreboardApp.Application.Habits.Commands;
 using ScoreboardApp.Application.HabitTrackers.Commands;
 using System.Net.Http;
@@ -51,6 +52,15 @@ namespace ScoreboardApp.Api.IntegrationTests
             createEntryResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
             return await createEntryResponse.Content.ReadFromJsonAsync<CreateCompletionHabitEntryCommandResponse>();
+        }
+
+        public static async Task<CreateEffortHabitEntryCommandResponse?> CreateEffortHabitEntry(HttpClient httpClient, CreateEffortHabitEntryCommand createEffortEntryCommand)
+        {
+            var createEntryResponse = await httpClient.PostAsJsonAsync(Endpoints.EffortHabitEntries, createEffortEntryCommand);
+
+            createEntryResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+
+            return await createEntryResponse.Content.ReadFromJsonAsync<CreateEffortHabitEntryCommandResponse>();
+        }
     }
-}
 }

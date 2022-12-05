@@ -44,7 +44,9 @@ namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitEntriesController
             var habitCommand = _createHabitCommandGenerator.Clone().RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id).Generate();
             var habit = await TestHelpers.CreateCompletionHabit(_apiClient, habitCommand);
 
-            var entryCommand = _createEntryCommandGenerator.Clone().RuleFor(x => x.HabitId, faker => habit!.Id).Generate();
+            var entryCommand = _createEntryCommandGenerator.Clone()
+                                                           .RuleFor(x => x.HabitId, faker => habit!.Id)
+                                                           .Generate();
 
             // Act
             var createEntryResponse = await _apiClient.PostAsJsonAsync(Endpoint, entryCommand);
@@ -68,7 +70,10 @@ namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitEntriesController
             var habitCommand = _createHabitCommandGenerator.Clone().RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id).Generate();
             var habit = await TestHelpers.CreateCompletionHabit(_apiClient, habitCommand);
 
-            var firstEntryCommand = _createEntryCommandGenerator.Clone().RuleFor(x => x.HabitId, faker => habit!.Id).Generate();
+            var firstEntryCommand = _createEntryCommandGenerator.Clone()
+                                                                .RuleFor(x => x.HabitId, faker => habit!.Id)
+                                                                .Generate();
+
             var firstEntry = await TestHelpers.CreateCompletionHabitEntry(_apiClient, firstEntryCommand);
 
             var secondEntryCommand = firstEntryCommand;
@@ -85,27 +90,91 @@ namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitEntriesController
             createdObject.Should().NotBeNull();
             var errors = createdObject!.Errors;
 
-            errors.Should().ContainKey("EntryDate").WhoseValue.Contains("Habit entry for this {PropertyName} already exists.");
+            errors.Should().ContainKey("EntryDate").WhoseValue.Contains("Habit entry for this EntryDate already exists.");
 
         }
 
         [Fact]
         public async Task Create_ReturnsValidationError_WhenDateIsInTheFuture()
         {
+            // Arrange
+            var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator.Generate());
 
+            var habitCommand = _createHabitCommandGenerator.Clone().RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id).Generate();
+            var habit = await TestHelpers.CreateCompletionHabit(_apiClient, habitCommand);
 
+            var entryCommand = _createEntryCommandGenerator.Clone()
+                                                           .RuleFor(x => x.HabitId, faker => habit!.Id)
+                                                           .RuleFor(x => x.EntryDate, faker => faker.Date.FutureDateOnly())
+                                                           .Generate();
+
+            // Act
+            var createEntryResponse = await _apiClient.PostAsJsonAsync(Endpoint, entryCommand);
+
+            // Assert
+            createEntryResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+
+            var createdObject = await createEntryResponse.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+
+            createdObject.Should().NotBeNull();
+            var errors = createdObject!.Errors;
+
+            errors.Should().ContainKey("EntryDate").WhoseValue.Contains("EntryDate cannot be in the future.");
 
         }
+
         [Fact]
         public async Task   Create_ReturnsBadRequest_WhenUserDoesntOwnTheHabit()
         {
-                                                                
+            // Arrange
+            var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator.Generate());
+
+            var habitCommand = _createHabitCommandGenerator.Clone().RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id).Generate();
+            var habit = await TestHelpers.CreateCompletionHabit(_apiClient, habitCommand);
+
+            var entryCommand = _createEntryCommandGenerator.Clone()
+                                                           .RuleFor(x => x.HabitId, faker => habit!.Id)
+                                                           .Generate();
+
+            var secondUserClient = _apiFactory.CreateClient();
+            secondUserClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiFactory.TestUser2.Token);
+
+
+            // Act
+            var createEntryResponse = await secondUserClient.PostAsJsonAsync(Endpoint, entryCommand);
+
+            // Assert
+            createEntryResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+
+            var createdObject = await createEntryResponse.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+
+            createdObject.Should().NotBeNull();
+            var errors = createdObject!.Errors;
+
+            errors.Should().ContainKey("HabitId").WhoseValue.Contains("The HabitId must be a valid id.");
         }
 
         [Fact]
         public async Task Create_ReturnsUnauthorized_WhenUserIsNotLoggedIn()
         {
+            // Arrange
+            var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator.Generate());
 
+            var habitCommand = _createHabitCommandGenerator.Clone().RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id).Generate();
+            var habit = await TestHelpers.CreateCompletionHabit(_apiClient, habitCommand);
+
+            var entryCommand = _createEntryCommandGenerator.Clone()
+                                                           .RuleFor(x => x.HabitId, faker => habit!.Id)
+                                                           .Generate();
+
+            var unauthenticatedClient = _apiFactory.CreateClient();
+
+
+            // Act
+            var createEntryResponse = await unauthenticatedClient.PostAsJsonAsync(Endpoint, entryCommand);
+
+            // Assert
+            createEntryResponse.Should().HaveStatusCode(HttpStatusCode.Unauthorized);
         }
 
     }
