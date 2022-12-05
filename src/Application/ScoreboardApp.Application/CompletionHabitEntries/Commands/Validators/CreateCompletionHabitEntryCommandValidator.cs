@@ -21,14 +21,14 @@ namespace ScoreboardApp.Application.CompletionHabitEntries.Commands.Validators
             RuleFor(x => x.EntryDate)
                 .NotEmpty().WithMessage("{PropertyName} cannot be null or empty.")
                 .LessThanOrEqualTo(DateOnly.FromDateTime(DateTime.Now)).WithMessage("{PropertyName} cannot be in the future.")
-                .MustAsync(BeUniqueDate).WithMessage("Habit entry for this {PropertyName} already exists.");
+                .MustAsync(BeUniqueDate).WithMessage("Habit entry for this {PropertyName} already exists.");                                    
         }
 
         private async Task<bool> BeValidEffortHabitId(Guid habitId, CancellationToken cancellationToken)
         {
             var currentUserId = _currentUserService.GetUserId();
 
-            return await _context.EffortHabits
+            return await _context.CompletionHabits
                                  .Where(x => x.UserId == currentUserId)
                                  .AnyAsync(x => x.Id == habitId, cancellationToken);
         }

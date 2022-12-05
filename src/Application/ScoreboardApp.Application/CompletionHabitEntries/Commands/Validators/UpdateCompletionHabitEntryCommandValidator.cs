@@ -28,7 +28,7 @@ namespace ScoreboardApp.Application.CompletionHabitEntries.Commands.Validators
         {
             var currentUserId = _currentUserService.GetUserId();
 
-            return await _context.EffortHabits
+            return await _context.CompletionHabits
                 .Where(x => x.UserId == currentUserId)
                 .AnyAsync(x => x.Id == habitId, cancellationToken);
         }
