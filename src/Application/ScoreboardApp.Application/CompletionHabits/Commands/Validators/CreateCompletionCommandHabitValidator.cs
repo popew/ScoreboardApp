@@ -16,7 +16,7 @@ namespace ScoreboardApp.Application.CompletionHabits.Commands.Validators
             _currentUserService = currentUserService;
 
             RuleFor(x => x.HabitTrackerId)
-                .NotEmpty()
+                .NotEmpty().WithMessage("The {PropertyName} cannot be null or empty.")
                 .MustAsync(BeValidHabitTrackerId).WithMessage("The {PropertyName} must be a valid id.");
 
             RuleFor(x => x.Title)
