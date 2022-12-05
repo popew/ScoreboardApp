@@ -1,5 +1,7 @@
-﻿using ScoreboardApp.Application.Habits.Commands;
+﻿using ScoreboardApp.Application.CompletionHabitEntries.Commands;
+using ScoreboardApp.Application.Habits.Commands;
 using ScoreboardApp.Application.HabitTrackers.Commands;
+using System.Net.Http;
 
 namespace ScoreboardApp.Api.IntegrationTests
 {
@@ -17,11 +19,11 @@ namespace ScoreboardApp.Api.IntegrationTests
 
         public static async Task<CreateHabitTrackerCommandResponse?> CreateHabitTracker(HttpClient httpClient, CreateHabitTrackerCommand createTrackerCommand)
         {
-            var createHttpResponse = await httpClient.PostAsJsonAsync(Endpoints.HabitTrackers, createTrackerCommand);
+            var createTrackerResponse = await httpClient.PostAsJsonAsync(Endpoints.HabitTrackers, createTrackerCommand);
 
-            createHttpResponse.StatusCode.Should().Be(HttpStatusCode.Created);
+            createTrackerResponse.StatusCode.Should().Be(HttpStatusCode.Created);
 
-            return await createHttpResponse.Content.ReadFromJsonAsync<CreateHabitTrackerCommandResponse>();
+            return await createTrackerResponse.Content.ReadFromJsonAsync<CreateHabitTrackerCommandResponse>();
         }
 
         public static async Task<CreateCompletionHabitCommandResponse?> CreateCompletionHabit(HttpClient httpClient, CreateCompletionHabitCommand createCompletionHabitCommand)
@@ -41,5 +43,14 @@ namespace ScoreboardApp.Api.IntegrationTests
 
             return await createHabitResponse.Content.ReadFromJsonAsync<CreateEfforHabitCommandResponse>();
         }
+
+        public static async Task<CreateCompletionHabitEntryCommandResponse?> CreateCompletionHabitEntry(HttpClient httpClient, CreateCompletionHabitEntryCommand createCompletionEntryCommand)
+        {
+            var createEntryResponse = await httpClient.PostAsJsonAsync(Endpoints.CompletionHabitEntries, createCompletionEntryCommand);
+
+            createEntryResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+
+            return await createEntryResponse.Content.ReadFromJsonAsync<CreateCompletionHabitEntryCommandResponse>();
     }
+}
 }
