@@ -177,5 +177,29 @@ namespace ScoreboardApp.Api.IntegrationTests.EffortHabitEntriesController
             createEntryResponse.Should().HaveStatusCode(HttpStatusCode.Unauthorized);
         }
 
+        [Fact]
+        public async Task Create_ReturnsValidationError_WhenHabitIdIsNotValid()
+        {
+            // Arrange
+
+            var entryCommand = _createEntryCommandGenerator.Clone()
+                                                           .RuleFor(x => x.HabitId, faker => Guid.NewGuid())
+                                                           .Generate();
+
+
+            // Act
+            var createEntryResponse = await _apiClient.PostAsJsonAsync(Endpoint, entryCommand);
+
+            // Assert
+            createEntryResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+
+            var createdObject = await createEntryResponse.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+
+            createdObject.Should().NotBeNull();
+            var errors = createdObject!.Errors;
+
+            errors.Should().ContainKey("HabitId").WhoseValue.Contains("The HabitId must be a valid id.");
+        }
+
     }
 }

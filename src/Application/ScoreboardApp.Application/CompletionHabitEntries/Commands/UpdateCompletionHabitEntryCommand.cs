@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ScoreboardApp.Application.Commons.Exceptions;
 using ScoreboardApp.Application.Commons.Interfaces;
+using ScoreboardApp.Application.Commons.Mappings;
 using ScoreboardApp.Domain.Entities;
 
 namespace ScoreboardApp.Application.CompletionHabitEntries.Commands
@@ -15,7 +16,7 @@ namespace ScoreboardApp.Application.CompletionHabitEntries.Commands
         public Guid HabitId { get; init; }
     }
 
-    public sealed record UpdateCompletionHabitEntryCommandResponse
+    public sealed record UpdateCompletionHabitEntryCommandResponse : IMapFrom<CompletionHabitEntry>
     {
         public Guid Id { get; init; }
         public bool Completion { get; init; }
