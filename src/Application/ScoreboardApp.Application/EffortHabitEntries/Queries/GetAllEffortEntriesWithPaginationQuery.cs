@@ -9,14 +9,14 @@ using ScoreboardApp.Application.HabitTrackers.DTOs;
 
 namespace ScoreboardApp.Application.EffortHabitEntries.Queries
 {
-    public sealed record GetEffortHabitEntriesWithPaginationQuery : IPagedQuery, IRequest<PaginatedList<EffortHabitEntryDTO>>
+    public sealed record GetAllEffortEntriesWithPaginationQuery : IPaginationQuery, IRequest<PaginatedList<EffortHabitEntryDTO>>
     {
-        public Guid HabitId { get; init; }
+        public Guid? HabitId { get; init; }
         public int PageNumber { get; init; } = 1;
         public int PageSize { get; init; } = 10;
     }
 
-    public sealed class GetEffortHabitEntriesWithPaginationQueryHandler : IRequestHandler<GetEffortHabitEntriesWithPaginationQuery, PaginatedList<EffortHabitEntryDTO>>
+    public sealed class GetEffortHabitEntriesWithPaginationQueryHandler : IRequestHandler<GetAllEffortEntriesWithPaginationQuery, PaginatedList<EffortHabitEntryDTO>>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -29,12 +29,13 @@ namespace ScoreboardApp.Application.EffortHabitEntries.Queries
             _currentUserService = currentUserService;
         }
 
-        public async Task<PaginatedList<EffortHabitEntryDTO>> Handle(GetEffortHabitEntriesWithPaginationQuery request, CancellationToken cancellationToken)
+        public async Task<PaginatedList<EffortHabitEntryDTO>> Handle(GetAllEffortEntriesWithPaginationQuery request, CancellationToken cancellationToken)
         {
             string? currentUserId = _currentUserService.GetUserId()!;
 
             return await _context.EffortHabitEntries
-                                .Where(x => x.HabitId == request.HabitId && x.UserId == currentUserId   )
+                                .Where(x => x.UserId== currentUserId)
+                                .Where(x => request.HabitId == null || x.HabitId == request.HabitId)
                                 .OrderBy(x => x.EntryDate)
                                 .ProjectTo<EffortHabitEntryDTO>(_mapper.ConfigurationProvider)
                                 .PaginatedListAsync(request.PageNumber, request.PageSize);

@@ -25,7 +25,7 @@ namespace ScoreboardApp.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] GetAllCompletionHabitEntriesWithPaginationQuery query)
+        public async Task<IActionResult> GetAll([FromQuery] GetAllCompletionEntriesWithPaginationQuery query)
         {
             var response = await Mediator.Send(query);
 
