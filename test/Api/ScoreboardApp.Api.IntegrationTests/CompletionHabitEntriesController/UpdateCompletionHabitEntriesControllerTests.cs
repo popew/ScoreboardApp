@@ -109,9 +109,15 @@ namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitEntriesController
         [Fact]
         public async Task Update_ReturnsNotFound_WhenEntryDoesntExist()
         {
+            // Arrange
+            var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator.Generate());
+
+            var habitCommand = _createHabitCommandGenerator.Clone().RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id).Generate();
+            var habit = await TestHelpers.CreateCompletionHabit(_apiClient, habitCommand);
+
             var updateCommand = _updateEntryCommandGenerator.Clone()
                                                             .RuleFor(x => x.Id, faker => Guid.NewGuid())
-                                                            .RuleFor(x => x.HabitId, faker => Guid.NewGuid())
+                                                            .RuleFor(x => x.HabitId, faker => habit!.Id)
                                                             .Generate();
 
             // Act
@@ -122,36 +128,6 @@ namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitEntriesController
             updateEntryResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
         }
 
-        [Fact]
-        public async Task Update_ReturnsNotFound_WhenUserDoesntOwnTheEntry()
-        {
-            // Arrange
-            var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator.Generate());
-
-            var habitCommand = _createHabitCommandGenerator.Clone().RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id).Generate();
-            var habit = await TestHelpers.CreateCompletionHabit(_apiClient, habitCommand);
-
-            var entryCommand = _createEntryCommandGenerator.Clone()
-                                                           .RuleFor(x => x.HabitId, faker => habit!.Id)
-                                                           .Generate();
-
-            var entry = await TestHelpers.CreateCompletionHabitEntry(_apiClient, entryCommand);
-
-            var updateCommand = _updateEntryCommandGenerator.Clone()
-                                                            .RuleFor(x => x.Id, faker => entry!.Id)
-                                                            .RuleFor(x => x.HabitId, faker => entry!.HabitId)
-                                                            .Generate();
-
-            var secondUserClient = _apiFactory.CreateClient();
-            secondUserClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiFactory.TestUser2.Token);
-
-            // Act
-            var updateEntryResponse = await secondUserClient.PutAsJsonAsync($"{Endpoint}/{entry!.Id}", updateCommand);
-
-            // Assert
-
-            updateEntryResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
-        }
 
         [Fact]
         public async Task Update_ReturnsUnauthorized_WhenUserIsNotLoggedIn()

@@ -36,7 +36,7 @@ namespace ScoreboardApp.Api.IntegrationTests.EffortHabitsController
         }
 
         [Fact]
-        public async Task Update_UpdatesCompletionHabit_WhenCompletionHabitExists()
+        public async Task Update_UpdatesHabit_WhenHabitExists()
         {
             // Arrange
             var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator.Generate());

@@ -7,9 +7,9 @@ using ScoreboardApp.Application.HabitTrackers.Commands;
 
 namespace ScoreboardApp.Api.IntegrationTests.EffortHabitEntriesController
 {
-    internal class UpdateEffortHabitEntriesControllerTest : IClassFixture<ScoreboardAppApiFactory>
+    public class UpdateEffortHabitEntriesControllerTest : IClassFixture<ScoreboardAppApiFactory>
     {
-        private const string Endpoint = TestHelpers.Endpoints.CompletionHabitEntries;
+        private const string Endpoint = TestHelpers.Endpoints.EffortHabitEntries;
         private readonly HttpClient _apiClient;
         private readonly ScoreboardAppApiFactory _apiFactory;
 
@@ -27,7 +27,7 @@ namespace ScoreboardApp.Api.IntegrationTests.EffortHabitEntriesController
             .RuleFor(x => x.SessionGoal, faker => faker.Random.Double(0, 100))
             .RuleFor(x => x.EntryDate, faker => faker.Date.RecentDateOnly(7));
 
-        private readonly Faker<UpdateEffortHabitCommand> _updateEntryCommandGenerator = new Faker<UpdateEffortHabitCommand>()
+        private readonly Faker<UpdateEffortHabitEntryCommand> _updateEntryCommandGenerator = new Faker<UpdateEffortHabitEntryCommand>()
             .RuleFor(x => x.Effort, faker => faker.Random.Double(0, 100))
             .RuleFor(x => x.SessionGoal, faker => faker.Random.Double(0, 100))
             .RuleFor(x => x.EntryDate, faker => faker.Date.RecentDateOnly(7));
@@ -47,13 +47,13 @@ namespace ScoreboardApp.Api.IntegrationTests.EffortHabitEntriesController
             var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator.Generate());
 
             var habitCommand = _createHabitCommandGenerator.Clone().RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id).Generate();
-            var habit = await TestHelpers.CreateCompletionHabit(_apiClient, habitCommand);
+            var habit = await TestHelpers.CreateEffortHabit(_apiClient, habitCommand);
 
             var entryCommand = _createEntryCommandGenerator.Clone()
                                                            .RuleFor(x => x.HabitId, faker => habit!.Id)
                                                            .Generate();
 
-            var entry = await TestHelpers.CreateCompletionHabitEntry(_apiClient, entryCommand);
+            var entry = await TestHelpers.CreateEffortHabitEntry(_apiClient, entryCommand);
 
             var updateCommand = _updateEntryCommandGenerator.Clone()
                                                             .RuleFor(x => x.Id, faker => entry!.Id)
@@ -67,7 +67,7 @@ namespace ScoreboardApp.Api.IntegrationTests.EffortHabitEntriesController
 
             updateEntryResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            var updatedObject = await updateEntryResponse.Content.ReadFromJsonAsync<UpdateCompletionHabitEntryCommandResponse>();
+            var updatedObject = await updateEntryResponse.Content.ReadFromJsonAsync<UpdateEffortHabitEntryCommandResponse>();
 
             updatedObject.Should().NotBeNull();
             updatedObject.Should().BeEquivalentTo(updateCommand);
@@ -80,13 +80,13 @@ namespace ScoreboardApp.Api.IntegrationTests.EffortHabitEntriesController
             var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator.Generate());
 
             var habitCommand = _createHabitCommandGenerator.Clone().RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id).Generate();
-            var habit = await TestHelpers.CreateCompletionHabit(_apiClient, habitCommand);
+            var habit = await TestHelpers.CreateEffortHabit(_apiClient, habitCommand);
 
             var entryCommand = _createEntryCommandGenerator.Clone()
                                                            .RuleFor(x => x.HabitId, faker => habit!.Id)
                                                            .Generate();
 
-            var entry = await TestHelpers.CreateCompletionHabitEntry(_apiClient, entryCommand);
+            var entry = await TestHelpers.CreateEffortHabitEntry(_apiClient, entryCommand);
 
             var updateCommand = _updateEntryCommandGenerator.Clone()
                                                             .RuleFor(x => x.Id, faker => entry!.Id)
@@ -101,7 +101,7 @@ namespace ScoreboardApp.Api.IntegrationTests.EffortHabitEntriesController
 
             updateEntryResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            var updatedObject = await updateEntryResponse.Content.ReadFromJsonAsync<UpdateCompletionHabitEntryCommandResponse>();
+            var updatedObject = await updateEntryResponse.Content.ReadFromJsonAsync<UpdateEffortHabitEntryCommandResponse>();
 
             updatedObject.Should().NotBeNull();
             updatedObject.Should().BeEquivalentTo(updateCommand);
@@ -110,9 +110,15 @@ namespace ScoreboardApp.Api.IntegrationTests.EffortHabitEntriesController
         [Fact]
         public async Task Update_ReturnsNotFound_WhenEntryDoesntExist()
         {
+            // Arrange
+            var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator.Generate());
+
+            var habitCommand = _createHabitCommandGenerator.Clone().RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id).Generate();
+            var habit = await TestHelpers.CreateEffortHabit(_apiClient, habitCommand);
+
             var updateCommand = _updateEntryCommandGenerator.Clone()
                                                             .RuleFor(x => x.Id, faker => Guid.NewGuid())
-                                                            .RuleFor(x => x.HabitId, faker => Guid.NewGuid())
+                                                            .RuleFor(x => x.HabitId, faker => habit!.Id)
                                                             .Generate();
 
             // Act
@@ -120,36 +126,10 @@ namespace ScoreboardApp.Api.IntegrationTests.EffortHabitEntriesController
 
             // Assert
 
-            updateEntryResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
-        }
+            var updatedObject = await updateEntryResponse.Content.ReadFromJsonAsync<ValidationProblemDetails>();
 
-        [Fact]
-        public async Task Update_ReturnsNotFound_WhenUserDoesntOwnTheEntry()
-        {
-            // Arrange
-            var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator.Generate());
-
-            var habitCommand = _createHabitCommandGenerator.Clone().RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id).Generate();
-            var habit = await TestHelpers.CreateCompletionHabit(_apiClient, habitCommand);
-
-            var entryCommand = _createEntryCommandGenerator.Clone()
-                                                           .RuleFor(x => x.HabitId, faker => habit!.Id)
-                                                           .Generate();
-
-            var entry = await TestHelpers.CreateCompletionHabitEntry(_apiClient, entryCommand);
-
-            var updateCommand = _updateEntryCommandGenerator.Clone()
-                                                            .RuleFor(x => x.Id, faker => entry!.Id)
-                                                            .RuleFor(x => x.HabitId, faker => entry!.HabitId)
-                                                            .Generate();
-
-            var secondUserClient = _apiFactory.CreateClient();
-            secondUserClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiFactory.TestUser2.Token);
-
-            // Act
-            var updateEntryResponse = await secondUserClient.PutAsJsonAsync($"{Endpoint}/{entry!.Id}", updateCommand);
-
-            // Assert
+            updatedObject.Should().NotBeNull();
+            var errors = updatedObject!.Errors;
 
             updateEntryResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
         }
@@ -180,13 +160,13 @@ namespace ScoreboardApp.Api.IntegrationTests.EffortHabitEntriesController
             var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator.Generate());
 
             var habitCommand = _createHabitCommandGenerator.Clone().RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id).Generate();
-            var habit = await TestHelpers.CreateCompletionHabit(_apiClient, habitCommand);
+            var habit = await TestHelpers.CreateEffortHabit(_apiClient, habitCommand);
 
             var entryCommand = _createEntryCommandGenerator.Clone()
                                                            .RuleFor(x => x.HabitId, faker => habit!.Id)
                                                            .Generate();
 
-            var entry = await TestHelpers.CreateCompletionHabitEntry(_apiClient, entryCommand);
+            var entry = await TestHelpers.CreateEffortHabitEntry(_apiClient, entryCommand);
 
             var updateCommand = _updateEntryCommandGenerator.Clone()
                                                             .RuleFor(x => x.Id, faker => entry!.Id)
@@ -200,10 +180,10 @@ namespace ScoreboardApp.Api.IntegrationTests.EffortHabitEntriesController
             // Assert
             updateEntryResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            var createdObject = await updateEntryResponse.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+            var updatedObject = await updateEntryResponse.Content.ReadFromJsonAsync<ValidationProblemDetails>();
 
-            createdObject.Should().NotBeNull();
-            var errors = createdObject!.Errors;
+            updatedObject.Should().NotBeNull();
+            var errors = updatedObject!.Errors;
 
             errors.Should().ContainKey("EntryDate").WhoseValue.Contains("EntryDate cannot be in the future.");
         }
@@ -215,13 +195,13 @@ namespace ScoreboardApp.Api.IntegrationTests.EffortHabitEntriesController
             var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator.Generate());
 
             var habitCommand = _createHabitCommandGenerator.Clone().RuleFor(x => x.HabitTrackerId, faker => habitTracker!.Id).Generate();
-            var habit = await TestHelpers.CreateCompletionHabit(_apiClient, habitCommand);
+            var habit = await TestHelpers.CreateEffortHabit(_apiClient, habitCommand);
 
             var entryCommandGenerator = _createEntryCommandGenerator.Clone()
                                                            .RuleFor(x => x.HabitId, faker => habit!.Id);
 
-            var firstEntry = await TestHelpers.CreateCompletionHabitEntry(_apiClient, entryCommandGenerator.Generate());
-            var secondEntry = await TestHelpers.CreateCompletionHabitEntry(_apiClient, entryCommandGenerator.Generate());
+            var firstEntry = await TestHelpers.CreateEffortHabitEntry(_apiClient, entryCommandGenerator.Generate());
+            var secondEntry = await TestHelpers.CreateEffortHabitEntry(_apiClient, entryCommandGenerator.Generate());
 
             var updateCommand = _updateEntryCommandGenerator.Clone()
                                                             .RuleFor(x => x.Id, faker => firstEntry!.Id)
@@ -235,11 +215,12 @@ namespace ScoreboardApp.Api.IntegrationTests.EffortHabitEntriesController
             // Assert
             updateEntryResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            var createdObject = await updateEntryResponse.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+            var updatedObject = await updateEntryResponse.Content.ReadFromJsonAsync<ValidationProblemDetails>();
 
-            createdObject.Should().NotBeNull();
-            var errors = createdObject!.Errors;
+            updatedObject.Should().NotBeNull();
+            var errors = updatedObject!.Errors;
 
             errors.Should().ContainKey("EntryDate").WhoseValue.Contains("Habit entry for this EntryDate already exists.");
         }
     }
+}

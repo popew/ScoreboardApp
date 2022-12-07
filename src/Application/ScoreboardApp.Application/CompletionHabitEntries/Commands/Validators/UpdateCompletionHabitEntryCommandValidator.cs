@@ -4,7 +4,7 @@ using ScoreboardApp.Application.Commons.Interfaces;
 
 namespace ScoreboardApp.Application.CompletionHabitEntries.Commands.Validators
 {
-    internal class UpdateCompletionHabitEntryCommandValidator : AbstractValidator<UpdateCompletionHabitEntryCommand>
+    public class UpdateCompletionHabitEntryCommandValidator : AbstractValidator<UpdateCompletionHabitEntryCommand>
     {
         private readonly IApplicationDbContext _context;
         private readonly ICurrentUserService _currentUserService;
