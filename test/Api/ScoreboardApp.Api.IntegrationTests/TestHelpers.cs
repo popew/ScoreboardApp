@@ -2,7 +2,6 @@
 using ScoreboardApp.Application.EffortHabitEntries.Commands;
 using ScoreboardApp.Application.Habits.Commands;
 using ScoreboardApp.Application.HabitTrackers.Commands;
-using System.Net.Http;
 
 namespace ScoreboardApp.Api.IntegrationTests
 {

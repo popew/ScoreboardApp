@@ -2,9 +2,6 @@
 using ScoreboardApp.Application.Habits.Commands;
 using ScoreboardApp.Application.HabitTrackers.Commands;
 using ScoreboardApp.Application.HabitTrackers.DTOs;
-using System;
-using System.Threading.Tasks;
-using Xunit;
 
 namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitsController
 {

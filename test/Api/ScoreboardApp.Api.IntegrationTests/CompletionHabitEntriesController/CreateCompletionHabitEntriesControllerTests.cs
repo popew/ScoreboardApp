@@ -3,9 +3,6 @@ using ScoreboardApp.Application.CompletionHabitEntries.Commands;
 using ScoreboardApp.Application.DTOs.Enums;
 using ScoreboardApp.Application.Habits.Commands;
 using ScoreboardApp.Application.HabitTrackers.Commands;
-using System;
-using System.Threading.Tasks;
-using Xunit;
 
 namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitEntriesController
 {
@@ -124,7 +121,7 @@ namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitEntriesController
         }
 
         [Fact]
-        public async Task   Create_ReturnsBadRequest_WhenUserDoesntOwnTheHabit()
+        public async Task Create_ReturnsBadRequest_WhenUserDoesntOwnTheHabit()
         {
             // Arrange
             var habitTracker = await TestHelpers.CreateHabitTracker(_apiClient, _createTrackerCommandGenerator.Generate());
@@ -203,4 +200,3 @@ namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitEntriesController
 
     }
 }
-                            

@@ -199,4 +199,3 @@ namespace ScoreboardApp.Api.IntegrationTests.EffortHabitsController
 
     }
 }
-        

@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ScoreboardApp.Application.CompletionHabitEntries.Commands;
 using ScoreboardApp.Application.DTOs.Enums;
 using ScoreboardApp.Application.EffortHabitEntries.Commands;
 using ScoreboardApp.Application.Habits.Commands;

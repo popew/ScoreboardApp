@@ -1,5 +1,4 @@
-﻿using ScoreboardApp.Application.CompletionHabitEntries.Commands;
-using ScoreboardApp.Application.DTOs.Enums;
+﻿using ScoreboardApp.Application.DTOs.Enums;
 using ScoreboardApp.Application.EffortHabitEntries.Commands;
 using ScoreboardApp.Application.Habits.Commands;
 using ScoreboardApp.Application.HabitTrackers.Commands;

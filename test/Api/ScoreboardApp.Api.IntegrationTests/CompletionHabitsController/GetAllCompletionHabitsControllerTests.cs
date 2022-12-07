@@ -129,5 +129,5 @@ namespace ScoreboardApp.Api.IntegrationTests.CompletionHabitsController
             errors.Should().ContainKey("HabitTrackerId").WhoseValue.Contains("The HabitTrackerId must be a valid id.");
         }
     }
-  
+
 }
