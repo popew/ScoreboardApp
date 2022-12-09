@@ -20,14 +20,13 @@ namespace ScoreboardApp.Application.CompletionHabitEntries.Queries.Validators
             _currentUserService = currentUserService;
 
             RuleFor(x => x.HabitId)
-                .NotEmpty()
-                .MustAsync(BeValidEffortHabitIdOrEmpty).WithMessage("EffortHabit with given id does not exist.");
+                .MustAsync(BeValidEffortHabitIdOrEmpty).WithMessage("The {PropertyName} must be a valid id.");
 
             RuleFor(x => x.PageNumber)
-                .GreaterThanOrEqualTo(1);
+                .GreaterThanOrEqualTo(1).WithMessage("{PropertyName} must be a positive integer.");
 
             RuleFor(x => x.PageSize)
-                .GreaterThanOrEqualTo(1);
+                .GreaterThanOrEqualTo(1).WithMessage("{PropertyName} must be a positive integer.");
         }
 
         private async Task<bool> BeValidEffortHabitIdOrEmpty(Guid? habitId, CancellationToken cancellationToken)
