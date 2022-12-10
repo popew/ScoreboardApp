@@ -5,23 +5,26 @@ using ScoreboardApp.Application.Habits.Commands;
 
 namespace ScoreboardApp.Application.EffortHabits.Commands.Validators
 {
-    internal class UpdateEffortHabitCommandValidator : AbstractValidator<UpdateEffortHabitCommand>
+    public sealed class UpdateEffortHabitCommandValidator : AbstractValidator<UpdateEffortHabitCommand>
     {
         private readonly IApplicationDbContext _context;
+        private readonly ICurrentUserService _currentUserService;
 
-        public UpdateEffortHabitCommandValidator(IApplicationDbContext context)
+        public UpdateEffortHabitCommandValidator(IApplicationDbContext context, ICurrentUserService currentUserService)
         {
             _context = context;
+            _currentUserService = currentUserService;
 
             RuleFor(x => x.HabitTrackerId)
                 .NotEmpty()
-                .MustAsync(BeValidHabitTrackerId);
+                .MustAsync(BeValidHabitTrackerId).WithMessage("The {PropertyName} must be a valid id.");
 
             RuleFor(x => x.Title)
-                .NotEmpty();
+                .NotEmpty().WithMessage("The title cannot be null or empty.")
+                .MaximumLength(200).WithMessage("The {PropertyName} length cannot exceed {MaxLength} characters.");
 
             RuleFor(x => x.Description)
-                .MaximumLength(400);
+                .MaximumLength(400).WithMessage("The {PropertyName} length cannot exceed {MaxLength} characters.");
 
             RuleFor(x => x.Unit)
                 .MaximumLength(20);
@@ -29,7 +32,12 @@ namespace ScoreboardApp.Application.EffortHabits.Commands.Validators
 
         private async Task<bool> BeValidHabitTrackerId(Guid habitTrackerId, CancellationToken cancellationToken)
         {
-            return await _context.HabitTrackers.AnyAsync(x => x.Id == habitTrackerId, cancellationToken);
+            string currentUserId = _currentUserService.GetUserId()!;
+
+            return await _context.HabitTrackers
+                                 .AsNoTracking()
+                                 .Where(x => x.UserId == currentUserId)
+                                 .AnyAsync(x => x.Id == habitTrackerId, cancellationToken);
         }
     }
 }

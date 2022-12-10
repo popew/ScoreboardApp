@@ -19,7 +19,7 @@ namespace ScoreboardApp.Api.Controllers
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            var response = await Mediator.Send(new GetHabitTrackerQuery(id));
+            var response = await Mediator.Send(new  GetHabitTrackerQuery(id));
 
             return Ok(response);
         }

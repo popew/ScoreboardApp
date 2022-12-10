@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ScoreboardApp.Application.Authentication;
-using ScoreboardApp.Infrastructure.CustomIdentityService.Identity;
-using System.Net.Http.Json;
 
 namespace ScoreboardApp.Api.IntegrationTests.UserController
 {
@@ -45,7 +43,7 @@ namespace ScoreboardApp.Api.IntegrationTests.UserController
         {
             // Arrange
 
-            var refreshCommand = new RefreshCommand() { Token = "InvalidToken", RefreshToken = _apiFactory.NormalTestUser.RefreshToken };
+            var refreshCommand = new RefreshCommand() { Token = "InvalidToken", RefreshToken = _apiFactory.TestUser1.RefreshToken };
 
             // Act
 
@@ -65,7 +63,7 @@ namespace ScoreboardApp.Api.IntegrationTests.UserController
         {
             // Arrange
 
-            var refreshCommand = new RefreshCommand() { Token = _apiFactory.NormalTestUser.Token, RefreshToken = "InvalidToken" };
+            var refreshCommand = new RefreshCommand() { Token = _apiFactory.TestUser1.Token, RefreshToken = "InvalidToken" };
 
             // Act
 

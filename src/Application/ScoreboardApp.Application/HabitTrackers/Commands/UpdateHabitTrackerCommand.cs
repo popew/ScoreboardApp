@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ScoreboardApp.Application.Commons.Exceptions;
 using ScoreboardApp.Application.Commons.Interfaces;
+using ScoreboardApp.Application.Commons.Mappings;
 using ScoreboardApp.Application.DTOs.Enums;
 using ScoreboardApp.Domain.Entities;
 using ScoreboardApp.Domain.Enums;
@@ -17,7 +18,7 @@ namespace ScoreboardApp.Application.HabitTrackers.Commands
     }
 
     // Rationale: Commands shouldn't return any values, but it's nice to return the object back from the call
-    public sealed record UpdateHabitTrackerCommandResponse
+    public sealed record UpdateHabitTrackerCommandResponse : IMapFrom<HabitTracker>
     {
         public Guid Id { get; init; }
         public string Title { get; init; } = default!;

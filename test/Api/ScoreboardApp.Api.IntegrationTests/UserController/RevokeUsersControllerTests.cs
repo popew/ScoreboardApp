@@ -1,11 +1,4 @@
 ﻿using ScoreboardApp.Application.Authentication;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ScoreboardApp.Api.IntegrationTests.UserController
 {
@@ -27,7 +20,7 @@ namespace ScoreboardApp.Api.IntegrationTests.UserController
         {
             // Arrange
             var httpClient = _apiFactory.CreateClient();
-            var revokeCommand = new RevokeCommand() { UserName = _apiFactory.NormalTestUser.UserName };
+            var revokeCommand = new RevokeCommand() { UserName = _apiFactory.TestUser1.UserName };
 
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiFactory.AdminTestUser.Token);
 
@@ -43,7 +36,7 @@ namespace ScoreboardApp.Api.IntegrationTests.UserController
         {
             // Arrange
             var httpClient = _apiFactory.CreateClient();
-            var revokeCommand = new RevokeCommand() { UserName = Guid.NewGuid().ToString()};
+            var revokeCommand = new RevokeCommand() { UserName = Guid.NewGuid().ToString() };
 
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiFactory.AdminTestUser.Token);
 
@@ -59,9 +52,9 @@ namespace ScoreboardApp.Api.IntegrationTests.UserController
         {
             // Arrange
             var httpClient = _apiFactory.CreateClient();
-            var revokeCommand = new RevokeCommand() { UserName = _apiFactory.NormalTestUser.UserName };
+            var revokeCommand = new RevokeCommand() { UserName = _apiFactory.TestUser1.UserName };
 
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiFactory.NormalTestUser.Token);
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiFactory.TestUser1.Token);
 
             // Act
             var httpResponse = await httpClient.PostAsJsonAsync(EndpointUnderTest, revokeCommand);
