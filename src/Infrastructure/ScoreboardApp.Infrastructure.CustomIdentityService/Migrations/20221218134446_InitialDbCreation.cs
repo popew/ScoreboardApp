@@ -5,8 +5,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ScoreboardApp.Infrastructure.CustomIdentityService.Migrations
 {
+    /// <inheritdoc />
     public partial class InitialDbCreation : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -289,6 +291,7 @@ namespace ScoreboardApp.Infrastructure.CustomIdentityService.Migrations
                 columns: new[] { "SubjectId", "SessionId", "Type" });
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
