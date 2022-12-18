@@ -8,8 +8,7 @@ The main purpose of the project is to serve as playground for me to learn topics
 ## Technologies
 
 - The architecture of the project is inspired by [Clean Architecture Template](https://github.com/jasontaylordev/CleanArchitecture)
-- ASP.NET Core 7
-- Entity Framework Core 7
+- The project was started using .NET6 and EF Core 6. Updated to .NET7.
 - Notable packages: MediatR, AutoMapper, FluentValidation
 - Basic telemetry with [OpenTelemetry](https://opentelemetry.io/) and [OpenZipkin](https://zipkin.io/)
 - Integration tests: XUnit, TestContainers, Bogus, FluentAssertions
@@ -32,7 +31,7 @@ The main purpose of the project is to serve as playground for me to learn topics
    docker-compose -f compose-development.yml up
    ```
    
-NOTICE: The docker files contain default passwords so it's is easier to start and evaluate the project. It is done on purpose, but DON'T DO IT IN YOUR PROJECTS. Also DON'T KEEP PASSWORDS IN REPOSITORY. 
+NOTICE: The docker files contain default passwords so it is easier to start and evaluate the project. It is done on purpose, but DON'T DO IT IN YOUR PROJECTS. Also DON'T KEEP PASSWORDS IN REPOSITORY. 
 
 
 ## Workflow

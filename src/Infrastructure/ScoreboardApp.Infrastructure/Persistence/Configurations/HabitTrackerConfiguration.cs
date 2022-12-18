@@ -10,22 +10,12 @@ namespace ScoreboardApp.Infrastructure.Persistence.Configurations
         {
             builder.ToTable(tb => tb.IsTemporal());
 
-            builder.HasMany(ht => ht.EffortHabits)
-                .WithOne(h => h.HabitTracker)
-                .HasForeignKey(h => h.HabitTrackerId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            builder.HasMany(ht => ht.CompletionHabits)
-                .WithOne(h => h.HabitTracker)
-                .HasForeignKey(h => h.HabitTrackerId)
-                .OnDelete(DeleteBehavior.Cascade);
-
             builder.Property(ht => ht.Title)
                 .HasMaxLength(200)
                 .IsRequired();
 
             builder.Property(ht => ht.UserId)
-                .HasMaxLength(200)
+                .HasMaxLength(450)
                 .IsRequired();
         }
     }
