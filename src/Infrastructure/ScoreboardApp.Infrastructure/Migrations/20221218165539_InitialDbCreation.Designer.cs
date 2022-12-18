@@ -12,7 +12,7 @@ using ScoreboardApp.Infrastructure.Persistence;
 namespace ScoreboardApp.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221218134738_InitialDbCreation")]
+    [Migration("20221218165539_InitialDbCreation")]
     partial class InitialDbCreation
     {
         /// <inheritdoc />
@@ -78,9 +78,7 @@ namespace ScoreboardApp.Infrastructure.Migrations
 
                     b.ToTable("CompletionHabits");
 
-                    b
-                        .UseTpcMappingStrategy()
-                        .ToTable(tb => tb.IsTemporal(ttb =>
+                    b.ToTable(tb => tb.IsTemporal(ttb =>
                             {
                                 ttb.UseHistoryTable("CompletionHabitsHistory");
                                 ttb
@@ -142,9 +140,7 @@ namespace ScoreboardApp.Infrastructure.Migrations
 
                     b.ToTable("CompletionHabitEntries");
 
-                    b
-                        .UseTpcMappingStrategy()
-                        .ToTable(tb => tb.IsTemporal(ttb =>
+                    b.ToTable(tb => tb.IsTemporal(ttb =>
                             {
                                 ttb.UseHistoryTable("CompletionHabitEntriesHistory");
                                 ttb
@@ -219,9 +215,7 @@ namespace ScoreboardApp.Infrastructure.Migrations
 
                     b.ToTable("EffortHabits");
 
-                    b
-                        .UseTpcMappingStrategy()
-                        .ToTable(tb => tb.IsTemporal(ttb =>
+                    b.ToTable(tb => tb.IsTemporal(ttb =>
                             {
                                 ttb.UseHistoryTable("EffortHabitsHistory");
                                 ttb
@@ -286,9 +280,7 @@ namespace ScoreboardApp.Infrastructure.Migrations
 
                     b.ToTable("EffortHabitEntries");
 
-                    b
-                        .UseTpcMappingStrategy()
-                        .ToTable(tb => tb.IsTemporal(ttb =>
+                    b.ToTable(tb => tb.IsTemporal(ttb =>
                             {
                                 ttb.UseHistoryTable("EffortHabitEntriesHistory");
                                 ttb

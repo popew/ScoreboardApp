@@ -75,9 +75,7 @@ namespace ScoreboardApp.Infrastructure.Migrations
 
                     b.ToTable("CompletionHabits");
 
-                    b
-                        .UseTpcMappingStrategy()
-                        .ToTable(tb => tb.IsTemporal(ttb =>
+                    b.ToTable(tb => tb.IsTemporal(ttb =>
                             {
                                 ttb.UseHistoryTable("CompletionHabitsHistory");
                                 ttb
@@ -139,9 +137,7 @@ namespace ScoreboardApp.Infrastructure.Migrations
 
                     b.ToTable("CompletionHabitEntries");
 
-                    b
-                        .UseTpcMappingStrategy()
-                        .ToTable(tb => tb.IsTemporal(ttb =>
+                    b.ToTable(tb => tb.IsTemporal(ttb =>
                             {
                                 ttb.UseHistoryTable("CompletionHabitEntriesHistory");
                                 ttb
@@ -216,9 +212,7 @@ namespace ScoreboardApp.Infrastructure.Migrations
 
                     b.ToTable("EffortHabits");
 
-                    b
-                        .UseTpcMappingStrategy()
-                        .ToTable(tb => tb.IsTemporal(ttb =>
+                    b.ToTable(tb => tb.IsTemporal(ttb =>
                             {
                                 ttb.UseHistoryTable("EffortHabitsHistory");
                                 ttb
@@ -283,9 +277,7 @@ namespace ScoreboardApp.Infrastructure.Migrations
 
                     b.ToTable("EffortHabitEntries");
 
-                    b
-                        .UseTpcMappingStrategy()
-                        .ToTable(tb => tb.IsTemporal(ttb =>
+                    b.ToTable(tb => tb.IsTemporal(ttb =>
                             {
                                 ttb.UseHistoryTable("EffortHabitEntriesHistory");
                                 ttb
