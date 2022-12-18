@@ -15,6 +15,7 @@ namespace ScoreboardApp.Infrastructure.Persistence.Configurations
             base.Configure(builder);
 
             builder.ToTable(tb => tb.IsTemporal());
+            builder.UseTpcMappingStrategy();
 
             builder.Property(h => h.Title)
                 .HasMaxLength(200)
@@ -26,13 +27,8 @@ namespace ScoreboardApp.Infrastructure.Persistence.Configurations
             builder.Property(h => h.HabitTrackerId)
                 .IsRequired();
 
-            builder.HasMany(h => h.HabitEntries)
-                .WithOne(e => e.Habit)
-                .HasForeignKey(e => e.HabitId)
-                .OnDelete(DeleteBehavior.Cascade);
-
             builder.Property(h => h.UserId)
-                .HasMaxLength(200)
+                .HasMaxLength(450)
                 .IsRequired();
         }
     }
