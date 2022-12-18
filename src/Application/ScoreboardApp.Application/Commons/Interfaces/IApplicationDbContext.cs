@@ -5,11 +5,11 @@ namespace ScoreboardApp.Application.Commons.Interfaces
 {
     public interface IApplicationDbContext
     {
-        DbSet<CompletionHabitEntry> CompletionHabitEntries { get; set; }
-        DbSet<CompletionHabit> CompletionHabits { get; set; }
-        DbSet<EffortHabitEntry> EffortHabitEntries { get; set; }
-        DbSet<EffortHabit> EffortHabits { get; set; }
-        DbSet<HabitTracker> HabitTrackers { get; set; }
+        DbSet<CompletionHabitEntry> CompletionHabitEntries { get; }
+        DbSet<CompletionHabit> CompletionHabits { get; }
+        DbSet<EffortHabitEntry> EffortHabitEntries { get; }
+        DbSet<EffortHabit> EffortHabits { get; }
+        DbSet<HabitTracker> HabitTrackers { get; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }

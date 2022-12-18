@@ -10,8 +10,8 @@ namespace ScoreboardApp.Domain.Entities
 
         public double? SessionGoal { get; set; }
         public DateOnly EntryDate { get; set; }
-        public EffortHabit Habit { get; set; }
+        public EffortHabit Habit { get; set; } = default!;
         public Guid HabitId { get; set; }
-        public string UserId { get; set; }
+        public required string UserId { get; set; }
     }
 }

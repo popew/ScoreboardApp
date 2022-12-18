@@ -21,19 +21,19 @@ namespace ScoreboardApp.Infrastructure
 
             services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")!,
                                      providerOptions => providerOptions.EnableRetryOnFailure());
             });
-
+            
             services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
 
             // Configure HealthChecks
             services.AddHealthChecks()
                     .AddSqlServer(name: "ApiDatabase",
-                                  connectionString: configuration.GetConnectionString("DefaultConnection"),
+                                  connectionString: configuration.GetConnectionString("DefaultConnection")!,
                                   failureStatus: HealthStatus.Degraded)
                     .AddSqlServer(name: "IdentityDatabase",
-                                  connectionString: configuration.GetConnectionString("CustomIdentityDatabase"),
+                                  connectionString: configuration.GetConnectionString("CustomIdentityDatabase")!,
                                   failureStatus: HealthStatus.Degraded);
 
             // Configure Telemetry
@@ -44,7 +44,7 @@ namespace ScoreboardApp.Infrastructure
 
             var telemetryOptions = configuration.GetSection(nameof(TelemetryOptions)).Get<TelemetryOptions>();
 
-            if (telemetryOptions.IsEnabled == true)
+            if (telemetryOptions!.IsEnabled == true)
             {
                 services.AddOpenTelemetryTracing(builder =>
                 {

@@ -7,10 +7,10 @@ namespace ScoreboardApp.Domain.Entities
     public class CompletionHabit : BaseAuditableEntity, IHabit<CompletionHabitEntry>
     {
         public string? Description { get; set; }
-        public IList<CompletionHabitEntry> HabitEntries { get; set; }
-        public HabitTracker HabitTracker { get; set; }
+        public IList<CompletionHabitEntry> HabitEntries { get; set; } = new List<CompletionHabitEntry>();
+        public HabitTracker HabitTracker { get; set; } = default!;
         public Guid HabitTrackerId { get; set; }
         public string? Title { get; set; }
-        public string UserId { get; set; }
+        public required string UserId { get; set; }
     }
 }

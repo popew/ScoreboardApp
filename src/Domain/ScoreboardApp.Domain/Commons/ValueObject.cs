@@ -8,7 +8,7 @@
 
         protected abstract IEnumerable<object> GetEqualityComponents();
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj == null)
                 return false;
@@ -38,8 +38,13 @@
             return _cachedHashCode.Value;
         }
 
-        public virtual int CompareTo(object obj)
+        public virtual int CompareTo(object? obj)
         {
+            if(obj is null)
+            {
+                return 1;
+            }
+
             Type thisType = GetUnproxiedType(this);
             Type otherType = GetUnproxiedType(obj);
 
@@ -61,7 +66,7 @@
             return 0;
         }
 
-        private int CompareComponents(object object1, object object2)
+        private int CompareComponents(object? object1, object? object2)
         {
             if (object1 is null && object2 is null)
                 return 0;
@@ -78,7 +83,7 @@
             return object1.Equals(object2) ? 0 : -1;
         }
 
-        public virtual int CompareTo(ValueObject other)
+        public virtual int CompareTo(ValueObject? other)
         {
             return CompareTo(other as object);
         }
@@ -108,7 +113,7 @@
             string typeString = type.ToString();
 
             if (typeString.Contains(EFCoreProxyPrefix) || typeString.EndsWith(NHibernateProxyPostfix))
-                return type.BaseType;
+                return type.BaseType!;
 
             return type;
         }

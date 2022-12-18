@@ -72,7 +72,7 @@ namespace ScoreboardApp.Api.IntegrationTests.EffortHabitEntriesController
                 PageSize = 10
             };
 
-            Dictionary<string, string> query = new()
+            Dictionary<string, string?> query = new()
             {
                 {nameof(queryObject.HabitId), queryObject.HabitId!.ToString() },
                 {nameof(queryObject.PageNumber), queryObject.PageNumber.ToString() },
@@ -87,8 +87,10 @@ namespace ScoreboardApp.Api.IntegrationTests.EffortHabitEntriesController
 
             var receivedObjects = await getAllEntriesResponse.Content.ReadFromJsonAsync<PaginatedListDTO<EffortHabitEntryDTO>>();
 
-            receivedObjects.Items.Should().HaveCount(3);
-            receivedObjects.Items.Should().BeEquivalentTo(createdEntries);
+            receivedObjects.Should().NotBeNull();
+
+            receivedObjects!.Items.Should().HaveCount(3);
+            receivedObjects!.Items.Should().BeEquivalentTo(createdEntries);
 
         }
 
@@ -127,7 +129,7 @@ namespace ScoreboardApp.Api.IntegrationTests.EffortHabitEntriesController
                 PageSize = 10
             };
 
-            Dictionary<string, string> query = new()
+            Dictionary<string, string?> query = new()
             {
                 {nameof(queryObject.PageNumber), queryObject.PageNumber.ToString() },
                 {nameof(queryObject.PageSize), queryObject.PageSize.ToString() }
@@ -141,8 +143,10 @@ namespace ScoreboardApp.Api.IntegrationTests.EffortHabitEntriesController
 
             var receivedObjects = await getAllEntriesResponse.Content.ReadFromJsonAsync<PaginatedListDTO<EffortHabitEntryDTO>>();
 
-            receivedObjects.Items.Should().HaveCount(2);
-            receivedObjects.Items.Should().BeEquivalentTo(createdEntries);
+            receivedObjects.Should().NotBeNull();
+
+            receivedObjects!.Items.Should().HaveCount(2);
+            receivedObjects!.Items.Should().BeEquivalentTo(createdEntries);
         }
 
         [Fact]
@@ -161,7 +165,7 @@ namespace ScoreboardApp.Api.IntegrationTests.EffortHabitEntriesController
                 PageSize = 10
             };
 
-            Dictionary<string, string> query = new()
+            Dictionary<string, string?> query = new()
             {
                 {nameof(queryObject.HabitId), queryObject.HabitId!.ToString() },
                 {nameof(queryObject.PageNumber), queryObject.PageNumber.ToString() },
@@ -192,7 +196,7 @@ namespace ScoreboardApp.Api.IntegrationTests.EffortHabitEntriesController
                 PageSize = 10
             };
 
-            Dictionary<string, string> query = new()
+            Dictionary<string, string?> query = new()
             {
                 {nameof(queryObject.PageNumber), queryObject.PageNumber.ToString() },
                 {nameof(queryObject.PageSize), queryObject.PageSize.ToString() }
@@ -216,7 +220,7 @@ namespace ScoreboardApp.Api.IntegrationTests.EffortHabitEntriesController
                 PageSize = 10
             };
 
-            Dictionary<string, string> query = new()
+            Dictionary<string, string?> query = new()
             {
                 {nameof(queryObject.HabitId), queryObject.HabitId!.ToString() },
                 {nameof(queryObject.PageNumber), queryObject.PageNumber.ToString() },
@@ -271,7 +275,7 @@ namespace ScoreboardApp.Api.IntegrationTests.EffortHabitEntriesController
                 PageSize = 2
             };
 
-            Dictionary<string, string> query = new()
+            Dictionary<string, string?> query = new()
             {
                 {nameof(queryObject.HabitId), queryObject.HabitId!.ToString() },
                 {nameof(queryObject.PageNumber), queryObject.PageNumber.ToString() },
@@ -286,12 +290,14 @@ namespace ScoreboardApp.Api.IntegrationTests.EffortHabitEntriesController
 
             var receivedObjects = await getAllEntriesResponse.Content.ReadFromJsonAsync<PaginatedListDTO<EffortHabitEntryDTO>>();
 
-            receivedObjects.Items.Should().HaveCount(1);
+            receivedObjects.Should().NotBeNull();
 
-            receivedObjects.PageNumber.Should().Be(2);
-            receivedObjects.TotalCount.Should().Be(3);
-            receivedObjects.TotalPages.Should().Be(2);
-            receivedObjects.Items.Should().HaveCount(1).And.ContainEquivalentOf(createdEntries.OrderBy(x => x.EntryDate).Last());
+            receivedObjects!.Items.Should().HaveCount(1);
+
+            receivedObjects!.PageNumber.Should().Be(2);
+            receivedObjects!.TotalCount.Should().Be(3);
+            receivedObjects!.TotalPages.Should().Be(2);
+            receivedObjects!.Items.Should().HaveCount(1).And.ContainEquivalentOf(createdEntries.OrderBy(x => x.EntryDate).Last());
         }
 
         [Fact]
@@ -310,7 +316,7 @@ namespace ScoreboardApp.Api.IntegrationTests.EffortHabitEntriesController
                 PageSize = 0
             };
 
-            Dictionary<string, string> query = new()
+            Dictionary<string, string?> query = new()
             {
                 {nameof(queryObject.HabitId), queryObject.HabitId!.ToString() },
                 {nameof(queryObject.PageNumber), queryObject.PageNumber.ToString() },

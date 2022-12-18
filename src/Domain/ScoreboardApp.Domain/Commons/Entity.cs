@@ -3,7 +3,7 @@
     // See more: https://github.com/vkhorikov/CSharpFunctionalExtensions/blob/master/CSharpFunctionalExtensions/Entity/Entity.cs
     public abstract class Entity<TId>
     {
-        public virtual TId Id { get; protected set; }
+        public virtual TId Id { get; protected set; } = default!;
 
         protected Entity()
         {
@@ -14,9 +14,9 @@
             Id = id;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            if (!(obj is Entity<TId> other))
+            if (obj is not Entity<TId> other)
                 return false;
 
             if (ReferenceEquals(this, other))
@@ -28,7 +28,7 @@
             if (IsTransient() || other.IsTransient())
                 return false;
 
-            return Id.Equals(other.Id);
+            return Id!.Equals(other.Id);
         }
 
         private bool IsTransient()
@@ -36,7 +36,7 @@
             return Id is null || Id.Equals(default(TId));
         }
 
-        public static bool operator ==(Entity<TId> a, Entity<TId> b)
+        public static bool operator ==(Entity<TId>? a, Entity<TId>? b)
         {
             if (a is null && b is null)
                 return true;
@@ -47,7 +47,7 @@
             return a.Equals(b);
         }
 
-        public static bool operator !=(Entity<TId> a, Entity<TId> b)
+        public static bool operator !=(Entity<TId>? a, Entity<TId>? b)
         {
             return !(a == b);
         }

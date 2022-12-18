@@ -13,7 +13,7 @@ namespace ScoreboardApp.Application.Commons.BaseTypes
         {
             _logger = logger;
         }
-        public virtual ValidateOptionsResult Validate(string name, T options)
+        public virtual ValidateOptionsResult Validate(string? name, T options)
         {
             var validateResult = this.Validate(options);
 

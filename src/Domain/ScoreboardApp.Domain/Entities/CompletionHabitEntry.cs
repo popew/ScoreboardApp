@@ -8,8 +8,8 @@ namespace ScoreboardApp.Domain.Entities
     {
         public bool Completion { get; set; }
         public DateOnly EntryDate { get; set; }
-        public CompletionHabit Habit { get; set; }
+        public CompletionHabit Habit { get; set; } = default!;
         public Guid HabitId { get; set; }
-        public string UserId { get; set; }
+        public required string UserId { get; set; }
     }
 }
