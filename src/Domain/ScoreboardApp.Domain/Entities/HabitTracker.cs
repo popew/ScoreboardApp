@@ -12,6 +12,6 @@ namespace ScoreboardApp.Domain.Entities
         public IList<CompletionHabit> CompletionHabits { get; private set; } = new List<CompletionHabit>();
         public IList<EffortHabit> EffortHabits { get; private set; } = new List<EffortHabit>();
 
-        public string UserId { get; set; }
+        public required string UserId { get; set; }
     }
 }

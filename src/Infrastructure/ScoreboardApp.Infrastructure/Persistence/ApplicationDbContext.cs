@@ -16,14 +16,12 @@ namespace ScoreboardApp.Infrastructure.Persistence
             _auditableEntitySaveChangesInterceptor = auditableEntitySaveChangesInterceptor;
         }
 
-        public DbSet<HabitTracker> HabitTrackers { get; set; }
-        public DbSet<CompletionHabit> CompletionHabits { get; set; }
-        public DbSet<EffortHabit> EffortHabits { get; set; }
+        public DbSet<HabitTracker> HabitTrackers => Set<HabitTracker>();
+        public DbSet<CompletionHabit> CompletionHabits => Set<CompletionHabit>();
+        public DbSet<EffortHabit> EffortHabits => Set<EffortHabit>();
+        public DbSet<CompletionHabitEntry> CompletionHabitEntries => Set<CompletionHabitEntry>();
 
-
-        public DbSet<CompletionHabitEntry> CompletionHabitEntries { get; set; }
-
-        public DbSet<EffortHabitEntry> EffortHabitEntries { get; set; }
+        public DbSet<EffortHabitEntry> EffortHabitEntries => Set<EffortHabitEntry>();
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

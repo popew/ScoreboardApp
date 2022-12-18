@@ -14,9 +14,9 @@ namespace ScoreboardApp.Domain.Entities
         public EffortHabitSubtype Subtype { get; set; } = EffortHabitSubtype.None;
         public string? Description { get; set; }
         public IList<EffortHabitEntry> HabitEntries { get; set; } = new List<EffortHabitEntry>();
-        public HabitTracker HabitTracker { get; set; }
+        public HabitTracker HabitTracker { get; set; } = default!;
         public Guid HabitTrackerId { get; set; }
         public string? Title { get; set; }
-        public string UserId { get; set; }
+        public required string UserId { get; set; }
     }
 }                       

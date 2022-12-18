@@ -59,10 +59,10 @@ namespace ScoreboardApp.Infrastructure.CustomIdentityService.Identity
 
             foreach(string roleName in roleNames)
             {
-                _logger.LogInformation("Adding {userName} to role {roleName}", identityUser.UserName, roleName);
+                _logger.LogInformation("Adding {userName} to role {roleName}", identityUser!.UserName, roleName);
 
-                await _userManager.AddToRoleAsync(identityUser, roleName);
+                await _userManager.AddToRoleAsync(identityUser!, roleName);
             }
         }
     }
-}
+}       

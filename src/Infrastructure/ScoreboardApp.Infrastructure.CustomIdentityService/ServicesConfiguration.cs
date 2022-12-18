@@ -19,11 +19,17 @@ namespace ScoreboardApp.Infrastructure.CustomIdentityService
     {
         public static IServiceCollection AddCustomIdentityService(this IServiceCollection services, IConfiguration configuration)
         {
-            services.Configure<TokenSettings>(configuration.GetSection(nameof(TokenSettings)));
+            services.AddOptions<TokenSettings>()
+                    .Bind(configuration.GetSection(nameof(TokenSettings)))
+                    .Validate(options =>
+                    {
+                        return !string.IsNullOrEmpty(options.Secret);
+                    })
+                    .ValidateOnStart();
 
             services.AddDbContext<ApplicationIdentityDbContext>(options =>
             {
-                options.UseSqlServer(configuration.GetConnectionString("CustomIdentityDatabase"),
+                options.UseSqlServer(configuration.GetConnectionString("CustomIdentityDatabase")!,
                                      providerOptions => providerOptions.EnableRetryOnFailure());
             });
 
@@ -59,7 +65,7 @@ namespace ScoreboardApp.Infrastructure.CustomIdentityService
             Action<JwtBearerOptions> jwtBearerOptions = options =>
             {
                 var tokenSettings = configuration.GetSection(nameof(TokenSettings)).Get<TokenSettings>();
-                byte[] secret = Encoding.ASCII.GetBytes(tokenSettings.Secret);
+                byte[] secret = Encoding.ASCII.GetBytes(tokenSettings!.Secret);
 
                 options.RequireHttpsMetadata = true;
                 options.SaveToken = true;
