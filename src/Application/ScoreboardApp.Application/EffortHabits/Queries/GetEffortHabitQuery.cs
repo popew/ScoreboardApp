@@ -8,10 +8,7 @@ using ScoreboardApp.Domain.Entities;
 
 namespace ScoreboardApp.Application.EffortHabits.Queries
 {
-    public sealed record GetEffortHabitQuery(Guid Id) : IRequest<EffortHabitDTO>
-    {
-        public Guid Id { get; init; } = Id;
-    }
+    public sealed record GetEffortHabitQuery(Guid Id) : IRequest<EffortHabitDTO>;
 
     public sealed class GetEffortHabitQueryHandler : IRequestHandler<GetEffortHabitQuery, EffortHabitDTO>
     {

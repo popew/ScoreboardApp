@@ -13,7 +13,7 @@ namespace ScoreboardApp.Application.HabitTrackers.Commands
     public sealed record UpdateHabitTrackerCommand : IRequest<UpdateHabitTrackerCommandResponse>
     {
         public Guid Id { get; init; }
-        public string Title { get; init; } = default!;
+        public required string Title { get; init; }
         public PriorityMapping Priority { get; init; }
     }
 
@@ -21,7 +21,7 @@ namespace ScoreboardApp.Application.HabitTrackers.Commands
     public sealed record UpdateHabitTrackerCommandResponse : IMapFrom<HabitTracker>
     {
         public Guid Id { get; init; }
-        public string Title { get; init; } = default!;
+        public required string Title { get; init; }
         public PriorityMapping Priority { get; init; }
     }
 

@@ -8,6 +8,6 @@ namespace ScoreboardApp.Domain.Entities.Interfaces
         IList<TEntry> HabitEntries { get; set; }
         HabitTracker HabitTracker { get; set; }
         Guid HabitTrackerId { get; set; }
-        string? Title { get; set; }
+        string Title { get; set; }
     }
 }

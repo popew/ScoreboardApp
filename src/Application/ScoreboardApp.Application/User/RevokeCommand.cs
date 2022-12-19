@@ -7,7 +7,7 @@ namespace ScoreboardApp.Application.Authentication
 {
     public sealed record RevokeCommand() : IRequest
     {
-        public string UserName { get; init; } = default!;
+        public required string UserName { get; init; }
     }
 
     public sealed class RevokeCommandHandler : IRequestHandler<RevokeCommand, Unit>

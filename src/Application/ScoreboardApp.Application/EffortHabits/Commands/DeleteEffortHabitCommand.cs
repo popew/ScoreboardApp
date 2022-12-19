@@ -6,10 +6,7 @@ using ScoreboardApp.Domain.Entities;
 
 namespace ScoreboardApp.Application.Habits.Commands
 {
-    public sealed record DeleteEffortHabitCommand(Guid Id) : IRequest
-    {
-        public Guid Id { get; init; } = Id;
-    }
+    public sealed record DeleteEffortHabitCommand(Guid Id) : IRequest;
 
     public sealed class DeleteEffortHabitCommandHandler : IRequestHandler<DeleteEffortHabitCommand>
     {

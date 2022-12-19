@@ -7,10 +7,9 @@ namespace ScoreboardApp.Application.Authentication
 {
     public record RegisterCommand() : IRequest
     {
-        public string UserName { get; init; } = default!;
-        public string Password { get; init; } = default!;
-
-        public string Email { get; init; } = default!;
+        public required string UserName { get; init; }
+        public required string Password { get; init; }
+        public required string Email { get; init; }
     }
 
     public sealed class RegisterRequestHandler : IRequestHandler<RegisterCommand, Unit>

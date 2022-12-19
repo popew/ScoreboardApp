@@ -12,7 +12,7 @@ using ScoreboardApp.Infrastructure.Persistence;
 namespace ScoreboardApp.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221218165539_InitialDbCreation")]
+    [Migration("20221219182911_InitialDbCreation")]
     partial class InitialDbCreation
     {
         /// <inheritdoc />

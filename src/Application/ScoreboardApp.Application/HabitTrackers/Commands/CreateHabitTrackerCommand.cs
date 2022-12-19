@@ -11,7 +11,7 @@ namespace ScoreboardApp.Application.HabitTrackers.Commands
 {
     public sealed record CreateHabitTrackerCommand : IRequest<CreateHabitTrackerCommandResponse>
     {
-        public string Title { get; init; } = default!;
+        public required string Title { get; init; }
         public PriorityMapping Priority { get; init; }
     }
 

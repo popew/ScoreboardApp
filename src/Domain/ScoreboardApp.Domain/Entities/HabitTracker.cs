@@ -6,7 +6,7 @@ namespace ScoreboardApp.Domain.Entities
 {
     public class HabitTracker : BaseAuditableEntity, IOwnedEntity
     {
-        public string? Title { get; set; }
+        public required string Title { get; set; }
         public Priority Priority { get; set; } = Priority.None;
 
         public IList<CompletionHabit> CompletionHabits { get; private set; } = new List<CompletionHabit>();

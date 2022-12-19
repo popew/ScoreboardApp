@@ -8,8 +8,8 @@ namespace ScoreboardApp.Application.Habits.Commands
 {
     public sealed record CreateCompletionHabitCommand : IRequest<CreateCompletionHabitCommandResponse>
     {
-        public string Title { get; init; } = default!;
-        public string Description { get; init; } = default!;
+        public required string Title { get; init; }
+        public string? Description { get; init; }
 
         public Guid HabitTrackerId { get; init; }
     }
@@ -17,8 +17,8 @@ namespace ScoreboardApp.Application.Habits.Commands
     public sealed record CreateCompletionHabitCommandResponse : IMapFrom<CompletionHabit>
     {
         public Guid Id { get; init; }
-        public string Title { get; init; } = default!;
-        public string Description { get; init; } = default!;
+        public required string Title { get; init; }
+        public string? Description { get; init; }
 
         public Guid HabitTrackerId { get; init; }
     }

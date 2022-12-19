@@ -10,14 +10,14 @@ namespace ScoreboardApp.Application.Authentication
 {
     public sealed record AuthenticateCommand() : IRequest<AuthenticateCommandResponse>
     {
-        public string UserName { get; init; } = default!;
-        public string Password { get; init; } = default!;
+        public required string UserName { get; init; }
+        public required string Password { get; init; }
     }
 
     public sealed record AuthenticateCommandResponse() : IMapFrom<TokenResponse>
     {
-        public string Token { get; init; } = default!;
-        public string RefreshToken { get; init; } = default!;
+        public required string Token { get; init; }
+        public required string RefreshToken { get; init; }
     }
 
     public sealed class AuthenticateRequestHandler : IRequestHandler<AuthenticateCommand, AuthenticateCommandResponse>

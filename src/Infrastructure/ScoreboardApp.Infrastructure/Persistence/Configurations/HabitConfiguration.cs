@@ -17,18 +17,13 @@ namespace ScoreboardApp.Infrastructure.Persistence.Configurations
             builder.ToTable(tb => tb.IsTemporal());
 
             builder.Property(h => h.Title)
-                .HasMaxLength(200)
-                .IsRequired();
+                .HasMaxLength(200);
 
             builder.Property(h => h.Description)
                 .HasMaxLength(400);
 
-            builder.Property(h => h.HabitTrackerId)
-                .IsRequired();
-
             builder.Property(h => h.UserId)
-                .HasMaxLength(450)
-                .IsRequired();
+                .HasMaxLength(450);
         }
     }
 
@@ -45,9 +40,6 @@ namespace ScoreboardApp.Infrastructure.Persistence.Configurations
         public override void Configure(EntityTypeBuilder<EffortHabit> builder)
         {
             base.Configure(builder);
-
-            builder.Property(h => h.Subtype)
-                .IsRequired();
 
             builder.Property(h => h.Unit)
                 .HasMaxLength(20);
