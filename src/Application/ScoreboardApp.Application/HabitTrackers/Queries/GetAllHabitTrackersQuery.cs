@@ -7,11 +7,7 @@ using ScoreboardApp.Application.DTOs;
 
 namespace ScoreboardApp.Application.HabitTrackers.Queries
 {
-    public sealed record GetAllHabitTrackersQuery : IRequest<IList<HabitTrackerDTO>>
-    {
-
-    }
-
+    public sealed record GetAllHabitTrackersQuery : IRequest<IList<HabitTrackerDTO>>;
     public sealed class GetAllHabitTrackersQueryHandler : IRequestHandler<GetAllHabitTrackersQuery, IList<HabitTrackerDTO>>
     {
         private readonly IApplicationDbContext _context;

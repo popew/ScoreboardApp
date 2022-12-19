@@ -10,13 +10,13 @@ namespace ScoreboardApp.Application.Authentication
 {
     public sealed record RefreshCommand() : IRequest<RefreshCommandResponse>
     {
-        public string Token { get; init; } = default!;
-        public string RefreshToken { get; init; } = default!;
+        public required string Token { get; init; } = default!;
+        public required string RefreshToken { get; init; } = default!;
     }
     public sealed record RefreshCommandResponse() : IMapFrom<TokenResponse>
     {
-        public string Token { get; init; } = default!;
-        public string RefreshToken { get; init; } = default!;
+        public required string Token { get; init; } = default!;
+        public required string RefreshToken { get; init; } = default!;
     }
 
     public sealed class RefreshCommandHandler : IRequestHandler<RefreshCommand, RefreshCommandResponse>

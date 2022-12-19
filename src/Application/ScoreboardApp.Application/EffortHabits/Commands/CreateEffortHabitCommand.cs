@@ -10,10 +10,10 @@ namespace ScoreboardApp.Application.Habits.Commands
 {
     public sealed record CreateEfforHabitCommand : IRequest<CreateEfforHabitCommandResponse>
     {
-        public string Title { get; init; } = default!;
-        public string Description { get; init; } = default!;
+        public required string Title { get; init; }
+        public string? Description { get; init; }
 
-        public string? Unit { get; init; } = default!;
+        public string? Unit { get; init; }
         public double? AverageGoal { get; init; }
 
         public EffortHabitSubtypeMapping Subtype { get; init; }
@@ -23,10 +23,10 @@ namespace ScoreboardApp.Application.Habits.Commands
     public sealed record CreateEfforHabitCommandResponse : IMapFrom<EffortHabit>
     {
         public Guid Id { get; init; }
-        public string Title { get; init; } = default!;
-        public string Description { get; init; } = default!;
+        public required string Title { get; init; }
+        public string? Description { get; init; }
 
-        public string? Unit { get; init; } = default!;
+        public string? Unit { get; init; }
         public double? AverageGoal { get; init; }
 
         public EffortHabitSubtypeMapping Subtype { get; init; }

@@ -15,6 +15,6 @@ namespace ScoreboardApp.Application.HabitTrackers.DTOs
         public string? Description { get; set; }
         public IList<EffortHabitEntryDTO> HabitEntries { get; set; } = new List<EffortHabitEntryDTO>();
         public Guid HabitTrackerId { get; set; }
-        public string? Title { get; set; }
+        public required string Title { get; set; }
     }
 }

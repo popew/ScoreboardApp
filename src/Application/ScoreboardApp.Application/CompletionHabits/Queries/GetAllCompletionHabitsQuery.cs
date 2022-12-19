@@ -8,7 +8,7 @@ using ScoreboardApp.Domain.Entities;
 
 namespace ScoreboardApp.Application.CompletionHabits.Queries
 {
-    public sealed record GetAllCompletionHabitsQuery : IRequest<IList<CompletionHabitDTO>>
+    public sealed record GetAllCompletionHabitsQuery() : IRequest<IList<CompletionHabitDTO>>
     {
         public Guid? HabitTrackerId { get; init; }
     }

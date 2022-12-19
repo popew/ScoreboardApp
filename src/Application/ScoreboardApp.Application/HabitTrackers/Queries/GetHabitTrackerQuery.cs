@@ -8,10 +8,7 @@ using ScoreboardApp.Domain.Entities;
 
 namespace ScoreboardApp.Application.HabitTrackers.Queries
 {
-    public sealed record GetHabitTrackerQuery   (Guid Id) : IRequest<HabitTrackerDTO>
-    {
-        public Guid Id { get; init; } = Id;
-    }
+    public sealed record GetHabitTrackerQuery(Guid Id) : IRequest<HabitTrackerDTO>;
 
     public sealed class GetHabitTrackerQueryHandler : IRequestHandler<GetHabitTrackerQuery, HabitTrackerDTO>
     {

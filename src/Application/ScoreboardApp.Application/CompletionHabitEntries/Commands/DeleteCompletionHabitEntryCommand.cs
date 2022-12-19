@@ -6,10 +6,7 @@ using ScoreboardApp.Domain.Entities;
 
 namespace ScoreboardApp.Application.CompletionHabitEntries.Commands
 {
-    public sealed record DeleteCompletionHabitEntryCommand(Guid Id) : IRequest
-    {
-        public Guid Id { get; init; } = Id;
-    }
+    public sealed record DeleteCompletionHabitEntryCommand(Guid Id) : IRequest;
     public class DeleteCompletionHabitEntryCommandHandler : IRequestHandler<DeleteCompletionHabitEntryCommand, Unit>
     {
         private readonly IApplicationDbContext _context;
