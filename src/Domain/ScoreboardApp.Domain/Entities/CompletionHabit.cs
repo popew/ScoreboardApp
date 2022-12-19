@@ -1,5 +1,4 @@
 ﻿using ScoreboardApp.Domain.Commons;
-using ScoreboardApp.Domain.Commons.Interfaces;
 using ScoreboardApp.Domain.Entities.Interfaces;
 
 namespace ScoreboardApp.Domain.Entities
@@ -10,7 +9,7 @@ namespace ScoreboardApp.Domain.Entities
         public IList<CompletionHabitEntry> HabitEntries { get; set; } = new List<CompletionHabitEntry>();
         public HabitTracker HabitTracker { get; set; } = default!;
         public Guid HabitTrackerId { get; set; }
-        public string? Title { get; set; }
+        public required string Title { get; set; }
         public required string UserId { get; set; }
     }
 }

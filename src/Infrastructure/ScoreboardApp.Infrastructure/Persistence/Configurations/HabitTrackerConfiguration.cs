@@ -11,12 +11,10 @@ namespace ScoreboardApp.Infrastructure.Persistence.Configurations
             builder.ToTable(tb => tb.IsTemporal());
 
             builder.Property(ht => ht.Title)
-                .HasMaxLength(200)
-                .IsRequired();
+                .HasMaxLength(200);
 
             builder.Property(ht => ht.UserId)
-                .HasMaxLength(450)
-                .IsRequired();
+                .HasMaxLength(450);
         }
     }
 }

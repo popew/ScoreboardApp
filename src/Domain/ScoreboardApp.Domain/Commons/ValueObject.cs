@@ -40,7 +40,7 @@
 
         public virtual int CompareTo(object? obj)
         {
-            if(obj is null)
+            if (obj is null)
             {
                 return 1;
             }

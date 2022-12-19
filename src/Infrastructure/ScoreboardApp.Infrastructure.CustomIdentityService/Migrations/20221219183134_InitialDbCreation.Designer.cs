@@ -12,7 +12,7 @@ using ScoreboardApp.Infrastructure.CustomIdentityService.Persistence;
 namespace ScoreboardApp.Infrastructure.CustomIdentityService.Migrations
 {
     [DbContext(typeof(ApplicationIdentityDbContext))]
-    [Migration("20221218134446_InitialDbCreation")]
+    [Migration("20221219183134_InitialDbCreation")]
     partial class InitialDbCreation
     {
         /// <inheritdoc />
@@ -344,7 +344,7 @@ namespace ScoreboardApp.Infrastructure.CustomIdentityService.Migrations
                     b.Property<string>("RefreshToken")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("RefreshTokenExpiryTime")
+                    b.Property<DateTime?>("RefreshTokenExpiryTime")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("SecurityStamp")
