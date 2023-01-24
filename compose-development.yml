@@ -19,6 +19,8 @@ services:
             - TokenSettings__Audience=""
             - TokenSettings__Expiry=5
             - TokenSettings__RefreshExpiry=1440
+            - SeedingOptions__AdminPassword=Pa@@word123,
+            - SeedingOptions_TestUserPassword=Pa@@word123
         depends_on:
             sql_backend:
                 condition: service_started

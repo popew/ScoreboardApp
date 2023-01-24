@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Identity;
 using ScoreboardApp.Infrastructure.CustomIdentityService.Persistence;
@@ -30,7 +31,7 @@ namespace ScoreboardApp.Infrastructure.CustomIdentityService.Extensions
         ///     Seed Identity data
         /// </summary>
         /// <param name="builder"></param>
-        public static async Task SeedIdentityDataAsync(this IApplicationBuilder builder)
+        public static async Task SeedIdentityDataAsync(this IApplicationBuilder builder, IConfiguration configuration)
         {
             using (var serviceScope = builder.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
@@ -39,8 +40,8 @@ namespace ScoreboardApp.Infrastructure.CustomIdentityService.Extensions
                 var dataSeeder = services.GetRequiredService<IdentityDbContextDataSeeder>();
 
                 await dataSeeder.SeedRolesAsync(Roles.RolesSupported);
-                await dataSeeder.SeedUserAsync("dev_admin@scoreboardapp.com", "DefaultPa@@word123", new string[] { Roles.Administrator, Roles.User });
-                await dataSeeder.SeedUserAsync("dev_testuser@scoreboardapp.com", "DefaultPa@@word123", new string[] { Roles.User });
+                await dataSeeder.SeedUserAsync("dev_admin@scoreboardapp.com", configuration.GetValue<string>("Seeding:AdminPassword")!, new string[] { Roles.Administrator, Roles.User });
+                await dataSeeder.SeedUserAsync("dev_testuser@scoreboardapp.com", configuration.GetValue<string>("Seeding:TestUserPassword")!, new string[] { Roles.User });
             }
         }
     }
